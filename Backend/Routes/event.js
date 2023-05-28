@@ -5,16 +5,18 @@ const {
   createEvent,
   getAllEvents,
   DeleteEvent,
+  getAllShopEvents,
+  getAllEvent,
 } = require("../controlar/event");
 
 const router = express.Router();
 
 router.post("/create-event", upload.array("images"), createEvent);
 
-// router.get("/get-all-products-shop/:id", createEvent);
-router.get("/get-all-events/:id", getAllEvents);
+
+router.get("/get-all-events/:id", getAllShopEvents);
 router.delete("/delete-shop-event/:id", DeleteEvent);
-// router.get("/get-all-products", getAllProducts);
+router.get("/get-all-events",getAllEvent)
 
 // router.put("/create-new-review", isAuthenticated, reviewProduct);
 

@@ -2,8 +2,10 @@ import React from 'react'
 import styles from '../../styles/style'
 import EventProduct from "./EventProduct.jsx"
 import CountDown from "./CountDown.jsx"
+import { useSelector } from 'react-redux';
 
 function Events() {
+  const {allEvents,isLoading} = useSelector((state) => state.events);  
   return (
     <div>
       <div className={`${styles.section} my-3`}>

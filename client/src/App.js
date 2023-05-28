@@ -16,6 +16,7 @@ import {
   UserProfilePage,
   ShopCreatePage,
   ShopLogInPage,
+  CheckoutPage,
 } from "./Routes.js";
 import { useEffect } from "react";
 // import axios from "axios";
@@ -24,14 +25,30 @@ import Store from "./Redux/Store";
 import { loadSeller, loadUser } from "./Redux/Action/user";
 import { useSelector } from "react-redux";
 
-import { ShopHomePage ,ShopDashBoardPage,ShopCreateProduct,AllShopProduct,ShopCreateEvent,AllShopEvent} from "./Routes/ShopRoutes.js";
+import {
+  ShopHomePage,
+  ShopDashBoardPage,
+  ShopCreateProduct,
+  AllShopProduct,
+  ShopCreateEvent,
+  AllShopEvent,
+  ShopAllCoupouns,
+  ShopViewPage,
+} from "./Routes/ShopRoutes.js";
 import ProtectedRoute from "./ProtectRoutes/ProtectedRoute";
 import ProtectSellerRoute from "./ProtectRoutes/ProtectSellerRoute";
-
+import { getAllProducts } from "./Redux/Action/product";
+import { getAllEvents } from "./Redux/Action/event";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 function App() {
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
+    Store.dispatch(getAllProducts());
+    Store.dispatch(getAllEvents());
+
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -50,7 +67,7 @@ function App() {
             element={<SellerActivationPage />}
           />
           <Route path="/all-products" element={<ProductsPage />} />
-          <Route path="/product/:name" element={<ProductDetailsPage />} />
+          <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/all-cart-products" element={<CartPage />} />
@@ -59,6 +76,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <UserProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
               </ProtectedRoute>
             }
           />
@@ -75,6 +100,7 @@ function App() {
               </ProtectSellerRoute>
             }
           />
+          <Route path="/shop/view/:id" element={<ShopViewPage />} />
 
           <Route
             path="/dashboard"
@@ -88,7 +114,7 @@ function App() {
             path="/dashboard-create-product"
             element={
               <ProtectSellerRoute>
-                <ShopCreateProduct/>
+                <ShopCreateProduct />
               </ProtectSellerRoute>
             }
           />
@@ -96,28 +122,37 @@ function App() {
             path="/dashboard-products"
             element={
               <ProtectSellerRoute>
-                <AllShopProduct/>
+                <AllShopProduct />
               </ProtectSellerRoute>
             }
           />
-            <Route
+          <Route
             path="/dashboard-create-event"
             element={
               <ProtectSellerRoute>
-                <ShopCreateEvent/>
+                <ShopCreateEvent />
               </ProtectSellerRoute>
             }
           />
-           <Route
+          <Route
             path="/dashboard-events"
             element={
               <ProtectSellerRoute>
-                <AllShopEvent/>
+                <AllShopEvent />
+              </ProtectSellerRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard-coupouns"
+            element={
+              <ProtectSellerRoute>
+                <ShopAllCoupouns />
               </ProtectSellerRoute>
             }
           />
         </Routes>
-       
+
         <ToastContainer
           position="bottom-right"
           autoClose={5000}

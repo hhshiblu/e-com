@@ -80,20 +80,23 @@ const ShopDeleteProduct = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-// get all products
-// const getAllProducts=
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const products = await Product.find().sort({ createdAt: -1 });
+//get all products
+const getAllProducts=
+  CatchAsyncError(async (req, res, next) => {
+    try {
+      const products = await Product.find().sort({ createdAt: -1 });
+      
+  
 
-//       res.status(201).json({
-//         success: true,
-//         products,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error, 400));
-//     }
-//   });
+      res.status(201).json({
+        success: true,
+        products,
+      });
+     
+    } catch (error) {
+      return next(new Errorhandeler(error, 400));
+    }
+  });
 
 // review for a product
 // const reviewProduct=
@@ -164,4 +167,4 @@ const ShopDeleteProduct = CatchAsyncError(async (req, res, next) => {
 //       return next(new ErrorHandler(error.message, 500));
 //     }
 //   });
-module.exports = { createproduct, getShopProduct,ShopDeleteProduct };
+module.exports = { createproduct, getShopProduct,ShopDeleteProduct,getAllProducts };

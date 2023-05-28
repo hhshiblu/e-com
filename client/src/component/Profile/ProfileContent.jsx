@@ -11,19 +11,13 @@ import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { MdTrackChanges } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
-// import {
-//   deleteUserAddress,
-//   loadUser,
-//   updatUserAddress,
-//   updateUserInformation,
-// } from "../../redux/actions/user";
-import { Country, State } from "country-state-city";
 
-// import { toast } from "react-toastify";
+import { Country, State } from "country-state-city";
 import axios from "axios";
 import styles from "../../styles/style";
 import { toast } from "react-toastify";
 import { backend_URL, server } from "../../serverUrl";
+import { deleteUserAddress, loadUser, updatUserAddress, updateUserInformation } from "../../Redux/Action/user";
 // import { getAllOrdersOfUser } from "../../redux/actions/order";
 
 const ProfileContent = ({ active }) => {
@@ -48,32 +42,32 @@ const ProfileContent = ({ active }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // dispatch(updateUserInformation(name, email, phoneNumber, password));
+    dispatch(updateUserInformation(name, email, phoneNumber, password));
   };
 
-//   const handleImage = async (e) => {
-//     const file = e.target.files[0];
-//     setAvatar(file);
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    setAvatar(file);
 
-//     const formData = new FormData();
+    const formData = new FormData();
 
-//     formData.append("image", e.target.files[0]);
+    formData.append("image", e.target.files[0]);
 
-//     await axios
-//       .put(`${server}/user/update-avatar`, formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//         withCredentials: true,
-//       })
-//       .then((response) => {
-//          dispatch(loadUser());
-//          toast.success("avatar updated successfully!");
-//       })
-//       .catch((error) => {
-//         toast.error(error);
-//       });
-//   };
+    await axios
+      .put(`${server}/update-avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+         dispatch(loadUser());
+         toast.success("Profile Picture updated successfully!");
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  };
 
   return (
     <div className="w-full">
@@ -92,10 +86,10 @@ const ProfileContent = ({ active }) => {
                   type="file"
                   id="image"
                   className="hidden"
-                //   onChange={handleImage}
+                  onChange={handleImage}
                 />
                 <label htmlFor="image">
-                  <AiOutlineCamera />
+                  <AiOutlineCamera  className="cursor-pointer"/>
                 </label>
               </div>
             </div>
@@ -469,7 +463,7 @@ const ChangePassword = () => {
 
     await axios
       .put(
-        `${server}/user/update-user-password`,
+        `${server}/update-user-password`,
         { oldPassword, newPassword, confirmPassword },
         { withCredentials: true }
       )
@@ -545,7 +539,7 @@ const Address = () => {
   const [address2, setAddress2] = useState("");
   const [addressType, setAddressType] = useState("");
   const { user } = useSelector((state) => state.user);
-//   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const addressTypeData = [
     {
@@ -562,33 +556,34 @@ const Address = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (addressType === "" || country === "" || city === "") {
-    //   toast.error("Please fill all the fields!");
-    // } else {
-    //   dispatch(
-    //     updatUserAddress(
-    //       country,
-    //       city,
-    //       address1,
-    //       address2,
-    //       zipCode,
-    //       addressType
-    //     )
-    //   );
-    //   setOpen(false);
-    //   setCountry("");
-    //   setCity("");
-    //   setAddress1("");
-    //   setAddress2("");
-    //   setZipCode(null);
-    //   setAddressType("");
-    // }
+    if (addressType === "" || country === "" || city === "") {
+      toast.error("Please fill all the fields!");
+    } else {
+      dispatch(
+        updatUserAddress(
+          country,
+          city,
+          address1,
+          address2,
+          zipCode,
+          addressType
+        )
+      );
+      
+      setOpen(false);
+      setCountry("");
+      setCity("");
+      setAddress1("");
+      setAddress2("");
+      setZipCode(null);
+      setAddressType("");
+    }
   };
 
-//   const handleDelete = (item) => {
-//     const id = item._id;
-//     dispatch(deleteUserAddress(id));
-//   };
+  const handleDelete = (item) => {
+    const id = item._id;
+    dispatch(deleteUserAddress(id));
+  };
 
   return (
     <div className="w-full px-5">
@@ -716,12 +711,14 @@ const Address = () => {
                   </div>
 
                   <div className=" w-full pb-2">
+                    
                     <input
                       type="submit"
                       className={`${styles.input} mt-5 cursor-pointer`}
                       required
                       readOnly
                     />
+                   
                   </div>
                 </div>
               </form>
@@ -764,7 +761,7 @@ const Address = () => {
               <AiOutlineDelete
                 size={25}
                 className="cursor-pointer"
-                // onClick={() => handleDelete(item)}
+                onClick={() => handleDelete(item)}
               />
             </div>
           </div>

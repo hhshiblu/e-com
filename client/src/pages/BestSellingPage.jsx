@@ -3,23 +3,26 @@ import React, { useEffect, useState } from "react";
 import Header from "../component/Layout/Header.jsx";
 import styles from "../styles/style.js";
 
-import { productData } from "../staticData/data.js";
+
 import ProductCart from "../component/Route/ProductCart/ProductCart.jsx";
+import { useSelector } from "react-redux";
+import Footer from "../component/Layout/Footer.jsx";
 
 function ProductsPage() {
   const [data, setData] = useState([]);
-
+  const {allProducts,isLoading} = useSelector((state) => state.products);
   useEffect(() => {
-    const d =
-      productData && productData.sort((a, b) => b.total_sell - a.total_sell);
-
-    setData(d);
-
-    window.scrollTo(0, 0);
-  }, [productData]);
+    const allProductsData = allProducts ? [...allProducts] : [];
+    const sortedData = allProductsData?.sort((a,b) => b.sold_out - a.sold_out); 
+    setData(sortedData);
+  }, [allProducts]);
 
   return (
     <div>
+       {/* {
+    isLoading ? (
+      <Loader />
+    ) : ( */}
       <Header activeHeading={2} />
       <br />
       <br />
@@ -29,6 +32,9 @@ function ProductsPage() {
         </div>
         <div></div>
       </div>
+      <Footer/>
+      {/* )
+   } */}
     </div>
   );
 }

@@ -5,7 +5,6 @@ const Event =require ("../Modal/event")
 
 
 const CatchAsyncError = require("../Middleware/CatchAsyncError");
-const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 
 const fs = require("fs");
 const Errorhandeler = require("../utils/Errorhandeler");
@@ -39,21 +38,20 @@ const createEvent = CatchAsyncError(async (req, res, next) => {
   });
 
 // get all events
-// const getShopProduct = CatchAsyncError(async (req, res, next) => {
-//   try {
-//     const events = await Event.find({ sellerId: req.params.id });
-
-//     res.status(201).json({
-//       success: true,
-//       events,
-//     });
-//   } catch (error) {
-//     return next(new Errorhandeler(error, 400));
-//   }
-// });
+const getAllEvent=CatchAsyncError( async (req, res, next) => {
+  try {
+    const events = await Event.find();
+    res.status(201).json({
+      success: true,
+      events,
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error, 400));
+  }
+});
 
 // get all events of a shop
-const getAllEvents=
+const getAllShopEvents=
   CatchAsyncError(async (req, res, next) => {
     try {
       const events = await Event.find({ sellerId: req.params.id });
@@ -121,4 +119,4 @@ const DeleteEvent=
 //   })
 // );
 
-module.exports = {createEvent,getAllEvents,DeleteEvent};
+module.exports = {createEvent,getAllShopEvents,DeleteEvent,getAllEvent};

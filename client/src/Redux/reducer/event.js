@@ -48,6 +48,18 @@ deleteeventFailed:(state,action)=>{
     state.isloading=false;
     state.error=action.payload
 },
+ // get all events 
+ getAlleventsRequest: (state) => {
+    state.isloading = true;
+  },
+  getAlleventsSuccess: (state, action) => {
+    state.isloading = false;
+    state.allEvents = action.payload;
+  },
+  getAlleventsFailed: (state, action) => {
+    state.isloading = false;
+    state.error = action.payload;
+  },
 
 
     clearErrors:(state)=>{

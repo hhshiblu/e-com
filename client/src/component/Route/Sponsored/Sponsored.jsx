@@ -28,7 +28,10 @@ function Sponsored() {
           <img src="https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg" alt="" style={{ width: "140px", objectFit: "contain" }} />
         </div>
       </div>
+     
+     
     </div>
+
   );
 }
 

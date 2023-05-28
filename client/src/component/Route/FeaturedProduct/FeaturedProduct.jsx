@@ -1,9 +1,11 @@
 import React from 'react'
 import styles from '../../../styles/style'
-import { productData } from '../../../staticData/data'
+
 import ProductCart from '../ProductCart/ProductCart'
+import { useSelector } from 'react-redux';
 
 function FeaturedProduct() {
+  const {allProducts} = useSelector((state) => state.products);
   return (
     <div>
        <div className={`${styles.section}`}>
@@ -12,14 +14,13 @@ function FeaturedProduct() {
 
         </div>
         <div className=" grid grid-cols-2 gap-[15px] md:grid-cols-3 md:gap-[15px] lg:grid-cols-5 lg:gap-[15px] xl:grid-cols-6 xl:gap-[15px]">
-                {
-                    productData && productData.map((i,index)=>{
-                        return(
-                            <ProductCart key={index } data={i}/>
-                        
-                        )
-                    })
-                }
+        {
+            allProducts && allProducts.length !== 0 &&(
+              <>
+               {allProducts && allProducts.map((i, index) => <ProductCart data={i} key={index} />)}
+              </>
+            )
+           }
         </div>
 
        </div>

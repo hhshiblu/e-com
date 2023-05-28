@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-
+import Footer from "../component/Layout/Footer.jsx"
 import Header from "../component/Layout/Header.jsx";
 import styles from "../styles/style.js";
 import { useSearchParams } from "react-router-dom";
-import { productData } from "../staticData/data.js";
+
 import ProductCart from "../component/Route/ProductCart/ProductCart.jsx";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // Define the SubmitHendel function outside the component
 
 function ProductsPage() {
   const [searchParams] = useSearchParams();
+  const {allProducts,isLoading} = useSelector((state) => state.products);
   const categoryData = searchParams.get("category");
   const [data, setData] = useState([]);
  
@@ -18,23 +20,25 @@ function ProductsPage() {
   useEffect(() => {
 
     if (categoryData === null) {
-      const d =
-        productData && productData.sort((a, b) => a.total_sell - b.total_sell);
-        
+      const d = allProducts;
       setData(d);
      
     } else {
       const d =
-        productData && productData.filter((i) => i.category === categoryData);
+      allProducts && allProducts.filter((i) => i.category === categoryData);
       setData(d);
       
     }
 
     window.scrollTo(0, 0);
-  }, [categoryData]);
+  }, [allProducts]);
 
   return (
     <div>
+       {/* {
+    isLoading ? (
+      <Loader />
+    ) : ( */}
       <Header activeHeading={3} />
       <br />
       <br />
@@ -48,6 +52,9 @@ function ProductsPage() {
           ):null}
         </div>
       </div>
+      <Footer/>
+      {/* )
+  } */}
     </div>
   );
 }

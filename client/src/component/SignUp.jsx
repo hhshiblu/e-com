@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 function SignUp() {
   // const navigate=useNavigate();
   const [showPassword1, setShowPassword1] = useState(false);
-  const [showPassword2, setShowPassword2] = useState(false);
+  // const [showPassword2, setShowPassword2] = useState(false);
 
   const [avatar, setAvatar] = useState(null);
   const [user, setUser] = useState({
@@ -18,7 +18,7 @@ function SignUp() {
     email: "",
     phone: "",
     password: "",
-    cpassword: "",
+  
   });
 
   const handelChange = (e) => {
@@ -39,7 +39,6 @@ function SignUp() {
     newform.append("name", user.name);
     newform.append("email", user.email);
     newform.append("password", user.password);
-    newform.append("cpassword", user.cpassword);
 
     axios
       .post(`${server}/signup`, newform, config)
@@ -49,7 +48,7 @@ function SignUp() {
         //   navigate("/login")
           
         // }
-        setUser({ name: "", email: "", phone: "", password: "", cpassword: "" });
+        setUser({ name: "", email: "", phone: "", password: ""});
         setAvatar(null)
       })
       .catch((err) => {
@@ -142,7 +141,7 @@ function SignUp() {
                   )}
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="cpassword"
                   className="block text-sm font-medium text-gray-700"
@@ -173,7 +172,7 @@ function SignUp() {
                     />
                   )}
                 </div>
-              </div>
+              </div> */}
               <div>
                 <label
                   htmlFor="avatar"

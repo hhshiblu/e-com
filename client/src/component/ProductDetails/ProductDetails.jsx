@@ -9,7 +9,7 @@ import {
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { IoLocation } from "react-icons/io5";
 import { GrServices } from "react-icons/gr";
-// import { useDispatch, useSelector } from "react-redux";
+
 import { Link, useNavigate } from "react-router-dom";
 // import { getAllProductsShop } from "../../redux/actions/product";
 // import { backend_url, server } from "../../server";
@@ -18,23 +18,29 @@ import { Link, useNavigate } from "react-router-dom";
 //   addToWishlist,
 //   removeFromWishlist,
 // } from "../../redux/actions/wishlist";
-// import { addTocart } from "../../redux/actions/cart";
-// import { toast } from "react-toastify";
+
+import { toast } from "react-toastify";
 // import Ratings from "./Ratings";
 import axios from "axios";
 import styles from "../../styles/style";
+import { backend_URL } from "../../serverUrl";
+import { useSelector,useDispatch } from "react-redux";
+import { addTocart } from "../../Redux/Action/cart";
+
 
 const ProductDetails = ({ data }) => {
   //   const { wishlist } = useSelector((state) => state.wishlist);
-  //   const { cart } = useSelector((state) => state.cart);
-  //   const { user, isAuthenticated } = useSelector((state) => state.user);
-  //   const { products } = useSelector((state) => state.products);
+    const { cart } = useSelector((state) => state.cart);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
-  console.log(select);
-  //   const dispatch = useDispatch();
+
+const discountPersent= 900;
+
+    const dispatch = useDispatch();
   //   useEffect(() => {
   //     dispatch(getAllProductsShop(data && data?.shop._id));
   //     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
@@ -64,20 +70,29 @@ const ProductDetails = ({ data }) => {
   //     dispatch(addToWishlist(data));
   //   };
 
-  //   const addToCartHandler = (id) => {
-  //     const isItemExists = cart && cart.find((i) => i._id === id);
-  //     if (isItemExists) {
-  //       toast.error("Item already in cart!");
-  //     } else {
-  //       if (data.stock < 1) {
-  //         toast.error("Product stock limited!");
-  //       } else {
-  //         const cartData = { ...data, qty: count };
-  //         dispatch(addTocart(cartData));
-  //         toast.success("Item added to cart successfully!");
-  //       }
-  //     }
-  //   };
+
+
+  const addToCartHandler = () => {
+    
+    try {
+      const cartData = {
+        cartItems: [
+          {
+            productId: data._id,
+            quantity: count,
+          },
+        ],
+      };
+
+      dispatch(addTocart(cartData)).then(toast.success("product added successfull"))
+      
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+        
+      }
+    
+ 
 
   //   const totalReviewsLength =
   //     products &&
@@ -124,17 +139,16 @@ const ProductDetails = ({ data }) => {
         <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
           <div className="w-full py-5">
             <div className="block w-full md:flex gap-5">
-{/* ---------------------------------------image part------------------- */}
+              {/* ---------------------------------------image part------------------- */}
 
               <div className="w-full md:w-[50%] lg:w-[30%] ">
                 <img
-                  //   src={`${backend_url}${data && data.images[select]}`}
-                  src={data?.image_Url[select].url}
+                  src={`${backend_URL}upload/${data && data.images[select]}`}
                   alt=""
                   className="w-[100%] "
                 />
                 <div className=" flex gap-4 w-full pt-2">
-                  {/* {data &&
+                  {data &&
                     data.images.map((i, index) => (
                       <div
                         className={`${
@@ -142,9 +156,9 @@ const ProductDetails = ({ data }) => {
                         } cursor-pointer`}
                       >
                         <img
-                          src={`${backend_url}${i}`}
+                          src={`${backend_URL}upload/${i}`}
                           alt=""
-                          className="h-[200px] overflow-hidden mr-3 mt-3"
+                          className="h-[60px] overflow-hidden mr-3 mt-3"
                           onClick={() => setSelect(index)}
                         />
                       </div>
@@ -153,38 +167,12 @@ const ProductDetails = ({ data }) => {
                     className={`${
                       select === 1 ? "border" : "null"
                     } cursor-pointer`}
-                  ></div> */}
-                  <div
-                    className={`${
-                      select === 0 ? "border border-red-400" : "null"
-                    } cursor-pointer  `}
-
-                  >
-                    <img
-                      src={data?.image_Url[0].url}
-                      alt=""
-                      className="h-[60px]"
-                      onClick={() => setSelect(0)}
-                    />
-                  </div>
-                  <div
-                    className={`${
-                      select === 1 ? "border border-red-400" : "null"
-                    } cursor-pointer `}
-                  >
-                    <img
-                     src={data?.image_Url[1].url}
-                      alt=""
-                      className="h-[60px]"
-                      onClick={() => setSelect(1)}
-                    />
-                  </div>
+                  ></div>
                 </div>
               </div>
- {/* ------------------------ product Information part ---------------------------- */}
+              {/* ------------------------ product Information part ---------------------------- */}
 
               <div className="w-full md:w-[50%] lg:w-[40%] pt-5">
-
                 <p className="pb-2">
                   {" "}
                   {data.stock > 0 ? (
@@ -242,18 +230,18 @@ const ProductDetails = ({ data }) => {
                   </span>
                 </div>
                 <hr />
-                {/* <p>{data.description.sli}</p> */}
+                
                 <div className="flex pt-3 my-2">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {/* {data.discountPrice}$ */}
+                 
                     <span className="font-semibold pr-2">৳</span>{" "}
-                    {data.discount_price}
+                    {data.discountPrice}
                   </h4>
                   <h3 className={`${styles.price} pl-5 flex`}>
-                    {/* {data.originalPrice ? data.originalPrice + "$" : null} */}
-                    {data.price ? <span>{data.price}</span> : null}
+                  
+                    {data.originalPrice ?<span>{"৳"+data.originalPrice } </span> : null}
                   </h3>
-                  <h3 className="pl-3 mt-[-4px] ">(45%)</h3>
+                  <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPersent+"% )") :null }</h3>
                 </div>
                 <hr />
                 <div className="py-3 ">
@@ -346,18 +334,16 @@ const ProductDetails = ({ data }) => {
                   </div>
                   <div
                     className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
-                    // onClick={() => addToCartHandler(data._id)}
+                    onClick={() => addToCartHandler(data._id)}
                   >
                     <span className="text-white flex items-center">
                       Add to cart <AiOutlineShoppingCart className="ml-1" />
                     </span>
                   </div>
                 </div>
-                             {/* -----------------------------------shop name------ */}
-
-                
+                {/* -----------------------------------shop name------ */}
               </div>
-    {/* ------------------------------------------- shop adress part------------------------           */}
+              {/* ------------------------------------------- shop adress part------------------------           */}
               <div className="hidden lg:block lg:w-[25%] border float-left  shadow-md px-4">
                 <div className="flex justify-between pt-8  text-base ">
                   <div className="text-gray-400">
@@ -381,7 +367,7 @@ const ProductDetails = ({ data }) => {
                     <p> service</p>
                   </div>
 
-                  <GrServices size={15} className="text-gray-400"/>
+                  <GrServices size={15} className="text-gray-400" />
                 </div>
                 <div className="flex flex-col pb-5">
                   <div className="pt-2 pl-3 text-[18px]">
@@ -413,41 +399,38 @@ const ProductDetails = ({ data }) => {
                   </div>
                 </div>
               </div>
-
             </div>
             {/* ----------------------------------- shop name---------------------- */}
             <div className="flex items-center pt-6">
-                  {/* <Link to={`/shop/preview/${data?.shop._id}`}> */}
-                  <img
-                    // src={`${backend_url}${data?.shop?.avatar}`}
-
-                    src={data.shop.shop_avatar.url}
-                    alt=""
-                    className="w-[50px] h-[50px] rounded-full mr-2"
-                  />
-                  {/* </Link> */}
-                  <div className="pr-8">
-                    {/* <Link to={`/shop/preview/${data?.shop._id}`}> */}
-                    <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                      {data.shop.name}
-                    </h3>
-                    {/* </Link> */}
-                    <h5 className="pb-3 text-[15px]">
-                      {/* ({averageRating}/5) Ratings */}({data.shop.ratings})
-                      Ratings
-                    </h5>
-                  </div>
-                  <div
-                    className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
-                    onClick={handleMessageSubmit}
-                  >
-                    <span className="text-white flex items-center">
-                      Send Message <AiOutlineMessage className="ml-1" />
-                    </span>
-                  </div>
-                </div>
+              <Link to={`/shop/view/${data?.seller._id}`}>
+                <img
+                  src={`${backend_URL}upload/${data?.seller?.avatar}`}
+                  alt=""
+                  className="w-[50px] h-[50px] rounded-full mr-2"
+                />
+              </Link>
+              <div className="pr-8">
+                <Link to={`/shop/view/${data?.seller._id}`}>
+                  <h5 className="text-[#0C134F] pb-0.5 text-sm sm:text-md">
+                    {data.seller.name}
+                  </h5>
+                </Link>
+                <h5 className="pb-3 text-[15px]">
+                  {/* ({averageRating}/5) Ratings({data.seller.ratings}) */}
+                  Ratings
+                </h5>
+              </div>
+              <div
+                className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
+                onClick={handleMessageSubmit}
+              >
+                <span className="text-white flex items-center">
+                  Send Message <AiOutlineMessage className="ml-1" />
+                </span>
+              </div>
+            </div>
           </div>
-                              {/* ------------------product details info-------------------- */}
+          {/* ------------------product details info-------------------- */}
           <ProductDetailsInfo
             data={data}
             // products={products}
@@ -556,21 +539,21 @@ const ProductDetailsInfo = ({
             {/* <Link to={`/shop/preview/${data.shop._id}`}> */}
             <div className="flex items-center">
               <img
-                // src={`${backend_url}${data?.shop?.avatar}`}
-                src={data.shop.shop_avatar.url}
+                src={`${backend_URL}upload/${data?.seller?.avatar}`}
+                // src={data.shop.shop_avatar.url}
                 className="w-[50px] h-[50px] rounded-full"
                 alt=""
               />
               <div className="pl-3">
-                <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
+                <h3 className={`${styles.shop_name}`}>{data.seller.name}</h3>
                 <h5 className="pb-2 text-[15px]">
-                  {/* ({averageRating}/5) Ratings */}({data.shop.ratings})
+                  {/* ({averageRating}/5) Ratings */}
                   Rating
                 </h5>
               </div>
             </div>
             {/* </Link> */}
-            <p className="pt-2">{data.shop.description}</p>
+            <p className="pt-2">{data.seller.description}</p>
           </div>
           <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
             <div className="text-left">

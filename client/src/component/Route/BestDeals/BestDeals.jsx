@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { productData } from "../../../staticData/data";
+
 import styles from "../../../styles/style";
 import ProductCart from "../ProductCart/ProductCart.jsx"
+import { useSelector } from "react-redux";
 
 function BestDeals() {
   const [data, setData] = useState([]);
+  const { allProducts } = useSelector((state) => state.products);
   useEffect(() => {
-    const d =
-      productData && productData.sort((a, b) => b.total_sell - a.total_sell);
-    const firstSix = d.slice(0, 6);
-    setData(firstSix);
-  },[]);
+    const allProductsData = allProducts ? [...allProducts] : [];
+    const sortedData = allProductsData?.sort((a,b) => b.sold_out - a.sold_out); 
+    const firstFive = sortedData && sortedData.slice(0, 5);
+    setData(firstFive);
+  }, [allProducts]);
+  
 
   return (
     <div>
@@ -19,14 +22,13 @@ function BestDeals() {
           <h1>Best Deals</h1>
         </div>
        <div className=" grid grid-cols-2 gap-[15px] md:grid-cols-3 md:gap-[15px] lg:grid-cols-5 lg:gap-[15px] xl:grid-cols-6 xl:gap-[15px]">
-                {
-                    data && data.map((i,index)=>{
-                        return(
-                            <ProductCart key={index } data={i}/>
-                        
-                        )
-                    })
-                }
+       {
+            data && data.length !== 0 &&(
+              <>
+               {data && data.map((i, index) => <ProductCart data={i} key={index} />)}
+              </>
+            )
+           }
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import { BiMenuAltLeft } from "react-icons/bi";
-import { productData, categoriesData } from "../../staticData/data";
+import {  categoriesData } from "../../staticData/data";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -17,7 +17,7 @@ import { backend_URL } from "../../serverUrl";
 import WishProduct  from "../WishProduct/WishProduct.jsx";
 const Search = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
-
+  const { cart } = useSelector((state) => state.cart);
   const [activemenu, setActiveMenu] = useState("nav_menu");
   const [searchItem, setSearchItem] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -25,18 +25,18 @@ const Search = ({ activeHeading }) => {
   const [dropDown, setDropdown] = useState(false);
   const [openWishCart, setOpenWishCart] = useState(false);
 
-  const handelSearch = (e) => {
-    const Item = e.target.value;
-    setSearchItem(Item);
+  // const handelSearch = (e) => {
+  //   const Item = e.target.value;
+  //   setSearchItem(Item);
 
-    const filterItem =
-      productData &&
-      productData.filter((product) =>
-        product.name.toLowerCase().includes(Item.toLowerCase())
-      );
+  //   const filterItem =
+  //     productData &&
+  //     productData.filter((product) =>
+  //       product.name.toLowerCase().includes(Item.toLowerCase())
+  //     );
 
-    setSearchData(filterItem);
-  };
+  //   setSearchData(filterItem);
+  // };
   // fixed Header
   window.addEventListener("scroll", function () {
     const search = document.querySelector(".search");
@@ -85,7 +85,7 @@ const Search = ({ activeHeading }) => {
                   <div className="relative cursor-pointer mx-[20px]">
                     <AiOutlineShoppingCart size={30} color="#000000" />
                     <span className=" absolute right-0 top-0 rounded-full bg-[#FC4F00] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] loading-tight text-center">
-                      0
+                      {cart&& cart.length}
                     </span>
                   </div>
                 </Link>
@@ -115,7 +115,7 @@ const Search = ({ activeHeading }) => {
               type="text"
               placeholder="search any item.."
               value={searchItem}
-              onChange={handelSearch}
+              // onChange={handelSearch}
               className="h-[40px] w-full px-2 border-[2px] border-[#3957db]  rounded-md"
             />
             <AiOutlineSearch
@@ -155,7 +155,7 @@ const Search = ({ activeHeading }) => {
                 <div className="relative cursor-pointer mr-[15px]">
                   <AiOutlineShoppingCart size={30} color="#000000" />
                   <span className=" absolute right-0 top-0 rounded-full bg-[#FC4F00] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] loading-tight text-center">
-                    0
+                   {cart&&cart.length}
                   </span>
                 </div>
               </Link>

@@ -176,4 +176,20 @@ try {
 }
 });
 
-module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut};
+// get shop info
+const getSellerInfo=
+ CatchAsyncError(async (req, res, next) => {
+    try {
+      const seller = await Seller.findById(req.params.id);
+      res.status(201).json({
+        success: true,
+        seller,
+      });
+    } catch (error) {
+      return next(new Errorhandeler(error.message, 500));
+    }
+  });
+
+  
+
+module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut, getSellerInfo};

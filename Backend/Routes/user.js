@@ -9,6 +9,11 @@ const {
   UserSignIn,
   GetUser,
   userLogOut,
+  UpdateUserInfo,
+  UpdateAvatar,
+  UpDateAdress,
+  DeleteUserAddress,
+  UpdatePass,
 } = require("../controlar/user");
 const { isAuthenticated } = require("../Middleware/auth");
 
@@ -21,6 +26,18 @@ router.post("/login", UserSignIn);
 router.get("/getuser", isAuthenticated, GetUser);
 
 router.get("/logout", isAuthenticated, userLogOut);
+router.put("/update-user-info", isAuthenticated, UpdateUserInfo);
 
+router.put(
+  "/update-avatar",
+  isAuthenticated,
+  upload.single("image"),
+  UpdateAvatar
+);
 
-module.exports= router;
+router.put("/update-user-addresses", isAuthenticated, UpDateAdress);
+router.delete("/delete-user-address/:id", isAuthenticated, DeleteUserAddress);
+
+router.put("/update-user-password", isAuthenticated, UpdatePass);
+
+module.exports = router;

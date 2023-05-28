@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from '../../styles/style'
 import { AiFillStar,AiOutlineArrowRight } from "react-icons/ai";
-function EventProduct() {
+function EventProduct({data}) {
   return (
     <div className={`w-full block bg-white rounded-lg md:flex p-2 shadow-lg`}>
          <div className='w-full md:w-[50%] overflow-hidden'>

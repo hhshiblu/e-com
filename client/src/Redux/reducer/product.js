@@ -49,6 +49,20 @@ deleteProductFailed:(state,action)=>{
     state.error=action.payload
 },
 
+  // get all products
+  getAllProductsRequest: (state) => {
+    state.isloading = true;
+  },
+  getAllProductsSuccess: (state, action) => {
+    state.isloading = false;
+    state.allProducts = action.payload;
+  },
+  getAllProductsFailed: (state, action) => {
+    state.isloading = false;
+    state.error = action.payload;
+  },
+  
+
 
     clearErrors:(state)=>{
         state.error=null;
