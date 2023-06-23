@@ -8,7 +8,7 @@ function HomeHero() {
         <div className="  flex flex-col gap-4 overflow-hidden lg:flex-row ">
           {/* --------- slider ---------- */}
 
-          <div className="w-full relative  md:w-[80%]   mx-auto   border-2 rounded-xl   shadow-sm  cursor-pointer overflow-hidden">
+          <div className="w-full relative  md:w-[80%]   mx-auto   border-2 rounded-xl   shadow-sm  cursor-pointer overflow-hidden -z-10">
             <HomeSlider/>
             </div>
           {/* ---------------------coming event--------------- */}

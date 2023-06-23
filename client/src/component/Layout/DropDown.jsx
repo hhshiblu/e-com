@@ -11,7 +11,7 @@ function DropDown({ catagoriesData, setDropdown, dropDown }) {
     window.location.reload(true);
   };
   return (
-    <div className=" pb-4 w-[270px] bg-[#fff] absolute z-30   rounded-b-md shadow-sm ">
+    <div className=" pb-4 w-[270px] bg-[#fff] absolute z-50   rounded-b-md shadow-sm ">
       {catagoriesData &&
         catagoriesData.map((i, index) => {
           return (

@@ -6,13 +6,12 @@ import {
   AiOutlineShoppingCart,
   AiFillStar,
 } from "react-icons/ai";
+import { BsChatDots } from "react-icons/bs";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { IoLocation } from "react-icons/io5";
 import { GrServices } from "react-icons/gr";
 
 import { Link, useNavigate } from "react-router-dom";
-// import { getAllProductsShop } from "../../redux/actions/product";
-// import { backend_url, server } from "../../server";
 
 // import {
 //   addToWishlist,
@@ -20,35 +19,29 @@ import { Link, useNavigate } from "react-router-dom";
 // } from "../../redux/actions/wishlist";
 
 import { toast } from "react-toastify";
-// import Ratings from "./Ratings";
+
 import axios from "axios";
 import styles from "../../styles/style";
-import { backend_URL } from "../../serverUrl";
-import { useSelector,useDispatch } from "react-redux";
+import { backend_URL, server } from "../../serverUrl";
+import { useSelector, useDispatch } from "react-redux";
 import { addTocart } from "../../Redux/Action/cart";
-
+import { getAllShopProduct } from "../../Redux/Action/product";
+import Rating from "./Rating";
 
 const ProductDetails = ({ data }) => {
-  //   const { wishlist } = useSelector((state) => state.wishlist);
-    const { cart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-const discountPersent= 900;
-
-    const dispatch = useDispatch();
-  //   useEffect(() => {
-  //     dispatch(getAllProductsShop(data && data?.shop._id));
-  //     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
-  //       setClick(true);
-  //     } else {
-  //       setClick(false);
-  //     }
-  //   }, [data, wishlist]);
+  console.log(data);
+  useEffect(() => {
+    dispatch(getAllShopProduct(data && data?.seller._id));
+  }, [data]);
 
   const incrementCount = () => {
     setCount(count + 1);
@@ -60,79 +53,58 @@ const discountPersent= 900;
     }
   };
 
-  //   const removeFromWishlistHandler = (data) => {
-  //     setClick(!click);
-  //     dispatch(removeFromWishlist(data));
-  //   };
-
-  //   const addToWishlistHandler = (data) => {
-  //     setClick(!click);
-  //     dispatch(addToWishlist(data));
-  //   };
-
-
-
-  const addToCartHandler = () => {
-    
-    try {
-      const cartData = {
-        cartItems: [
-          {
-            productId: data._id,
-            quantity: count,
-          },
-        ],
-      };
-
-      dispatch(addTocart(cartData)).then(toast.success("product added successfull"))
-      
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-        
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === id);
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < 1) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
       }
-    
- 
-
-  //   const totalReviewsLength =
-  //     products &&
-  //     products.reduce((acc, product) => acc + product.reviews.length, 0);
-
-  //   const totalRatings =
-  //     products &&
-  //     products.reduce(
-  //       (acc, product) =>
-  //         acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
-  //       0
-  //     );
-
-  //   const avg =  totalRatings / totalReviewsLength || 0;
-
-  //   const averageRating = avg.toFixed(2);
-
-  const handleMessageSubmit = async () => {
-    // if (isAuthenticated) {
-    //   const groupTitle = data._id + user._id;
-    //   const userId = user._id;
-    //   const sellerId = data.shop._id;
-    //   await axios
-    //     .post(`${server}/conversation/create-new-conversation`, {
-    //       groupTitle,
-    //       userId,
-    //       sellerId,
-    //     })
-    //     .then((res) => {
-    //       navigate(`/inbox?${res.data.conversation._id}`);
-    //     })
-    //     .catch((error) => {
-    //       toast.error(error.response.data.message);
-    //     });
-    // } else {
-    //   toast.error("Please login to create a conversation");
-    // }
-    navigate("/inbox?conversation=63583758348527358");
+    }
   };
 
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      0
+    );
+
+  const avg = totalRatings / totalReviewsLength || 0;
+
+  const averageRating = avg.toFixed(2);
+
+  const handleMessageSubmit = async () => {
+    if (isAuthenticated) {
+      const groupTitle = data._id + user._id;
+      const userId = user._id;
+      const sellerId = data.seller._id;
+      await axios
+        .post(`${server}/conversation/create-new-conversation`, {
+          groupTitle,
+          userId,
+          sellerId,
+        })
+        .then((res) => {
+          navigate(`/inbox?${res.data.conversation._id}`);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } else {
+      toast.error("Please login to create a conversation");
+    }
+  };
   return (
     <div className="bg-white">
       {data ? (
@@ -141,38 +113,38 @@ const discountPersent= 900;
             <div className="block w-full md:flex gap-5">
               {/* ---------------------------------------image part------------------- */}
 
-              <div className="w-full md:w-[50%] lg:w-[30%] ">
-                <img
-                  src={`${backend_URL}upload/${data && data.images[select]}`}
-                  alt=""
-                  className="w-[100%] "
-                />
-                <div className=" flex gap-4 w-full pt-2">
+              <div className="w-full md:w-[50%] lg:w-[30%] h-[55vh]">
+                <div className="h-[80%]  m-auto">
+                  <img
+                    src={`${backend_URL}upload/${data && data.images[select]}`}
+                    alt=""
+                    className="w-[100%] 800px:w-[90%] m-auto h-[100%]  "
+                  />
+                </div>
+
+                <div className=" flex gap-4 w-full pt-4">
                   {data &&
                     data.images.map((i, index) => (
                       <div
                         className={`${
-                          select === 0 ? "border" : "null"
-                        } cursor-pointer`}
+                          select === index
+                            ? "border border-red-400"
+                            : "null border"
+                        } cursor-pointer h-[60px] flex justify-center items-center p-2`}
                       >
                         <img
                           src={`${backend_URL}upload/${i}`}
                           alt=""
-                          className="h-[60px] overflow-hidden mr-3 mt-3"
+                          className="  h-full overflow-hidden mx-auto"
                           onClick={() => setSelect(index)}
                         />
                       </div>
                     ))}
-                  <div
-                    className={`${
-                      select === 1 ? "border" : "null"
-                    } cursor-pointer`}
-                  ></div>
                 </div>
               </div>
               {/* ------------------------ product Information part ---------------------------- */}
 
-              <div className="w-full md:w-[50%] lg:w-[40%] pt-5">
+              <div className="!w-full md:!w-[50%] lg:w-[40%] pt-5 ">
                 <p className="pb-2">
                   {" "}
                   {data.stock > 0 ? (
@@ -181,6 +153,9 @@ const discountPersent= 900;
                     <span>no Stock</span>
                   )}
                 </p>
+
+
+
 
                 <hr />
                 <h1 className={`${styles.productTitle} py-2`}>{data.name}</h1>
@@ -195,53 +170,33 @@ const discountPersent= 900;
                 </p>
 
                 <div className="flex items-center pb-2">
-                  <AiFillStar
-                    size={15}
-                    color="#F6BA00"
-                    className="mr-1 cursor-pointer"
-                  />
-                  <AiFillStar
-                    size={15}
-                    color="#F6BA00"
-                    className="mr-1 cursor-pointer"
-                  />
-                  <AiFillStar
-                    size={15}
-                    color="#F6BA00"
-                    className="mr-1 cursor-pointer"
-                  />
-                  <AiFillStar
-                    size={15}
-                    color="#F6BA00"
-                    className="mr-1 cursor-pointer"
-                  />
-                  <AiFillStar
-                    size={15}
-                    color="#F6BA00"
-                    className="mr-1 cursor-pointer"
-                  />
+                  <Rating rating={data?.ratings} />
                   <div className="ml-3 text-gray-500"></div>
                   <span>
-                    ({data.ratings ? <span>data.ratings</span> : 4.7})
+                    ({data.ratings ? <span>{averageRating}/5</span> : ""})
                   </span>
                   <span className="pl-3">
                     {" "}
-                    | <span className="text-[#0d14e4]"> 1,099 rating</span>{" "}
+                    |{" "}
+                    <span className="text-[#0d14e4]">
+                      {" "}
+                      {totalReviewsLength} Ratings
+                    </span>{" "}
                   </span>
                 </div>
                 <hr />
-                
+
                 <div className="flex pt-3 my-2">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                 
                     <span className="font-semibold pr-2">৳</span>{" "}
                     {data.discountPrice}
                   </h4>
                   <h3 className={`${styles.price} pl-5 flex`}>
-                  
-                    {data.originalPrice ?<span>{"৳"+data.originalPrice } </span> : null}
+                    {data.originalPrice ? (
+                      <span>{"৳" + data.originalPrice} </span>
+                    ) : null}
                   </h3>
-                  <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPersent+"% )") :null }</h3>
+                  {/* <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
                 </div>
                 <hr />
                 <div className="py-3 ">
@@ -322,7 +277,7 @@ const discountPersent= 900;
                   </div>
                 </div>
                 {/* -------------------------buy now /add to cart----------- */}
-                <div className="flex justify-center mr-5">
+                <div className="flex justify-center mr-5 mt-4">
                   <div
                     className={`${styles.button} bg-[#c72e2e] !mt-6 !rounded !h-11 flex items-center mr-5`}
                     // onClick={() => addToCartHandler(data._id)}
@@ -355,10 +310,7 @@ const discountPersent= 900;
 
                 <div className="block py-4 text-[15px] text-gray-700 ">
                   {/* <h1> {data.shop.name}  </h1> */}
-                  <h1>
-                    {" "}
-                    24/13 uttora housebuilding <br /> uttora , dhaka
-                  </h1>
+                  <h1>{data?.seller?.address}</h1>
                 </div>
                 <hr />
 
@@ -401,7 +353,7 @@ const discountPersent= 900;
               </div>
             </div>
             {/* ----------------------------------- shop name---------------------- */}
-            <div className="flex items-center pt-6">
+            {/* <div className="flex items-center pt-6">
               <Link to={`/shop/view/${data?.seller._id}`}>
                 <img
                   src={`${backend_URL}upload/${data?.seller?.avatar}`}
@@ -416,8 +368,7 @@ const discountPersent= 900;
                   </h5>
                 </Link>
                 <h5 className="pb-3 text-[15px]">
-                  {/* ({averageRating}/5) Ratings({data.seller.ratings}) */}
-                  Ratings
+                  ({averageRating}/5) Ratings
                 </h5>
               </div>
               <div
@@ -428,14 +379,15 @@ const discountPersent= 900;
                   Send Message <AiOutlineMessage className="ml-1" />
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* ------------------product details info-------------------- */}
           <ProductDetailsInfo
             data={data}
-            // products={products}
-            // totalReviewsLength={totalReviewsLength}
-            // averageRating={averageRating}
+            products={products}
+            totalReviewsLength={totalReviewsLength}
+            averageRating={averageRating}
+            handleMessageSubmit={handleMessageSubmit}
           />
           <br />
           <br />
@@ -445,21 +397,16 @@ const discountPersent= 900;
   );
 };
 
-const ProductDetailsInfo = ({
-  data,
-  // products,
-  // totalReviewsLength,
-  // averageRating,
-}) => {
+const ProductDetailsInfo = ({ data, averageRating, handleMessageSubmit }) => {
   const [active, setActive] = useState(1);
 
   return (
-    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
+    <div className="bg-[#f5f6fb] md:px-5 px-3 800px:px-10 py-2  rounded">
       <div className="w-full flex justify-between border-b pt-10 pb-2">
         <div className="relative">
           <h5
             className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+              "text-[#000] text-[17px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
             }
             onClick={() => setActive(1)}
           >
@@ -472,7 +419,7 @@ const ProductDetailsInfo = ({
         <div className="relative">
           <h5
             className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+              "text-[#000] text-[17px]   px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
             }
             onClick={() => setActive(2)}
           >
@@ -482,112 +429,84 @@ const ProductDetailsInfo = ({
             <div className={`${styles.active_indicator}`} />
           ) : null}
         </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(3)}
-          >
-            Seller Information
-          </h5>
-          {active === 3 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
       </div>
       {active === 1 ? (
         <>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+          <p className="py-2 text-sm md:text-md leading-8 pb-10 whitespace-pre-line">
             {data.description}
           </p>
         </>
       ) : null}
 
       {active === 2 ? (
-        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {/* {data &&
-            data.reviews.map((item, index) => (
-              <div className="w-full flex my-2">
+        <div className="w-full min-h-[40vh]  py-2 mt-2 overflow-y-scroll bg-white rounded-md ">
+          <div className="flex  md:justify-around  items-center justify-center mx-auto ">
+            <div className="flex items-center mx-auto">
+              <Link to={`/shop/view/${data?.seller._id}`}>
                 <img
-                  src={`${backend_url}/${item.user.avatar}`}
+                  src={`${backend_URL}upload/${data?.seller?.avatar}`}
                   alt=""
-                  className="w-[50px] h-[50px] rounded-full"
+                  className="w-[50px] h-[50px] rounded-full mr-2 mx-auto"
                 />
-                <div className="pl-2 ">
-                  <div className="w-full flex items-center">
-                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
-                  </div>
-                  <p>{item.comment}</p>
-                </div>
+              </Link>
+              <div className="pl-3">
+                <Link to={`/shop/view/${data?.seller._id}`}>
+                  <h3 className={`${styles.shop_name}`}>{data.seller.name}</h3>
+                </Link>
+                <h5 className="pb-2 text-[15px]">
+                  ({averageRating}/5) Ratings
+                </h5>
               </div>
-            ))}
+            </div>
+
+            <div className="flex items-center gap-3 pt-2 pl-8 text-sm md:text-md font-[760] cursor-pointer mx-auto pb-2 md:pb-0 text-current">
+              <div onClick={handleMessageSubmit}>
+                <h1>live chat</h1>
+              </div>
+              <div>
+                <BsChatDots className="" />
+              </div>
+            </div>
+          </div>
+          <hr />
+          <hr />
+          <hr />
+          {data &&
+            data.reviews.map((item, index) => {
+              return (
+                <div
+                  className="w-full h-min   my-4 p-4 rounded-md "
+                  key={index}
+                >
+                  <div className="flex ">
+                    {item && item.user.avatar ? (
+                      <img
+                        src={`${backend_URL}upload/${item.user.avatar}`}
+                        alt=""
+                        className="w-[50px] h-[50px] rounded-full"
+                      />
+                    ) : null}
+                    <div className="w-full flex  pl-6 relative">
+                      <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                      <span className="mr-2"> </span>{" "}
+                      <Rating rating={data?.ratings} />
+                    </div>
+                  </div>
+
+                  <div className="pl-16 mt-[-22px] text-gray-500 text-sm">
+                    {item.comment}
+                  </div>
+                </div>
+              );
+            })}
 
           <div className="w-full flex justify-center">
             {data && data.reviews.length === 0 && (
               <h5>No Reviews have for this product!</h5>
             )}
-          </div> */}
-          <p>no Review yet!</p>
+          </div>
         </div>
       ) : null}
-
-      {active === 3 && (
-        <div className="w-full block 800px:flex p-5">
-          <div className="w-full 800px:w-[50%]">
-            {/* <Link to={`/shop/preview/${data.shop._id}`}> */}
-            <div className="flex items-center">
-              <img
-                src={`${backend_URL}upload/${data?.seller?.avatar}`}
-                // src={data.shop.shop_avatar.url}
-                className="w-[50px] h-[50px] rounded-full"
-                alt=""
-              />
-              <div className="pl-3">
-                <h3 className={`${styles.shop_name}`}>{data.seller.name}</h3>
-                <h5 className="pb-2 text-[15px]">
-                  {/* ({averageRating}/5) Ratings */}
-                  Rating
-                </h5>
-              </div>
-            </div>
-            {/* </Link> */}
-            <p className="pt-2">{data.seller.description}</p>
-          </div>
-          <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
-            <div className="text-left">
-              <h5 className="font-[600]">
-                Joined on:{" "}
-                <span className="font-[500]">
-                  {/* {data.shop?.createdAt?.slice(0, 10)} */}
-                  14 jan 2022
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Total Products:{" "}
-                <span className="font-[500]">
-                  {/* {products && products.length} */}
-                  1,233
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Total Reviews:{" "}
-                <span className="font-[500]">
-                  {/* {totalReviewsLength} */}345
-                </span>
-              </h5>
-              <Link to="/">
-                <div
-                  className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
-                >
-                  <h4 className="text-white">Visit Shop</h4>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

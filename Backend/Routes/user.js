@@ -14,6 +14,7 @@ const {
   UpDateAdress,
   DeleteUserAddress,
   UpdatePass,
+  userInfo,
 } = require("../controlar/user");
 const { isAuthenticated } = require("../Middleware/auth");
 
@@ -39,5 +40,6 @@ router.put("/update-user-addresses", isAuthenticated, UpDateAdress);
 router.delete("/delete-user-address/:id", isAuthenticated, DeleteUserAddress);
 
 router.put("/update-user-password", isAuthenticated, UpdatePass);
+router.get("/user-info/:id", userInfo);
 
 module.exports = router;

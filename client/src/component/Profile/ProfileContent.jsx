@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -11,14 +11,19 @@ import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { MdTrackChanges } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
-
+// import Afadsfa from "../../component/dsa/Afadsfa.jsx"
 import { Country, State } from "country-state-city";
 import axios from "axios";
 import styles from "../../styles/style";
 import { toast } from "react-toastify";
 import { backend_URL, server } from "../../serverUrl";
-import { deleteUserAddress, loadUser, updatUserAddress, updateUserInformation } from "../../Redux/Action/user";
-// import { getAllOrdersOfUser } from "../../redux/actions/order";
+import {
+  deleteUserAddress,
+  loadUser,
+  updatUserAddress,
+  updateUserInformation,
+} from "../../Redux/Action/user";
+import { getAllOrdersOfUser } from "../../Redux/Action/order";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -61,8 +66,8 @@ const ProfileContent = ({ active }) => {
         withCredentials: true,
       })
       .then((response) => {
-         dispatch(loadUser());
-         toast.success("Profile Picture updated successfully!");
+        dispatch(loadUser());
+        toast.success("Profile Picture updated successfully!");
       })
       .catch((error) => {
         toast.error(error);
@@ -70,7 +75,7 @@ const ProfileContent = ({ active }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-[70vh] md:h-[75vh] overflow-hidden overflow-y-scroll py-6">
       {/* profile */}
       {active === 1 && (
         <>
@@ -89,21 +94,21 @@ const ProfileContent = ({ active }) => {
                   onChange={handleImage}
                 />
                 <label htmlFor="image">
-                  <AiOutlineCamera  className="cursor-pointer"/>
+                  <AiOutlineCamera className="cursor-pointer" />
                 </label>
               </div>
             </div>
           </div>
           <br />
           <br />
-          <div className="w-full px-5">
+          <div className="w-full px-5  mb-[90px] md:mb-0">
             <form onSubmit={handleSubmit} aria-required={true}>
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
                   <label className="block pb-2">Full Name</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className="  appearance-none  !w-[95%] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 mb-2 md:mb-0"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -113,7 +118,7 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Email Address</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
+                    className="  appearance-none  !w-[95%] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 mb-2 md:mb-0"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -126,7 +131,7 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Phone Number</label>
                   <input
                     type="number"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className="  appearance-none  !w-[95%] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 mb-2 md:mb-0"
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
@@ -137,20 +142,23 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Enter your password</label>
                   <input
                     type="password"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className="  appearance-none  !w-[95%] px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 mb-2 md:mb-0"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
-              <input
-                className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-                required
-                value="Update"
-                type="submit"
-              />
+              <div className="block mx-auto text-center">
+            <input
+              className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer mx-auto`}
+              required
+              value="Update"
+              type="submit"
+            />
+          </div>
             </form>
+
           </div>
         </>
       )}
@@ -189,108 +197,20 @@ const ProfileContent = ({ active }) => {
           <Address />
         </div>
       )}
+
+      
     </div>
   );
 };
 
-const AllOrders=()=>{
-
-}
-// const AllOrders = () => {
-//   const { user } = useSelector((state) => state.user);
-//   const { orders } = useSelector((state) => state.order);
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     dispatch(getAllOrdersOfUser(user._id));
-//   }, []);
-
-//   const columns = [
-//     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-//     {
-//       field: "status",
-//       headerName: "Status",
-//       minWidth: 130,
-//       flex: 0.7,
-//       cellClassName: (params) => {
-//         return params.getValue(params.id, "status") === "Delivered"
-//           ? "greenColor"
-//           : "redColor";
-//       },
-//     },
-//     {
-//       field: "itemsQty",
-//       headerName: "Items Qty",
-//       type: "number",
-//       minWidth: 130,
-//       flex: 0.7,
-//     },
-
-//     {
-//       field: "total",
-//       headerName: "Total",
-//       type: "number",
-//       minWidth: 130,
-//       flex: 0.8,
-//     },
-
-//     {
-//       field: " ",
-//       flex: 1,
-//       minWidth: 150,
-//       headerName: "",
-//       type: "number",
-//       sortable: false,
-//       renderCell: (params) => {
-//         return (
-//           <>
-//             <Link to={`/user/order/${params.id}`}>
-//               <Button>
-//                 <AiOutlineArrowRight size={20} />
-//               </Button>
-//             </Link>
-//           </>
-//         );
-//       },
-//     },
-//   ];
-
-//   const row = [];
-
-//   orders &&
-//     orders.forEach((item) => {
-//       row.push({
-//         id: item._id,
-//         itemsQty: item.cart.length,
-//         total: "US$ " + item.totalPrice,
-//         status: item.status,
-//       });
-//     });
-
-//   return (
-//     <div className="pl-8 pt-1">
-//       <DataGrid
-//         rows={row}
-//         columns={columns}
-//         pageSize={10}
-//         disableSelectionOnClick
-//         autoHeight
-//       />
-//     </div>
-//   );
-// };
-
-const AllRefundOrders = () => {
+const AllOrders = () => {
   const { user } = useSelector((state) => state.user);
-//   const { orders } = useSelector((state) => state.order);
+  const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
-//   useEffect(() => {
-//     dispatch(getAllOrdersOfUser(user._id));
-//   }, []);
-
-//   const eligibleOrders = orders && orders.filter((item) => item.status === "Processing refund");
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -345,15 +265,102 @@ const AllRefundOrders = () => {
 
   const row = [];
 
-//   eligibleOrders &&
-//    eligibleOrders.forEach((item) => {
-//       row.push({
-//         id: item._id,
-//         itemsQty: item.cart.length,
-//         total: "US$ " + item.totalPrice,
-//         status: item.status,
-//       });
-//     });
+  orders &&
+    orders.forEach((item) => {
+      row.push({
+        id: item._id,
+        itemsQty: item.cart.length,
+        total: "bdt  " + item.totalPrice,
+        status: item.status,
+      });
+    });
+
+  return (
+    <div className="pl-8 pt-1">
+      <DataGrid
+        rows={row}
+        columns={columns}
+        pageSize={10}
+        disableSelectionOnClick
+        autoHeight
+      />
+    </div>
+  );
+};
+
+const AllRefundOrders = () => {
+  const { user } = useSelector((state) => state.user);
+    const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch(getAllOrdersOfUser(user._id));
+    }, []);
+
+    const eligibleOrders = orders && orders.filter((item) => item.status === "Processing refund");
+
+  const columns = [
+    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+
+    {
+      field: "status",
+      headerName: "Status",
+      minWidth: 130,
+      flex: 0.7,
+      cellClassName: (params) => {
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
+      },
+    },
+    {
+      field: "itemsQty",
+      headerName: "Items Qty",
+      type: "number",
+      minWidth: 130,
+      flex: 0.7,
+    },
+
+    {
+      field: "total",
+      headerName: "Total",
+      type: "number",
+      minWidth: 130,
+      flex: 0.8,
+    },
+
+    {
+      field: " ",
+      flex: 1,
+      minWidth: 150,
+      headerName: "",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`/user/order/${params.id}`}>
+              <Button>
+                <AiOutlineArrowRight size={20} />
+              </Button>
+            </Link>
+          </>
+        );
+      },
+    },
+  ];
+
+  const row = [];
+
+    eligibleOrders &&
+     eligibleOrders.forEach((item) => {
+        row.push({
+          id: item._id,
+          itemsQty: item.cart.length,
+          total: "US$ " + item.totalPrice,
+          status: item.status,
+        });
+      });
 
   return (
     <div className="pl-8 pt-1">
@@ -370,12 +377,12 @@ const AllRefundOrders = () => {
 
 const TrackOrder = () => {
   const { user } = useSelector((state) => state.user);
-//   const { orders } = useSelector((state) => state.order);
-//   const dispatch = useDispatch();
+    const { orders } = useSelector((state) => state.order);
+    const dispatch = useDispatch();
 
-//   useEffect(() => {
-//     dispatch(getAllOrdersOfUser(user._id));
-//   }, []);
+    useEffect(() => {
+      dispatch(getAllOrdersOfUser(user._id));
+    }, []);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -430,15 +437,15 @@ const TrackOrder = () => {
 
   const row = [];
 
-//   orders &&
-//     orders.forEach((item) => {
-//       row.push({
-//         id: item._id,
-//         itemsQty: item.cart.length,
-//         total: "US$ " + item.totalPrice,
-//         status: item.status,
-//       });
-//     });
+    orders &&
+      orders.forEach((item) => {
+        row.push({
+          id: item._id,
+          itemsQty: item.cart.length,
+          total: "US$ " + item.totalPrice,
+          status: item.status,
+        });
+      });
 
   return (
     <div className="pl-8 pt-1">
@@ -468,7 +475,7 @@ const ChangePassword = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success(res.data.success);
+        toast.success(res.data.message);
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
@@ -569,7 +576,7 @@ const Address = () => {
           addressType
         )
       );
-      
+
       setOpen(false);
       setCountry("");
       setCity("");
@@ -586,7 +593,8 @@ const Address = () => {
   };
 
   return (
-    <div className="w-full px-5">
+    <div className="grid">
+ <div className=" !overflow-hidden px-5">
       {open && (
         <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center ">
           <div className="w-[35%] h-[80vh] bg-white rounded shadow relative overflow-y-scroll">
@@ -711,14 +719,12 @@ const Address = () => {
                   </div>
 
                   <div className=" w-full pb-2">
-                    
                     <input
                       type="submit"
                       className={`${styles.input} mt-5 cursor-pointer`}
                       required
                       readOnly
                     />
-                   
                   </div>
                 </div>
               </form>
@@ -738,10 +744,12 @@ const Address = () => {
         </div>
       </div>
       <br />
-      {user &&
+    <div className="overflow-x-scroll">
+    {user &&
         user.addresses.map((item, index) => (
           <div
-            className="w-full bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"
+          // className="  mx-auto p-2 md:p-2 overflow-x-auto rounded-xl bg-gray-200 lg:w-full lg:aspect-square flex items-center"
+            className=" w-[600px] md:w-full hide-scrollbar overflow-y-auto  bg-white h-min py-3 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"
             key={index}
           >
             <div className="flex items-center">
@@ -766,6 +774,7 @@ const Address = () => {
             </div>
           </div>
         ))}
+    </div>
 
       {user && user.addresses.length === 0 && (
         <h5 className="text-center pt-8 text-[18px]">
@@ -773,6 +782,8 @@ const Address = () => {
         </h5>
       )}
     </div>
+    </div>
+   
   );
 };
 export default ProfileContent;

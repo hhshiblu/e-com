@@ -25,7 +25,7 @@ const CheckoutSteps = ({active}) => {
                 </div>
                </div>
 
-               <div className={`${styles.noramlFlex}`}>
+               <div className={`${styles.normalFlex}`}>
                <div className={`${
                     active > 3 ? "w-[30px] 800px:w-[70px] h-[4px] !bg-[#f63b60]"
                     : "w-[30px] 800px:w-[70px] h-[4px] !bg-[#FDE1E6]"

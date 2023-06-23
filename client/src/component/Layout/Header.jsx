@@ -7,7 +7,7 @@ import Search from "./Search";
 function Header({ activeHeading }) {
   return (
     <div>
-      <Head />
+      {/* <Head /> */}
       <Search activeHeading={activeHeading} />
     </div>
   );

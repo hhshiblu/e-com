@@ -50,16 +50,16 @@ function Cetagoris() {
               return (
                 <div  
                   key={index}
-                  className="w-full overflow-hidden hover:shadow-blue-100 hover:md:shadow-md bg-gray-100    md:shadow-2xl cursor-pointer  flex items-center flex-col justify-between"
+                  className="w-full overflow-hidden hover:shadow-blue-100  bg-gray-100 rounded-md  cursor-pointer  flex items-center flex-col justify-between"
                   onClick={()=>SubmitHendel(i)}
                 >
                  
                   <img
                     src={i.image_Url}
                     alt={i.title}
-                    className="w-[70px] object-cover mt-2 transform hover:scale-110 transition duration-300"
+                    className="w-[70px] h-[70px] rounded-full object-cover mt-2 transform hover:scale-110 transition duration-300"
                   />
-                   <h5 className=" text-[16px] px-2 mb-2 ">{i.title}</h5>
+                   <h5 className=" text-sm px-2 mb-2 ">{i.title}</h5>
                 </div>
               );
             })}

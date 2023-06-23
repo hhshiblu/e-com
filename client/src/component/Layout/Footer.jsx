@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 function Footer() {
   return (
-    <div className="bg-[#000]  text-white">
+    <div className="bg-[#041C32]  text-white">
      
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:px-8 px-4 py-16 sm:text-center ">
@@ -30,7 +30,7 @@ function Footer() {
             <AiFillFacebook size={25} className="cursor-pointer" />
             <AiFillInstagram
               size={25}
-              style={{ marginLeft: "15px", cursor: "pointer" }}
+              style={{marginLeft: "15px", cursor: "pointer" }}
             />
             <AiFillTwitterCircle
               size={25}

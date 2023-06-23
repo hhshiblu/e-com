@@ -17,8 +17,13 @@ import {
   ShopCreatePage,
   ShopLogInPage,
   CheckoutPage,
+  PaymentPage,
+  OrderSuccessPage,
+  UserOrderDetailsPage,
+  TrackOrderPage,
+  UserInbox,
 } from "./Routes.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { server } from "./serverUrl";
 import Store from "./Redux/Store";
@@ -29,31 +34,72 @@ import {
   ShopHomePage,
   ShopDashBoardPage,
   ShopCreateProduct,
+  AllShopOrders,
   AllShopProduct,
   ShopCreateEvent,
   AllShopEvent,
   ShopAllCoupouns,
   ShopViewPage,
+  ShopOrderDetailsPage,
+  ShopOrdersRefund,
+  ShopSettingPage,
+  ShopWithDrawMoneyPage,
+  ShopInboxPage,
 } from "./Routes/ShopRoutes.js";
+
+import {
+  AdminDashboardWithdraw,
+  AdminDashboardEvents,
+  AdminDashboardProducts,
+  AdminDashboardOrders,
+  AdminDashboardSellers,
+  AdminDashboardUsers,
+  AdminDashboardPage,
+} from "./Routes/AdminRoutes.js";
 import ProtectedRoute from "./ProtectRoutes/ProtectedRoute";
 import ProtectSellerRoute from "./ProtectRoutes/ProtectSellerRoute";
 import { getAllProducts } from "./Redux/Action/product";
 import { getAllEvents } from "./Redux/Action/event";
 import axios from "axios";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { server } from "./serverUrl";
+import ProtectedAdminRoute from "./ProtectRoutes/ProtectedAdminRoute";
+
 axios.defaults.withCredentials = true;
 function App() {
+  const [stripeApikey, setStripeApiKey] = useState("");
+
+  async function getStripeApikey() {
+    const { data } = await axios.get(`${server}/payment/stripeapikey`);
+    setStripeApiKey(data.stripeApikey);
+  }
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
     Store.dispatch(getAllEvents());
-
+    getStripeApikey();
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div>
       <BrowserRouter>
+        {stripeApikey && (
+          <Elements stripe={loadStripe(stripeApikey)}>
+            <Routes>
+              <Route
+                path="/payment"
+                element={
+                  <ProtectedRoute>
+                    <PaymentPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Elements>
+        )}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -80,10 +126,35 @@ function App() {
             }
           />
           <Route
+            path="/user/track/order/:id"
+            element={
+              <ProtectedRoute>
+                <TrackOrderPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/order/:id"
+            element={
+              <ProtectedRoute>
+                <UserOrderDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/order/success" element={<OrderSuccessPage />} />
+          <Route
             path="/checkout"
             element={
               <ProtectedRoute>
                 <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <UserInbox />
               </ProtectedRoute>
             }
           />
@@ -97,6 +168,14 @@ function App() {
             element={
               <ProtectSellerRoute>
                 <ShopHomePage />
+              </ProtectSellerRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectSellerRoute>
+                <ShopSettingPage />
               </ProtectSellerRoute>
             }
           />
@@ -127,6 +206,30 @@ function App() {
             }
           />
           <Route
+            path="/dashboard-orders"
+            element={
+              <ProtectSellerRoute>
+                <AllShopOrders />
+              </ProtectSellerRoute>
+            }
+          />
+          <Route
+            path="/dashboard-refunds"
+            element={
+              <ProtectSellerRoute>
+                <ShopOrdersRefund />
+              </ProtectSellerRoute>
+            }
+          />
+          <Route
+            path="/order/:id"
+            element={
+              <ProtectSellerRoute>
+                <ShopOrderDetailsPage />
+              </ProtectSellerRoute>
+            }
+          />
+          <Route
             path="/dashboard-create-event"
             element={
               <ProtectSellerRoute>
@@ -142,6 +245,14 @@ function App() {
               </ProtectSellerRoute>
             }
           />
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <ProtectSellerRoute>
+                <ShopWithDrawMoneyPage />
+              </ProtectSellerRoute>
+            }
+          />
 
           <Route
             path="/dashboard-coupouns"
@@ -149,6 +260,72 @@ function App() {
               <ProtectSellerRoute>
                 <ShopAllCoupouns />
               </ProtectSellerRoute>
+            }
+          />
+          <Route
+            path="/dashboard-messages"
+            element={
+              <ProtectSellerRoute>
+                <ShopInboxPage />
+              </ProtectSellerRoute>
+            }
+          />
+
+          {/* -----------------------admin routes-------------- */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardPage />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-users"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardUsers />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-sellers"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardSellers />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-orders"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardOrders />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-products"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardProducts />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-events"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardEvents />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-withdraw-request"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardWithdraw />
+              </ProtectedAdminRoute>
             }
           />
         </Routes>

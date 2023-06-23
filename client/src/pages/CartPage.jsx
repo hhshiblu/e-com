@@ -5,156 +5,157 @@ import styles from "../styles/style";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { backend_URL } from "../serverUrl";
-// import { addTocart, removeFromCart } from "../Redux/Action/cart";
+import { Link } from "react-router-dom";
+import { addTocart, removeFromCart } from "../Redux/Action/cart";
 import { toast } from "react-toastify";
-
+import CheckoutPage from "./cheakOut/CheckoutPage.jsx";
 function ProductCart() {
+  const [subtotalPrices, setSubtotalPrices] = useState(0);
   const { cart } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.cart);
   const { allProducts } = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
-  const cartItems = allProducts && [allProducts.find((i) => i.id === cart.id)];
-
-  const removeCartHandler = (data) => {
-    // dispatch(removeFromCart(data));
+  const removeFromCartHandler = (data) => {
+    dispatch(removeFromCart(data));
   };
+
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.qty * item.discountPrice,
+    0
+  );
+
+  const quantityChangeHandler = (data) => {
+    dispatch(addTocart(data));
+    console.log(data);
+  };
+  <CheckoutPage user={totalPrice} />;
+
+  // const cartItems = allProducts && [allProducts.find((i) => i.id === cart.id)];
 
   // const subtotalPrices = cart.reduce(
   //   (acc, item) => acc + item.qty * item.discountPrice
   // );
-    // Calculate subtotal whenever cart changes
-    const [subtotalPrices, setSubtotalPrices] = useState(0);
-    useEffect(() => {
-      const subtotal = cart.reduce(
-        (acc, item) => acc + item.qty * item.discountPrice,
-        0
-      );
-      setSubtotalPrices(subtotal);
-    }, [cart]);
+  //  Calculate subtotal whenever cart changes
 
-  const quantityChanger = (data) => {
-    // dispatch(addTocart(data));
-  };
-
+  useEffect(() => {
+    const subtotal = cart.reduce(
+      (acc, item) => acc + item.qty * item.discountPrice,
+      0
+    );
+    setSubtotalPrices(subtotal);
+  }, [cart]);
 
   return (
     <div>
       <Header />
       <div className="h-full md:min-h-[cale(100vh_-_400px)] min-h-[cale(100vh_-_250px) m-auto mb-4] max-w-[1200px]  my-5 mb-8">
-
-{cart&&cart.length===0?(
+      {cart&&cart.length===0?(
   <div className="flex items-center justify-center !h-[60vh] ">
      Cart items is emty!!
   </div>
-):(
-  <div class="pt-5">
-          <div class="flex flex-col gap-8 lg:flex-row">
-            <div class="w-full p-5 bg-white rounded shadow lg:w-8/12">
-              <div>
-                <div class="flex gap-3 p-2 bg-gray-100 rounded">
-                  <div class="overflow-hidden border rounded">
-                    <div>
-                      <img
-                        alt="product"
-                        loading="lazy"
-                        width="50"
-                        height="50"
-                        decoding="async"
-                        data-nimg="1"
-                        class="mx-auto opacity-0 transition-opacity duration-300 ease-in-out 
-                     undefined "
-                        src="https://media.e-valy.com/cms/brands/logo/7bd5cdf9-b7b7-4c07-a5f1-501ce9fd1b7c?h=350&amp;w=350"
-                      />
-                    </div>
-                  </div>
-                  <p class="font-medium">Executive Machines Limited For PNP</p>
-                </div>
-                <ul class="flex flex-col gap-6 mt-4">
-                  {cartItems &&
-                    cartItems.map((i, index) => {
-                      return (
-                        <CartSingle
-                          key={index}
-                          data={i}
-                          removeCartHandler={removeCartHandler}
-                          quantityChanger={quantityChanger}
-                        />
-                      );
-                    })}
-                </ul>
-              </div>
-            </div>
-            <div class="w-full lg:w-4/12">
-              <div class="relative flex flex-col gap-4 p-4 bg-white rounded shadow">
-                <div class="flex flex-col items-center justify-center p-4 bg-gray-100">
-                  <p class="mb-2">Please add your address before order</p>
-                </div>
-                <div class="flex justify-between">
-                  <p>Subtotal</p>
-                  <strong>৳ {subtotalPrices}</strong>
-                </div>
-                <div class="flex justify-between">
-                  <p>Shipping</p>
-                  <strong>৳ 1290</strong>
-                </div>
-                <div class="flex justify-between">
-                  <p>discount</p>
-                  <strong>
-                    <span className="pr-1">-</span> ৳ 234
-                  </strong>
-                </div>
-                <hr />
-                <div class="flex justify-between mt-[-10px]">
-                  <p>Total</p>
-                  <strong>৳ 43138</strong>
-                </div>
-
-                <br />
+): (
+          <div className="pt-5">
+            <div className="flex flex-col gap-8 lg:flex-row">
+              <div className="w-full p-5 bg-white rounded shadow lg:w-8/12">
                 <div>
-                  <input
-                    type="text"
-                    placeholder="Copon Code"
-                    className="appearance-none  w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 sm:text-sm"
-                  />
+                  <div className="flex gap-3 p-2 bg-gray-100 rounded">
+                    <div className="overflow-hidden border rounded">
+                      <div>
+                        <img
+                          alt="product"
+                          loading="lazy"
+                          width="50"
+                          height="50"
+                          decoding="async"
+                          data-nimg="1"
+                          className="mx-auto opacity-0 transition-opacity duration-300 ease-in-out 
+                   undefined "
+                          src="https://media.e-valy.com/cms/brands/logo/7bd5cdf9-b7b7-4c07-a5f1-501ce9fd1b7c?h=350&amp;w=350"
+                        />
+                      </div>
+                    </div>
+                    <p className="font-medium">
+                      Executive Machines Limited For PNP
+                    </p>
+                  </div>
+                  <ul className="flex flex-col gap-6 mt-4">
+                    {cart &&
+                      cart.map((i, index) => {
+                        return (
+                          <CartSingle
+                            key={index}
+                            data={i}
+                            quantityChangeHandler={quantityChangeHandler}
+                            removeFromCartHandler={removeFromCartHandler}
+                          />
+                        );
+                      })}
+                  </ul>
                 </div>
-                <br />
-                <button
-                  class="btn type-primary size-lg  opacity-50 w-full  bg-[#e44343] border-[#e4434373] py-1 rounded-md text-white font-semibold "
-                  disabled=""
-                >
-                  <span data-content="center">Confirm Order</span>
-                </button>
+              </div>
+              <div className="w-full lg:w-4/12">
+                <div className="relative flex flex-col gap-4 p-4 bg-white rounded shadow">
+                  <div className="flex flex-col items-center justify-center p-4 bg-gray-100">
+                    <p className="mb-2">Total Price </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p>total</p>
+                    <strong>৳ {totalPrice}</strong>
+                  </div>
+                
+            
+                  <hr />
+                  
+
+                  <br />
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Copon Code"
+                      classNameName="appearance-none  w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <br />
+                  <button
+                    className="btn type-primary size-lg  opacity-50 w-full  bg-[#e44343] border-[#e4434373] py-1 rounded-md text-white font-semibold "
+                    disabled=""
+                  >
+                    <Link to="/checkout">
+                      <span data-content="center">Confirm Order</span>
+                    </Link>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-)}
-        
+        )}
       </div>
       <Footer />
     </div>
   );
 }
-const CartSingle = ({ data, removeCartHandler, quantityChanger }) => {
+const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
   const [value, setValue] = useState(data.qty);
   const totalPrice = data.discountPrice * value;
 
   const increment = (data) => {
     if (data.stock < value) {
-      toast.error("Product stock limited");
+      toast.error("Product stock limited!");
     } else {
       setValue(value + 1);
-      const UpdateCartData = { ...data, qty: value + 1 };
-      quantityChanger(UpdateCartData);
+      const updateCartData = { ...data, qty: value + 1 };
+      quantityChangeHandler(updateCartData);
     }
   };
+
   const decrement = (data) => {
     setValue(value === 1 ? 1 : value - 1);
-    const UpdateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
-    quantityChanger(UpdateCartData);
+    const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
+    quantityChangeHandler(updateCartData);
   };
   return (
-    <li class="flex gap-3">
+    <li className="flex gap-3">
       <div>
         <div>
           <img
@@ -164,23 +165,22 @@ const CartSingle = ({ data, removeCartHandler, quantityChanger }) => {
             height="80"
             decoding="async"
             data-nimg="1"
-            class="mx-auto text-transparent  transition-opacity duration-300 ease-in-out 
-opacity-100  undefined "
+            className="mx-auto text-transparent  transition-opacity duration-300 ease-in-out opacity-100  undefined "
             src={`${backend_URL}upload/${data?.images[0]}`}
           />
         </div>
       </div>
-      <div class="flex flex-1">
-        <div class="flex flex-col justify-between flex-1">
-          <p class="text-base line-clamp-1">{data.name}</p>
-          <div class="inline-flex ">
+      <div className="flex flex-1">
+        <div className="flex flex-col justify-between flex-1">
+          <p className="text-base line-clamp-1">{data.name}</p>
+          <div className="inline-flex ">
             <div
               className={`bg-[#e44343] border-[#e4434373] mt-2  rounded-full w-[25px] h-[25px] ${styles.normalFlex}  justify-center cursor-pointer `}
               onClick={() => increment(data)}
             >
               <HiPlus size={18} color="#fff" />
             </div>
-            <span class="inline-flex  justify-center w-8 p-2 px-5">
+            <span className="inline-flex  justify-center w-8 p-2 px-5">
               {data.qty}
             </span>
             <div
@@ -191,14 +191,14 @@ opacity-100  undefined "
             </div>
           </div>
         </div>
-        <div class="inline-flex flex-col items-end">
-          <p class="text-lg">
+        <div className="inline-flex flex-col items-end">
+          <p className="text-lg">
             ৳ <span> </span>
             {totalPrice}
           </p>
           <button
-            class="mt-2 font-medium text-gray-500 underline"
-            onClick={() => removeCartHandler(data)}
+            className="mt-2 font-medium text-gray-500 underline"
+            onClick={() => removeFromCartHandler(data)}
           >
             Remove
           </button>
@@ -207,5 +207,4 @@ opacity-100  undefined "
     </li>
   );
 };
-
 export default ProductCart;

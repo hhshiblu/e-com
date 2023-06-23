@@ -26,6 +26,7 @@ const isSeller= catchAsyncError(async(req,res,next)=>{
     }
     const decoded=jwt.verify(seller_t,process.env.JWT_SECRET_KEY);
     req.seller= await seller.findById(decoded.id)
+   
     next()
 })
 module.exports={isAuthenticated,isSeller}

@@ -189,7 +189,104 @@ const getSellerInfo=
       return next(new Errorhandeler(error.message, 500));
     }
   });
+// update seller profile
 
+const UpdateSellerPicture=
+   
+    CatchAsyncError(async (req, res, next) => {
+      try {
+        const existsUser = await Seller.findById(req.seller._id);
   
+        const existAvatarPath = `upload/${existsUser.avatar}`;
+  
+        fs.unlinkSync(existAvatarPath);
+  
+        const fileUrl = path.join(req.file.filename);
+  
+        const seller = await Seller.findByIdAndUpdate(req.seller._id, {
+          avatar: fileUrl,
+        });
+  
+        res.status(200).json({
+          success: true,
+          seller,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    })
 
-module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut, getSellerInfo};
+//update seller info
+
+const UpdateSellerInfo=
+    CatchAsyncError(async (req, res, next) => {
+      try {
+        const { name, description, address, phoneNumber, zipCode } = req.body;
+  
+        const seller = await Seller.findOne(req.seller._id);
+  
+        if (!seller) {
+          return next(new Errorhandeler("User not found", 400));
+        }
+  
+        seller.name = name;
+        seller.description = description;
+        seller.address = address;
+        seller.phoneNumber = phoneNumber;
+        seller.zipCode = zipCode;
+  
+        await seller.save();
+  
+        res.status(201).json({
+          success: true,
+          seller,
+        });
+      } catch (error) {
+        return next(new Errorhandeler(error.message, 500));
+      }
+    })
+// seller update payment method
+
+   const updatePayment=
+      CatchAsyncError(async (req, res, next) => {
+        try {
+          const { withdrawMethod } = req.body;
+    
+          const seller = await Seller.findByIdAndUpdate(req.seller._id, {
+            withdrawMethod,
+          });
+    
+          res.status(201).json({
+            success: true,
+            seller,
+          });
+        } catch (error) {
+          return next(new Errorhandeler(error.message, 500));
+        }
+      });
+    
+    // delete seller withdraw merthods --- only seller
+   const deleteSellerWithdroMethod=
+      CatchAsyncError(async (req, res, next) => {
+        try {
+          const seller = await Seller.findById(req.seller._id);
+    
+          if (!seller) {
+            return next(new Errorhandeler("Seller not found with this id", 400));
+          }
+    
+          seller.withdrawMethod = null;
+    
+          await seller.save();
+    
+          res.status(201).json({
+            success: true,
+            seller,
+          });
+        } catch (error) {
+          return next(new Errorhandeler(error.message, 500));
+        }
+      })
+    ;
+
+module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut, getSellerInfo,UpdateSellerPicture,UpdateSellerInfo,deleteSellerWithdroMethod,updatePayment};

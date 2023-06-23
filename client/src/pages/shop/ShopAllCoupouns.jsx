@@ -6,13 +6,13 @@ function ShopAllCoupouns() {
   return (
     <div>
     <DashBoardHeader/>
-    <div className="flex items-center justify-between w-full">
+    <div className="flex items-start justify-between w-full">
       <div className='w-[80px] 800px:w-[330px]'>
       <DashBoardSideBar active={9}/>
       </div>
       
 
-      <div className='w-full flex justify-center'>
+      <div className='w-full flex items-start '>
           <CouponCode/>
 
       </div>

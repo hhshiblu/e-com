@@ -1,7 +1,8 @@
 import axios from "axios";
-import { server } from "../../server";
+import { server } from "../../serverUrl";
 
 // get all orders of user
+
 export const getAllOrdersOfUser = (userId) => async (dispatch) => {
   try {
     dispatch({

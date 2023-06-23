@@ -46,10 +46,10 @@ const productSchema = new mongoose.Schema({
       productId: {
         type: String,
       },
-      createdAt:{
+      createdAt: {
         type: Date,
         default: Date.now(),
-      }
+      },
     },
   ],
   ratings: {
@@ -65,7 +65,7 @@ const productSchema = new mongoose.Schema({
   },
   sold_out: {
     type: Number,
-    default: 1,
+    default: 0,
   },
   createdAt: {
     type: Date,

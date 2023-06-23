@@ -5,7 +5,7 @@ import Cetagories from "../component/Route/Cetagories/Cetagoris.jsx"
 import BestDeals from "../component/Route/BestDeals/BestDeals.jsx"
 import FeaturedProduct from "../component/Route/FeaturedProduct/FeaturedProduct.jsx"
 import Events from "../component/Event/Events.jsx"
-import Sponsored from "../component/Route/Sponsored/Sponsored.jsx"
+// import Sponsored from "../component/Route/Sponsored/Sponsored.jsx"
 import Footer from '../component/Layout/Footer.jsx'
 import Subscribe from '../component/Layout/Subscribe.jsx'
 function HomePage() {
@@ -17,8 +17,8 @@ function HomePage() {
         <BestDeals/>
         <Events/>
         <FeaturedProduct/>
-        <Sponsored/>
-        <Subscribe/>
+       <br /><br /><br />
+        {/* <Subscribe/> */}
         <Footer/>
     </div>
   )
