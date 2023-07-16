@@ -27,6 +27,7 @@ const coupon = require("../Routes/couponCode");
 const order = require("../Routes/order");
 const payment = require("../Routes/payment");
 const cart = require("../Routes/cart");
+const category = require("../Routes/category");
 const withdraw = require("../Routes/withdraw");
 const conversation = require("../Routes/conversation");
 const message = require("../Routes/message");
@@ -40,6 +41,7 @@ app.use("/api/v1/coupon", coupon);
 app.use("/api/v1/order", order);
 app.use("/api/v1/payment", payment);
 app.use("/api/v1/cart", cart);
+app.use("/api/v1/category", category);
 app.use("/api/v1/withdraw", withdraw);
 app.use("/api/v1/conversation",conversation)
 app.use("/api/v1/message",message)

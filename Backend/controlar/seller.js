@@ -17,7 +17,7 @@ const SellerSignUp = CatchAsyncError(async (req, res, next) => {
       const CurentFile = `upload/${filename}`;
       fs.unlink(CurentFile, (err) => {
         if (err) {
-          console.log(err);
+          
           return res.status(500).json({ message: "error deleting file" });
         }
       });
@@ -289,4 +289,49 @@ const UpdateSellerInfo=
       })
     ;
 
-module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut, getSellerInfo,UpdateSellerPicture,UpdateSellerInfo,deleteSellerWithdroMethod,updatePayment};
+
+// all sellers --- for admin
+const getAllSeller=
+  CatchAsyncError(async (req, res, next) => {
+    try {
+      const sellers = await Seller.find().sort({
+        createdAt: -1,
+      });
+  
+      res.status(201).json({
+        success: true,
+        sellers,
+      });
+    } catch (error) {
+      return next(new Errorhandeler(error.message, 500));
+    }
+  })
+;
+
+// delete seller ---admin
+const deleteSeller=
+  CatchAsyncError(async (req, res, next) => {
+    try {
+      const seller = await Seller.findById(req.params.id);
+
+      if (!seller) {
+        return next(
+          new Errorhandeler("Seller is not available with this id", 400)
+        );
+      }
+
+      await Seller.findByIdAndDelete(req.params.id);
+
+      res.status(201).json({
+        success: true,
+        message: "Seller deleted successfully!",
+      });
+    } catch (error) {
+      return next(new Errorhandeler(error.message, 500));
+    }
+  });
+
+
+
+
+module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut, getSellerInfo,UpdateSellerPicture,UpdateSellerInfo,deleteSellerWithdroMethod,updatePayment,getAllSeller,deleteSeller};

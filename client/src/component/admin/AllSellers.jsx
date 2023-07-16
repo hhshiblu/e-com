@@ -26,7 +26,7 @@ const AllSellers = () => {
 
   const handleDelete = async (id) => {
     await axios
-    .delete(`${server}/shop/delete-seller/${id}`, { withCredentials: true })
+    .delete(`${server}/seller/delete-seller/${id}`, { withCredentials: true })
     .then((res) => {
       toast.success(res.data.message);
     });
@@ -75,7 +75,7 @@ const AllSellers = () => {
         renderCell: (params) => {
           return (
             <>
-            <Link to={`/shop/preview/${params.id}`}>
+            <Link to={`/shop/view/${params.id}`}>
             <Button>
                 <AiOutlineEye size={20} />
               </Button>

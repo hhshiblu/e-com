@@ -1,12 +1,13 @@
 const express = require("express");
 const upload = require("../src/multer");
-const { isSeller, isAuthenticated } = require("../middleware/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
 const {
   createEvent,
   getAllEvents,
   DeleteEvent,
   getAllShopEvents,
   getAllEvent,
+  adminAllEvent,
 } = require("../controlar/event");
 
 const router = express.Router();
@@ -18,14 +19,10 @@ router.get("/get-all-events/:id", getAllShopEvents);
 router.delete("/delete-shop-event/:id", DeleteEvent);
 router.get("/get-all-events",getAllEvent)
 
-// router.put("/create-new-review", isAuthenticated, reviewProduct);
-
-// router.get(
-//   "/admin-all-products",
-//   isAuthenticated,
-//   isAdmin("Admin"),
-//   adminAllProduct
-// );
-// router.get("/logout", isAuthenticated, userLogOut);
+router.get(
+  "/admin-all-events",
+  isAuthenticated,
+  // isAdmin("Admin"),
+  adminAllEvent)
 
 module.exports = router;

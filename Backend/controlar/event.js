@@ -100,23 +100,19 @@ const DeleteEvent=
   });
 
 // all events --- for admin
-// router.get(
-//   "/admin-all-events",
-//   isAuthenticated,
-//   isAdmin("Admin"),
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const events = await Event.find().sort({
-//         createdAt: -1,
-//       });
-//       res.status(201).json({
-//         success: true,
-//         events,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
+const adminAllEvent=
+  CatchAsyncError(async (req, res, next) => {
+    try {
+      const events = await Event.find().sort({
+        createdAt: -1,
+      });
+      res.status(201).json({
+        success: true,
+        events,
+      });
+    } catch (error) {
+      return next(new Errorhandeler(error.message, 500));
+    }
+  });
 
-module.exports = {createEvent,getAllShopEvents,DeleteEvent,getAllEvent};
+module.exports = {createEvent,getAllShopEvents,DeleteEvent,getAllEvent,adminAllEvent};

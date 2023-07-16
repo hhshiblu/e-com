@@ -14,8 +14,11 @@ const {
   UpdateSellerPicture,
   updatePayment,
   deleteSellerWithdroMethod,
+  deleteSeller,
+  getAllSeller,
 } = require("../controlar/seller");
-const { isSeller } = require("../Middleware/auth");
+const { isSeller, isAdmin, isAuthenticated } = require("../Middleware/auth");
+// const { getAllUser } = require("../controlar/user");
 
 router.post("/create-seller", upload.single("file"), SellerSignUp);
 
@@ -38,4 +41,14 @@ router.put(
 router.put("/update-seller-info", isSeller, UpdateSellerInfo);
 router.put("/update-payment-methods", isSeller, updatePayment);
 router.delete("/delete-withdraw-method/", isSeller, deleteSellerWithdroMethod);
+router.get(
+  "/admin-all-sellers",
+  isAuthenticated,
+  getAllSeller)
+
+  router.delete(
+    "/delete-seller/:id",
+    isAuthenticated,
+   deleteSeller)
+
 module.exports = router;

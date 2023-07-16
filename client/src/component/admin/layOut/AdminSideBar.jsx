@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiShoppingBag } from "react-icons/fi";
 import {GrWorkshop} from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
@@ -10,6 +10,7 @@ import { MdOutlineLocalOffer } from "react-icons/md";
 import { AiOutlineSetting } from "react-icons/ai";
 
 const AdminSideBar = ({ active }) => {
+  const [activetab, setActiveTab] = useState(false);
   return (
     <div className="w-full h-[90vh] bg-[#150939] shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* single item */}
@@ -21,7 +22,7 @@ const AdminSideBar = ({ active }) => {
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 1 ? "text-[crimson]" : "text-[#555]"
+              active === 1 ? "text-[crimson]" : "text-[#ffffff]"
             }`}
           >
             Dashboard
@@ -37,7 +38,7 @@ const AdminSideBar = ({ active }) => {
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 2 ? "text-[crimson]" : "text-[#555]"
+              active === 2 ? "text-[crimson]" :  "text-[#ffffff]"
             }`}
           >
             All Orders
@@ -53,7 +54,7 @@ const AdminSideBar = ({ active }) => {
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 3 ? "text-[crimson]" : "text-[#555]"
+              active === 3 ? "text-[crimson]" :  "text-[#ffffff]"
             }`}
           >
             All Sellers
@@ -69,7 +70,7 @@ const AdminSideBar = ({ active }) => {
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 4 ? "text-[crimson]" : "text-[#555]"
+              active === 4 ? "text-[crimson]" :  "text-[#ffffff]"
             }`}
           >
             All Users
@@ -78,7 +79,8 @@ const AdminSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link to="/admin-products" className="w-full flex items-center">
+           
+           <Link to="/admin-products" className="w-full flex items-center">
           <BsHandbag
             size={30}
             color={`${active === 5 ? "crimson" : "#555"}`}
@@ -91,7 +93,10 @@ const AdminSideBar = ({ active }) => {
             All Products
           </h5>
         </Link>
-      </div>
+            
+           
+          </div>
+      
 
       <div className="w-full flex items-center p-4">
         <Link to="/admin-events" className="w-full flex items-center">
@@ -110,6 +115,24 @@ const AdminSideBar = ({ active }) => {
       </div>
 
 
+      <div className="w-full flex items-center p-4">
+        <Link
+          to="/admin-category"
+          className="w-full flex items-center"
+        >
+          <CiMoneyBill
+            size={30}
+            color={`${active === 7 ? "crimson" : "#555"}`}
+          />
+          <h5
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+              active === 7 ? "text-[crimson]" : "text-[#555]"
+            }`}
+          >
+          Category
+          </h5>
+        </Link>
+      </div>
 
       <div className="w-full flex items-center p-4">
         <Link

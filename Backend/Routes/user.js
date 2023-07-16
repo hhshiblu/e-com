@@ -15,8 +15,10 @@ const {
   DeleteUserAddress,
   UpdatePass,
   userInfo,
+  getAllUser,
+  deleteUserbyAdmin,
 } = require("../controlar/user");
-const { isAuthenticated } = require("../Middleware/auth");
+const { isAuthenticated, isAdmin } = require("../Middleware/auth");
 
 router.post("/signup", upload.single("file"), userSignUp);
 
@@ -41,5 +43,13 @@ router.delete("/delete-user-address/:id", isAuthenticated, DeleteUserAddress);
 
 router.put("/update-user-password", isAuthenticated, UpdatePass);
 router.get("/user-info/:id", userInfo);
+router.get(
+  "/admin-all-users",
+  isAuthenticated,
+ getAllUser);
+  router.delete(
+    "/delete-user/:id",
+    isAuthenticated,
+    deleteUserbyAdmin)
 
 module.exports = router;

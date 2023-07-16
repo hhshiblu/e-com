@@ -29,4 +29,12 @@ const isSeller= catchAsyncError(async(req,res,next)=>{
    
     next()
 })
-module.exports={isAuthenticated,isSeller}
+const isAdmin = (...roles) => {
+    return (req,res,next) => {
+        if(!roles.includes(req.user.role)){
+            return next(new Errorhandeler(`${req.user.role} can not access this resources!`))
+        };
+        next();
+    }
+}
+module.exports={isAuthenticated,isSeller,isAdmin}

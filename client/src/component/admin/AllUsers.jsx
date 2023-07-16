@@ -24,9 +24,11 @@ const AllUsers = () => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
+console.log(users);
+
   const handleDelete = async (id) => {
     await axios
-    .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
+    .delete(`${server}/delete-user/${id}`, { withCredentials: true })
     .then((res) => {
       toast.success(res.data.message);
     });

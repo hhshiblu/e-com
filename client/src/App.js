@@ -53,6 +53,7 @@ import {
   AdminDashboardProducts,
   AdminDashboardOrders,
   AdminDashboardSellers,
+  AdminDashboardCategory,
   AdminDashboardUsers,
   AdminDashboardPage,
 } from "./Routes/AdminRoutes.js";
@@ -309,6 +310,14 @@ function App() {
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardProducts />
+              </ProtectedAdminRoute>
+            }
+          />
+           <Route
+            path="/admin-category"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardCategory />
               </ProtectedAdminRoute>
             }
           />

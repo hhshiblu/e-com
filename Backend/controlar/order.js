@@ -198,25 +198,21 @@ const SellerAcceptRefund=
 
 
 // all orders --- for admin
-// router.get(
-//   "/admin-all-orders",
-//   isAuthenticated,
-//   isAdmin("Admin"),
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const orders = await Order.find().sort({
-//         deliveredAt: -1,
-//         createdAt: -1,
-//       });
-//       res.status(201).json({
-//         success: true,
-//         orders,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
+const allOrders=
+  CatchAsyncError(async (req, res, next) => {
+    try {
+      const orders = await Order.find().sort({
+        deliveredAt: -1,
+        createdAt: -1,
+      });
+      res.status(201).json({
+        success: true,
+        orders,
+      });
+    } catch (error) {
+      return next(new Errorhandeler(error.message, 500));
+    }
+  });
 
 module.exports = {
   CreateNewOrder,
@@ -224,5 +220,6 @@ module.exports = {
   getOderSeller,
   UpdateOrder,
   UserOrderRefund,
-  SellerAcceptRefund
+  SellerAcceptRefund,
+  allOrders
 };
