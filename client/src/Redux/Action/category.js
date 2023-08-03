@@ -20,7 +20,7 @@ export const createCategory = (newForm) => async (dispatch) => {
 
     dispatch({
       type: "CategoryCreateSuccess",
-      payload: data.category,
+      payload: {category:data.category },
     });
   } catch (error) {
     dispatch({

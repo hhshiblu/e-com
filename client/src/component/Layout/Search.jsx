@@ -1,37 +1,69 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState} from "react";
+import { Link, useNavigate } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import { BiMenuAltLeft } from "react-icons/bi";
-import { categoriesData } from "../../staticData/data";
+
 import {
-  AiOutlineHeart,
-  AiOutlineSearch,
+
   AiOutlineShoppingCart,
   AiFillDashboard,
 } from "react-icons/ai";
-import { GrDashboard } from "react-icons/gr";
+import { ImCancelCircle } from "react-icons/im";
 import { BiCategoryAlt } from "react-icons/bi";
+import { FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import styles from "../../styles/style";
-import DropDown from "./DropDown.jsx";
+import { categoriesData } from "../../staticData/data";
+// import DropDown from "./DropDown.jsx";
 import { useSelector } from "react-redux";
-import { backend_URL } from "../../serverUrl";
-import WishProduct from "../WishProduct/WishProduct.jsx";
-const Search = ({ activeHeading }) => {
+
+import { BsArrowLeftShort } from "react-icons/bs";
+const Search = () => {
+  const navigate = useNavigate();
+
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const [activemenu, setActiveMenu] = useState("nav_menu");
+  const [activeMenu2, setactiveMenu2] = useState("nav_menu2");
+  const [isSticky, setIsSticky] = useState(false);
+  const [open, setOpen] = useState(false);
   const [searchItem, setSearchItem] = useState("");
   const [searchData, setSearchData] = useState([]);
   const { isSeller } = useSelector((state) => state.seller);
   const [dropDown, setDropdown] = useState(false);
-  const [openWishCart, setOpenWishCart] = useState(false);
+
+  const [keyWord, setKeyWord] = useState("");
 
   // const filterCart = cart?.filter((item) => item.user === user?._id);
   // console.log(filterCart);
   // const cartLength=filterCart?.length > 0 ? filterCart[0]?.cartItems?.length : 0;
+  const ToggleMenu = () => {
+    if (activemenu === "nav_menu") {
+      setActiveMenu("nav_menu nav_phone");
+    } else {
+      setActiveMenu("nav_menu");
+      setactiveMenu2("nav_menu2");
+    }
+  };
 
+  const ToggleMenu2 = () => {
+    if (activeMenu2 === "nav_menu2") {
+      setactiveMenu2("nav_menu2 nav_phone2");
+    } else {
+      setactiveMenu2("nav_menu2");
+    }
+  };
+
+  // useEffect(() => {
+  //   const crossIcon = document.querySelector(".cross-icon");
+
+  //     setTimeout(() => {
+  //       crossIcon.classList.add("visiable");
+
+  //     }, 500); // 500 milliseconds delay
+
+  // }, []);
   // const handelSearch = (e) => {
   //   const Item = e.target.value;
   //   setSearchItem(Item);
@@ -45,58 +77,60 @@ const Search = ({ activeHeading }) => {
   //   setSearchData(filterItem);
   // };
 
+  const handelSubmit = () => {
+    if (keyWord) navigate(`/products/all-products/?category=${keyWord}`);
+  };
   // fixed Header
-  window.addEventListener("scroll", function () {
-    const search = document.querySelector(".search");
-    const catagoris = document.querySelector(".catagoris");
 
-    if (search) {
-      if (window.matchMedia("(max-width: 768px)").matches) {
-        search.classList.toggle("active", window.scrollY > 70);
-        // catagoris.classList.toggle("active", window.scrollY > 100);
-      } else {
-        search.classList.remove("active");
-        // catagoris.classList.remove("active");
-      }
 
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        search.classList.toggle("activebigSceen", window.scrollY > 100);
-        // catagoris.classList.toggle("activeBigScreen", window.scrollY > 100);
+
+  // --------------------------------------sticky navbar---------------
+  
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setIsSticky(true);
       } else {
-        search.classList.remove("activebigSceen");
-        // catagoris.classList.remove("activeBigScreen");
+        setIsSticky(false);
       }
-    }
-  });
+    };
+
+    useEffect(() => {
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+
+
 
   return (
     <>
       <div
         className={` search  shadow-md font-300 sticky bg-white pt-0 md:pt-1`}
       >
-        <div className=" grid md:grid-cols-4 gap-0  pb-2 md:pt-1 ">
-          <div className="flex pb-2 justify-between mx-8 md:mx-auto ">
-            <div className=" hidden md:block">
+        <div className={`navbar ${isSticky ? "sticky" : ""}`}>
+          <div className="  h-[60px] min- min-w-fit md:bg-slate-900  md:grid grid-cols-4">
+            <div className="hidden md:block text-white m-auto">
               <Link to="/">EShoop</Link>
             </div>
-          </div>
-
-          <div className="mx-8 md:col-start-2 md:col-span-2 relative    ">
-            <input
-              type="text"
-              placeholder="search any item.."
-              value={searchItem}
-              // onChange={handelSearch}
-              className="h-[40px] w-full px-2 border-[2px] border-[#3957db] rounded-md"
-            />
-            <button
-              type="submit"
-              className="text-white bg-[#050320] absolute right-0 h-[40px] w-[100px] rounded-r-md font-[600]  text "
-            >
-              Search
-            </button>
-            {searchItem && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh bg-slate-50 shadow-sm z-[9] p-4">
+            <div className=" md:col-span-2 !m-auto w-[90%] py-[10px] relative">
+              <input
+                type="text"
+                placeholder="search any item.."
+                value={keyWord}
+                // onChange={handelSearch}
+                onChange={(e) => setKeyWord(e.target.value)}
+                className="h-[40px] w-full px-2 border-[2px] border-[#3957db] rounded-md  "
+              />
+              <button
+                type="submit"
+                onClick={handelSubmit}
+                className="text-white bg-[#050320] absolute right-0 h-[40px] w-[100px] rounded-r-md font-[600]  text "
+              >
+                Search
+              </button>
+              {/* {searchItem && searchData.length !== 0 ? (
+              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm z-[9] p-4">
                 {searchData &&
                   searchData.map((d, index) => {
                     const data = d.name;
@@ -108,213 +142,193 @@ const Search = ({ activeHeading }) => {
                     );
                   })}
               </div>
-            ) : null}
+            ) : null} */}
+            </div>
+            <div className="hidden m-auto  md:flex items-center">
+              <div className={`${styles.normalFlex}`}>
+                <div className="relative cursor-pointer mr-[20px]">
+                  <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
+                    {isAuthenticated ? (
+                      <div className=" bg-[#ffffff] !m-auto rounded-full h-[35px] w-[35px] flex items-center justify-center">
+                        <h1 className=" text-center text-black mt-[-3px] text-[20px]   font-[600] ">
+                          {user?.name.slice(0, 1)}
+                        </h1>
+                      </div>
+                    ) : (
+                      <Link to="/login">
+                        <CgProfile size={30} color="#fff" />
+                      </Link>
+                    )}
+                  </Link>
+                </div>
+              </div>
+
+              <div className={`${styles.normalFlex} mx-1`}>
+                <Link to="/all-cart-products">
+                  <div className="relative cursor-pointer mr-[15px] text-white">
+                    <FiShoppingCart size={30} className="text-white" />
+                    <span className=" absolute right-[-6px] top-[-5px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[14px] font-[50] loading-tight text-center">
+                      {cart && cart.length}
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <div className="hidden  md:flex  mx-auto  ">
-            {/* <div className={`${styles.normalFlex} mx-1`}>
-              <div
-                className="relative cursor-pointer mr-[15px]"
-                // onClick={() => setOpenWishCart(true)}
+          <div className="hidden bg-[#232F3E] h-[39px] md:flex items-center ">
+            <div className="pl-10 my-auto  relative  text-white text-sm md:text-base duration-300 cursor-pointer catagoris">
+              <BiMenuAltLeft size={25} className="absolute left-2" />
+              <h3 className="  font-[600]" onClick={ToggleMenu}>
+                {" "}
+                All Catagogies{" "}
+              </h3>
+            </div>
+            <div className={`hidden  md:block  my-auto ml-12`}>
+              <Navbar />
+            </div>
+            <div className="my-auto">
+              <Link
+                to={`${isSeller ? "/dashboard" : "/become-seller"}`}
+                className="mr-8  text-[#ffffff] font-semibold hover:border-[1px] px-[8px] pt-[9px] pb-[9px]  rounded-md "
               >
-                <AiOutlineHeart size={30} color="#000000" />
-                <span className=" absolute right-0 top-0 rounded-full bg-[#FC4F00] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] loading-tight text-center">
-                  0
-                </span>
-              </div>
-            </div> */}
-            <div className={`${styles.normalFlex} mx-1`}>
-              <Link to="/all-cart-products">
-                <div className="relative cursor-pointer mr-[15px]">
-                  <AiOutlineShoppingCart size={30} color="#000000" />
-                  <span className=" absolute right-0 top-0 rounded-full bg-[#0F044C] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] loading-tight text-center">
-                    {cart && cart.length}
-                  </span>
-                </div>
+                {" "}
+                {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
               </Link>
             </div>
-            <div className={`${styles.normalFlex}`}>
-              <div className="relative cursor-pointer mr-[20px]">
-                {isAuthenticated ? (
-                  <div className=" bg-[#0d092b]  rounded-full h-[30px] w-[30px]">
-                    <p className=" text-center text-white   font-[600] flex justify-center items-center">
-                      {user.name.slice(0, 1)}
-                    </p>
-                  </div>
-                ) : (
-                  <Link to="/login">
-                    <CgProfile size={30} color="#000000" />
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            {/* add Cart Component */}
-            {openWishCart ? (
-              <WishProduct setOpenWishCart={setOpenWishCart} />
-            ) : null}
           </div>
         </div>
-        {/* <header className="bg-[#] mt-1"> */}
-        <div className="hidden catagory md:flex justify-between h-[35px] lg:grid  lg:grid-cols-5  lg:mt-2 ">
-          <div
-            className="pl-10 mt-1 md:col-span-1 relative  text-black text-sm md:text-base duration-300 cursor-pointer catagoris"
-            onClick={() => setDropdown(!dropDown)}
-          >
-            <div>
-              <BiMenuAltLeft size={25} className="absolute  left-2" />
-              <h3 className="  font-[700]"> All Catagogies </h3>
 
-              {dropDown ? (
-                <div>
-                  <DropDown
-                    catagoriesData={categoriesData}
-                    setDropdown={setDropdown}
-                  />
-                </div>
-              ) : null}
+        {/* show category animation i will try allah borosha */}
+
+        <div
+          className={
+            activemenu === "nav_menu nav_phone"
+              ? "fixed top-0 left-0 w-full h-screen bg-[#00000199] z-[20000] "
+              : null
+          }
+        >
+          <ImCancelCircle
+            className={
+              activemenu === "nav_menu nav_phone"
+                ? "fixed top-3 left-[310px]  z-[20000]  border-[3px] border-black cursor-pointer rounded-[100%] text-white"
+                : "hidden"
+            }
+            size={30}
+            onClick={ToggleMenu}
+          />
+          <div className={activemenu}>
+            <div className=" text-left border-b-2 bg-[#01032d] border-b-black  py-2 pl-8 flex items-center">
+              <h1 className="font-bold pr-2 text-lg text-white">Hello , </h1>
+              <h2 className="font-semibold text-lg text-white">
+                {isAuthenticated ? <h1> {user?.name} </h1> : <h1> Sign In </h1>}
+              </h2>
             </div>
-          </div>
 
-          <div
-            className={`hidden  lg:block col-start-2 col-span-4 md:col-start-2 md:col-span-3  mx-auto`}
-          >
-            <Navbar active={activeHeading} />
-          </div>
+            {categoriesData.map((i, index) => {
+              return (
+                <div key={index} className={`${styles.normalFlex}`}>
+                  <h3
+                    className=" cursor-pointer select-none m-2 "
+                    onClick={ToggleMenu2}
+                  >
+                    {i.title}
+                  </h3>
+                </div>
+              );
+            })}
 
-          <div className="mt-1">
-            <Link
-              to={`${isSeller ? "/dashboard" : "/become-seller"}`}
-              className="mr-8  text-[#d31616] font-semibold border border-red-200 p-1 rounded-md bg-gray-200 "
-            >
-              {" "}
-              {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
-            </Link>
+            <div className={activeMenu2}>
+              <div
+                className="text-left border-b-2 border-black py-2 pl-6 flex items-center text-lg font-semibold"
+                onClick={ToggleMenu2}
+              >
+                <BsArrowLeftShort size={30} className="cursor-pointer" />
+                <h1 className="pl-4 cursor-pointer"> Main Categories</h1>
+              </div>
+              <div className="">
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+                <li>ljsdfkajshf</li>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* ----------------------------------phn menu--------------------------------- */}
 
-        <div class="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[55px] mx-auto z-50">
-          <div class="flex">
+        <div className="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[60px] mx-auto z-50">
+          <div className="flex">
             <div
-              class="grow rounded-tr-[30px] "
+              className="grow rounded-tr-[30px] "
               // style="width:calc(50% - 35px)"
             >
-              <div class="flex justify-around">
+              <div className="flex justify-around">
                 <button
                   type="button"
-                  class="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                  onClick={ToggleMenu}
                 >
                   <BiCategoryAlt className="text-white " size={18} />
-                  <p class="mt-[1px] text-xs text-white font-[700] ">
+                  <p className="mt-[1px] text-xs text-white font-[700] ">
                     Category
                   </p>
                 </button>
+                <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
+                  <button
+                    type="button"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                  >
+                    <CgProfile className="text-white " size={18} />
+                    <p className="mt-[1px] text-xs text-white font-[700] ">
+                      Account
+                    </p>
+                  </button>
+                </Link>
                 <button
                   type="button"
-                  class="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
-                >
-                  {isAuthenticated ? (
-                    <div className="  rounded-full h-[20px] w-[20px]">
-                      <Link to="/profile">
-                        <p className=" text-center text-white   font-[600] flex justify-center items-center">
-                          {user.name.slice(0, 1)}..
-                        </p>
-                      </Link>
-                    </div>
-                  ) : (
-                    <Link to="/login">
-                      <CgProfile size={30} color="#000000" />
-                    </Link>
-                  )}
-                  <p class="mt-[1px] text-xs text-white font-[700] ">Account</p>
-                </button>
-                <button
-                  type="button"
-                  class="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-10px]"
+                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-10px]"
                 >
                   <AiOutlineShoppingCart className="text-white " size={18} />
                 </button>
                 <Link to={`${isSeller ? "/dashboard" : "/become-seller"}`}>
-                <button
-                  type="button"
-                  class="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
-                >
-                  
+                  <button
+                    type="button"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                  >
                     <AiFillDashboard className="text-white " size={18} />
-                    <p class="mt-[1px] text-xs text-white font-[700] ">
-                    {isSeller ? "Dashboard" : "Shop"}{" "}
+                    <p className="mt-[1px] text-xs text-white font-[700] ">
+                      {isSeller ? "Dashboard" : "Shop"}{" "}
                     </p>
-                  
-                </button>
+                  </button>
                 </Link>
                 <button
                   type="button"
-                  class="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px] "
+                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px] "
                 >
                   {" "}
                   <Link to="/all-cart-products" className="relative">
-                    <AiOutlineShoppingCart className="text-white  relative" size={18} />
-                    <span className=" absolute right-[-7px] top-[-4px] rounded-full bg-[#0F044C] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] loading-tight text-center">
-                    {cart && cart.length}
-                  </span>
-                    <p class="mt-[1px] text-xs text-white font-[700] ">Cart</p>
+                    <FiShoppingCart
+                      className="text-white  relative"
+                      size={18}
+                    />
+                    <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center">
+                      {cart && cart.length}
+                    </span>
+                    <p className="mt-[1px] text-xs text-white font-[700] ">
+                      Cart
+                    </p>
                   </Link>
                 </button>
               </div>
             </div>
-            {/* <div class="flex-none w-[70px] rounded-bl-full rounded-br-full moon-box-shadow mb-[2px]"></div> */}
-            {/* <div
-              class="bg-[#2E4F4F] grow rounded-tl-[30px]"
-              // style="width:calc(50% - 35px)"
-            >
-              {/* <div class="flex justify-around"> 
-                <a href="/print-documents">
-                  <button type="button" class="text-center px-3 py-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="mx-auto"
-                    >
-                      <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                      <rect x="6" y="14" width="12" height="8"></rect>
-                    </svg>
-                    <p class="text-[11px] mt-[2px] text-white">Printer</p>
-                  </button>
-                </a>
-                <button type="button" class="text-center px-3 py-4 relative">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="mx-auto"
-                  >
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                  </svg>
-                  <p class="absolute text-[11px] top-[3px] -right-[2px] pt-[3px] text-white bg-primary w-[22px] h-[22px] grid place-items-center rounded-full">
-                    1{" "}
-                  </p>
-                  <p class="text-[11px] mt-[2px]">Cart</p>
-                </button>
-              </div> */}
-            {/* </div> */}
           </div>
         </div>
       </div>

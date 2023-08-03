@@ -61,22 +61,10 @@ function ProductCart() {
                 <div>
                   <div className="flex gap-3 p-2 bg-gray-100 rounded">
                     <div className="overflow-hidden border rounded">
-                      <div>
-                        <img
-                          alt="product"
-                          loading="lazy"
-                          width="50"
-                          height="50"
-                          decoding="async"
-                          data-nimg="1"
-                          className="mx-auto opacity-0 transition-opacity duration-300 ease-in-out 
-                   undefined "
-                          src="https://media.e-valy.com/cms/brands/logo/7bd5cdf9-b7b7-4c07-a5f1-501ce9fd1b7c?h=350&amp;w=350"
-                        />
-                      </div>
+        
                     </div>
-                    <p className="font-medium">
-                      Executive Machines Limited For PNP
+                    <p className="font-medium m-auto">
+                          all cart products
                     </p>
                   </div>
                   <ul className="flex flex-col gap-6 mt-4">
@@ -106,17 +94,7 @@ function ProductCart() {
                 
             
                   <hr />
-                  
 
-                  <br />
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Copon Code"
-                      classNameName="appearance-none  w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 sm:text-sm"
-                    />
-                  </div>
-                  <br />
                   <button
                     className="btn type-primary size-lg  opacity-50 w-full  bg-[#e44343] border-[#e4434373] py-1 rounded-md text-white font-semibold "
                     disabled=""

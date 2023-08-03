@@ -1,80 +1,116 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import {  useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux';
-import {createProduct} from "../../Redux/Action/product"
-import { useNavigate } from 'react-router-dom';
-import { categoriesData } from '../../staticData/data';
-import {toast} from "react-toastify"
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { createProduct } from "../../Redux/Action/product";
+import { useNavigate } from "react-router-dom";
+import { categoriesData } from "../../staticData/data";
+import { toast } from "react-toastify";
+const colorsData = ["Red", "White", "Green"];
+const sizesData = ["22", "23", "29", "42"];
+
 function CreateProduct() {
-    const {seller}= useSelector(state=>state.seller);
-    const {success,error}= useSelector(state=>state.products);
-    
-    const navigate=useNavigate()
-    const dispatch=useDispatch()
-    const [images,setImages]=useState([])
+  const { seller } = useSelector((state) => state.seller);
+  const { success, error } = useSelector((state) => state.products);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
 
-    const [product,setProduct]=useState({
-     ProductName:"",
-     description:"",
-     category:"",
-     tags:"",
-     originalPrice:"",
-     discountPrice:"",
-     stock:"",
-     
-    })
+  const handleColorChange = (e, color) => {
+    const { checked } = e.target;
+    if (checked) {
+      setSelectedColors((prevColors) => [...prevColors, color]);
+    } else {
+      setSelectedColors((prevColors) => prevColors.filter((c) => c !== color));
+    }
+  };
 
-    useEffect(() => {
-      if (error) {
-        toast.error(error);
-      }
-      if (success) {
-        toast.success("Product created successfully!");
-        navigate("/dashboard-products");
-        window.location.reload();
-      }
-    }, [dispatch, error, success]);
-  
-    
-    const handleImageChange = (e) => {
-        e.preventDefault();
-    
-        let files = Array.from(e.target.files);
-        setImages((prevImages) => [...prevImages, ...files]);
-      };
+  const handleSizeChange = (e, size) => {
+    const { checked } = e.target;
+    if (checked) {
+      setSelectedSizes((prevSizes) => [...prevSizes, size]);
+    } else {
+      setSelectedSizes((prevSizes) => prevSizes.filter((s) => s !== size));
+    }
+  };
+
+  console.log(selectedColors, selectedSizes);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [images, setImages] = useState([]);
+
+  const [product, setProduct] = useState({
+    ProductName: "",
+    description: "",
+    category: "",
+    tags: "",
+    originalPrice: "",
+    discountPrice: "",
+    stock: "",
+  });
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (success) {
+      toast.success("Product created successfully!");
+      navigate("/dashboard-products");
+      window.location.reload();
+    }
+  }, [dispatch, error, success, navigate]);
+
+  const handleImageChange = (e) => {
+    e.preventDefault();
+
+    let files = Array.from(e.target.files);
+    setImages((prevImages) => [...prevImages, ...files]);
+  };
 
   const handelChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
-const HandelSubmit=(e)=>{
-    e.preventDefault();
-    
-    const newForm = new FormData();
 
-    images.forEach((image) => {
-      newForm.append("images", image);
-    });
-    newForm.append("name", product.ProductName);
-    newForm.append("description", product.description);
-    newForm.append("category", product.category);
-    newForm.append("tags", product.tags);
-    newForm.append("originalPrice", product.originalPrice);
-    newForm.append("discountPrice", product.discountPrice);
-    newForm.append("stock", product.stock);
-    newForm.append("sellerId", seller._id);
-    dispatch(createProduct(newForm))
-}   
 
-return (
+ const HandelSubmit = (e) => {
+   e.preventDefault();
+
+   const newForm = new FormData();
+
+   images.forEach((image) => {
+     newForm.append("images", image);
+   });
+
+   newForm.append("name", product.ProductName);
+   newForm.append("description", product.description);
+   newForm.append("category", product.category);
+   newForm.append("tags", product.tags);
+   newForm.append("originalPrice", product.originalPrice);
+   newForm.append("discountPrice", product.discountPrice);
+   newForm.append("stock", product.stock);
+
+   // Add selected colors and sizes to the form data
+   selectedColors.forEach((color) => {
+     newForm.append("color", color);
+   });
+   selectedSizes.forEach((size) => {
+     newForm.append("size", size);
+   });
+
+   newForm.append("sellerId", seller._id);
+   dispatch(createProduct(newForm));
+ };
+
+
+  return (
     <div className="w-[90%] 800px:w-[84%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Product</h5>
       {/* create product form */}
       <form onSubmit={HandelSubmit}>
         <hr />
         <br />
-        
+
         <div>
           <label className="pb-2">
             Name <span className="text-red-500">*</span>
@@ -112,7 +148,7 @@ return (
           </label>
           <select
             className="w-full mt-2 border h-[35px] rounded-[5px]"
-            name='category'
+            name="category"
             value={product.category}
             onChange={handelChange}
           >
@@ -136,6 +172,40 @@ return (
             onChange={handelChange}
             placeholder="Enter your product tags..."
           />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Colors</label>
+          {colorsData.map((color) => (
+            <label key={color}>
+              <input
+                type="checkbox"
+                name="colors"
+                value={color}
+                checked={selectedColors.includes(color)}
+                onChange={(e) => handleColorChange(e, color)}
+              />
+              {color}
+            </label>
+          ))}
+        </div>
+        <br />
+
+        {/* Size checkboxes */}
+        <div>
+          <label className="pb-2">Sizes</label>
+          {sizesData.map((size) => (
+            <label key={size}>
+              <input
+                type="checkbox"
+                name="sizes"
+                value={size}
+                checked={selectedSizes.includes(size)}
+                onChange={(e) => handleSizeChange(e, size)}
+              />
+              {size}
+            </label>
+          ))}
         </div>
         <br />
         <div>
@@ -218,4 +288,4 @@ return (
   );
 }
 
-export default CreateProduct
+export default CreateProduct;

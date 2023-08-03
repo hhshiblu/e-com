@@ -6,7 +6,8 @@ import AdminDashboardProducts from "../pages/admin/AdminDashboardProducts.jsx"
 import AdminDashboardEvents from "../pages/admin/AdminDashboardEvents.jsx"
 import AdminDashboardWithdraw from "../pages/admin/AdminDashboardWithdraw.jsx"
 import AdminDashboardCategory from "../pages/admin/AdminDashboardCategory.jsx"
-
+import AdminDashboardBanar from "../pages/admin/AdminDashboardBanar.jsx";
+import AdminUpComingItems from "../pages/admin/AdminUpComingItems.jsx";
 export {
   AdminDashboardPage,
   AdminDashboardUsers,
@@ -16,4 +17,6 @@ export {
   AdminDashboardEvents,
   AdminDashboardWithdraw,
   AdminDashboardCategory,
+  AdminDashboardBanar,
+  AdminUpComingItems,
 };

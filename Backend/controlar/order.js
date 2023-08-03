@@ -88,21 +88,28 @@ const UpdateOrder = CatchAsyncError(async (req, res, next) => {
     if (!order) {
       return next(new Errorhandeler("Order not found with this id", 400));
     }
-    if (req.body.status === "Transferred to delivery partner") {
-   
-    }
-
-    
 
     if (req.body.status === "Delivered") {
       order.deliveredAt = Date.now();
       order.paymentInfo.status = "Succeeded";
       const serviceCharge = order.totalPrice * 0.1;
-      order.cart.forEach(async (o) => {
-        await updateOrder(o._id, o.qty);
-      });
+
+      for (const o of order.cart) {
+        const product = await Product.findById(o._id);
+        if (!product) {
+          return next(
+            new Errorhandeler(`Product not found with id ${o._id}`, 404)
+          );
+        }
+        product.stock -= o.qty;
+        product.sold_out += o.qty;
+
+        await product.save({ validateBeforeSave: false });
+      }
+
       await updateSellerInfo(order.totalPrice - serviceCharge);
     }
+
     order.status = req.body.status;
 
     await order.save({ validateBeforeSave: false });
@@ -112,17 +119,14 @@ const UpdateOrder = CatchAsyncError(async (req, res, next) => {
       order,
     });
 
-    async function updateOrder(id, qty) {
-      const product = await Product.findById(id);
-
-      product.stock -= qty;
-      product.sold_out += qty;
-
-      await product.save({ validateBeforeSave: false });
-    }
-
     async function updateSellerInfo(amount) {
       const seller = await Seller.findById(req.seller.id);
+
+      if (!seller) {
+        return next(
+          new Errorhandeler(`Seller not found with id ${req.seller.id}`, 404)
+        );
+      }
 
       seller.availableBalance = amount;
 
@@ -132,6 +136,7 @@ const UpdateOrder = CatchAsyncError(async (req, res, next) => {
     return next(new Errorhandeler(error.message, 500));
   }
 });
+
 
 // give a refund ----- user
 const UserOrderRefund=

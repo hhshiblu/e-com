@@ -13,21 +13,23 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 import { toast } from "react-toastify";
-import { RxCross1 } from "react-icons/rx";
+// import { RxCross1 } from "react-icons/rx";
 import styles from "../../styles/style";
 import { server } from "../../serverUrl";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
   const [open, setOpen] = useState(false);
+  const { leatestorderData } = useSelector((state) => state.orderData);
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
 
+   console.log("order data:", leatestorderData, user);
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
-    console.log(orderData);
+    
     setOrderData(orderData);
   }, []);
 
@@ -59,9 +61,6 @@ const Payment = () => {
     user: user && user,
     totalPrice: orderData?.totalPrice,
   };
-
-
-
 
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
@@ -118,8 +117,6 @@ const Payment = () => {
     }
   };
 
-
-
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
 
@@ -134,15 +131,15 @@ const Payment = () => {
     };
 
     await axios
-    .post(`${server}/order/create-order`, order, config)
-    .then((res) => {
-      setOpen(false);
-      // navigate("/order/success");
-      toast.success("Order successful!");
-      localStorage.setItem("cartItems", JSON.stringify([]));
-      localStorage.setItem("latestOrder", JSON.stringify([]));
-      // window.location.reload();
-    });
+      .post(`${server}/order/create-order`, order, config)
+      .then((res) => {
+        setOpen(false);
+        // navigate("/order/success");
+        toast.success("Order successful!");
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+        // window.location.reload();
+      });
   };
 
   return (
@@ -153,7 +150,6 @@ const Payment = () => {
             user={user}
             open={open}
             setOpen={setOpen}
-           
             createOrder={createOrder}
             paymentHandler={paymentHandler}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
@@ -291,10 +287,6 @@ const PaymentInfo = ({
       </div>
 
       <br />
-    
-
-     
-    
 
       <br />
       {/* cash on delivery */}
@@ -331,7 +323,6 @@ const PaymentInfo = ({
 };
 
 const CartData = ({ orderData }) => {
- 
   const shipping = orderData?.shipping?.toFixed(2);
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
@@ -347,7 +338,9 @@ const CartData = ({ orderData }) => {
       <br />
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
-        <h5 className="text-[18px] font-[600]">{orderData?.discountPrice? "$" + orderData.discountPrice : "-"}</h5>
+        <h5 className="text-[18px] font-[600]">
+          {orderData?.discountPrice ? "$" + orderData.discountPrice : "-"}
+        </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">
         ${orderData?.totalPrice}
@@ -358,4 +351,3 @@ const CartData = ({ orderData }) => {
 };
 
 export default Payment;
-

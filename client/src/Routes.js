@@ -17,12 +17,14 @@ import OrderSuccessPage from "./pages/OrderSuccessPage.jsx"
 import UserOrderDetailsPage from "./pages/UserOrderDetailsPage.jsx"
 import TrackOrderPage from "./pages/TrackOrderPage.jsx"
 import UserInbox from "./pages/UserInbox.jsx"
+import CateProductsPage from "./pages/CateProductsPage.jsx";
 export{
     HomePage,
     LoginPage,
     SignUpPage,
     ActivationPage,
     ProductsPage,
+    CateProductsPage,
     BestSellingPage,
     FaqPage,
     CartPage,

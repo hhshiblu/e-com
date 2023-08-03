@@ -32,16 +32,23 @@ const ProductDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { products } = useSelector((state) => state.products);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(data);
   useEffect(() => {
     dispatch(getAllShopProduct(data && data?.seller._id));
-  }, [data]);
+  }, [data, dispatch]);
+
+  const percentageDiscount =
+    data?.originalPrice === 0
+      ? 0
+      : ((data?.originalPrice - data?.discountPrice) / data?.originalPrice) *
+        100;
 
   const incrementCount = () => {
     setCount(count + 1);
@@ -106,11 +113,11 @@ const ProductDetails = ({ data }) => {
     }
   };
   return (
-    <div className="bg-white">
+    <div className="bg-white ">
       {data ? (
-        <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
-          <div className="w-full py-5">
-            <div className="block w-full md:flex gap-5">
+        <div className={`${styles.section} w-[90%] 800px:w-[90%]`}>
+          <div className="w-full py-7">
+            <div className="block w-full md:flex gap-5 ">
               {/* ---------------------------------------image part------------------- */}
 
               <div className="w-full md:w-[50%] lg:w-[30%] h-[55vh]">
@@ -118,19 +125,19 @@ const ProductDetails = ({ data }) => {
                   <img
                     src={`${backend_URL}upload/${data && data.images[select]}`}
                     alt=""
-                    className="w-[100%] 800px:w-[90%] m-auto h-[100%]  "
+                    className="w-[100%] 800px:w-[98%] m-auto h-[100%]  "
                   />
                 </div>
 
-                <div className=" flex gap-4 w-full pt-4">
+                <div className=" flex gap-4 w-full pt-6">
                   {data &&
                     data.images.map((i, index) => (
                       <div
                         className={`${
                           select === index
-                            ? "border border-red-400"
+                            ? "border-[2px] border-red-400"
                             : "null border"
-                        } cursor-pointer h-[60px] flex justify-center items-center p-2`}
+                        } cursor-pointer h-[40px] w-[40px] flex justify-center items-center `}
                       >
                         <img
                           src={`${backend_URL}upload/${i}`}
@@ -153,9 +160,6 @@ const ProductDetails = ({ data }) => {
                     <span>no Stock</span>
                   )}
                 </p>
-
-
-
 
                 <hr />
                 <h1 className={`${styles.productTitle} py-2`}>{data.name}</h1>
@@ -196,50 +200,69 @@ const ProductDetails = ({ data }) => {
                       <span>{"৳" + data.originalPrice} </span>
                     ) : null}
                   </h3>
+                  <div className="text-sm  text-blue-950 pl-4">
+                    ({percentageDiscount.toFixed(0)}%)
+                  </div>
                   {/* <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
                 </div>
                 <hr />
-                <div className="py-3 ">
+                <div className="py-2 flex items-center">
+                  <h1 className="font-semibold text-sm md:text-lg">
+                    {data?.color?.length > 0 ? "Color :" : ""}{" "}
+                  </h1>
                   {data.color ? (
-                    <h1 className="flex">
-                      Color :{" "}
-                      {data.color.map((i, index) => {
+                    <div className="flex">
+                      {data.color.map((color, index) => {
+                        // Change 'i' to 'color' here
                         return (
                           <span
                             key={index}
                             className={`${
-                              select === 0 ? " border border-red-400" : "null"
-                            } cursor-pointer p-2 mx-2`}
+                              selectedColor === index
+                                ? "border border-red-400"
+                                : null
+                            } cursor-pointer p-[3px] mx-2`}
                           >
-                            {i.color}
+                            <h1 onClick={() => setSelectedColor(index)}>
+                              {color}{" "}
+                            </h1>{" "}
+                            {/* Change 'i.color' to 'color' here */}
                           </span>
                         );
-                      })}{" "}
-                    </h1>
+                      })}
+                    </div>
                   ) : null}
                 </div>
-                <div className="pt-2">
+                <div className="py-2 flex items-center">
+                  <h1 className="font-semibold text-sm md:text-lg">
+                    {data?.size?.length > 0 ? "Size :" : ""}{" "}
+                  </h1>
                   {data.size ? (
                     <h1 className="flex">
-                      Color :{" "}
-                      {data.size.map((i, index) => {
+                      {data.size.map((size, index) => {
+                        // Change 'i' to 'color' here
                         return (
                           <span
                             key={index}
                             className={`${
-                              select === 0 ? " border border-red-400" : "null"
-                            } cursor-pointer p-2 mx-2`}
+                              selectedSize === index
+                                ? "border border-red-400"
+                                : null
+                            } cursor-pointer px-[2px] mx-2`}
                           >
-                            {i.color}
+                            <h1 onClick={() => setSelectedSize(index)}>
+                              {size}{" "}
+                            </h1>{" "}
+                            {/* Change 'i.color' to 'color' here */}
                           </span>
                         );
-                      })}{" "}
+                      })}
                     </h1>
                   ) : null}
                 </div>
 
                 <div className="flex items-center mt-4 justify-between pr-3">
-                  <div class="inline-flex pl-3">
+                  <div class="inline-flex pl-12">
                     <div
                       className={`bg-[#f24729] border-[#e4434373] mt-2  rounded-sm w-[30px] h-[30px] ${styles.normalFlex}  justify-center cursor-pointer  shadow-lg hover:opacity-75 transition duration-300 ease-in-out`}
                       onClick={incrementCount}

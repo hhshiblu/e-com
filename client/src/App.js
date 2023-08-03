@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -22,13 +22,13 @@ import {
   UserOrderDetailsPage,
   TrackOrderPage,
   UserInbox,
+  CateProductsPage,
 } from "./Routes.js";
 import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { server } from "./serverUrl";
 import Store from "./Redux/Store";
 import { loadSeller, loadUser } from "./Redux/Action/user";
-import { useSelector } from "react-redux";
 
 import {
   ShopHomePage,
@@ -56,6 +56,8 @@ import {
   AdminDashboardCategory,
   AdminDashboardUsers,
   AdminDashboardPage,
+  AdminDashboardBanar,
+  AdminUpComingItems,
 } from "./Routes/AdminRoutes.js";
 import ProtectedRoute from "./ProtectRoutes/ProtectedRoute";
 import ProtectSellerRoute from "./ProtectRoutes/ProtectSellerRoute";
@@ -66,6 +68,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { server } from "./serverUrl";
 import ProtectedAdminRoute from "./ProtectRoutes/ProtectedAdminRoute";
+import { leatestOrderData } from "./Redux/Action/orderData";
+import { getAllBanar } from "./Redux/Action/banar";
+import ScrollTop from "./component/scrollToTop/ScrollTop";
 
 axios.defaults.withCredentials = true;
 function App() {
@@ -76,17 +81,20 @@ function App() {
     setStripeApiKey(data.stripeApikey);
   }
   useEffect(() => {
+    Store.dispatch(getAllBanar());
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
     Store.dispatch(getAllEvents());
+    Store.dispatch(leatestOrderData());
     getStripeApikey();
-    window.scrollTo(0, 0);
+
   }, []);
 
   return (
     <div>
       <BrowserRouter>
+        <ScrollTop />
         {stripeApikey && (
           <Elements stripe={loadStripe(stripeApikey)}>
             <Routes>
@@ -114,9 +122,10 @@ function App() {
             element={<SellerActivationPage />}
           />
           <Route path="/all-products" element={<ProductsPage />} />
+          <Route path="/products/all-products" element={<CateProductsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
-          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/some-related-faq" element={<FaqPage />} />
           <Route path="/all-cart-products" element={<CartPage />} />
           <Route
             path="/profile"
@@ -282,6 +291,14 @@ function App() {
             }
           />
           <Route
+            path="/admin-up-items"
+            element={
+              <ProtectedAdminRoute>
+                <AdminUpComingItems />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
             path="/admin-users"
             element={
               <ProtectedAdminRoute>
@@ -313,7 +330,7 @@ function App() {
               </ProtectedAdminRoute>
             }
           />
-           <Route
+          <Route
             path="/admin-category"
             element={
               <ProtectedAdminRoute>
@@ -334,6 +351,14 @@ function App() {
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardWithdraw />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-hero-section"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardBanar />
               </ProtectedAdminRoute>
             }
           />

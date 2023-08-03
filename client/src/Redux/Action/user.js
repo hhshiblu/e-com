@@ -2,6 +2,7 @@ import axios from "axios";
 import { server } from "../../serverUrl";
 
 
+
 // load user
 export const loadUser = () => async (dispatch) => {
   try {
@@ -93,7 +94,7 @@ export const updateUserInformation =
 
 // update user address
 export const updatUserAddress =
-  (country, city, address1, address2, zipCode, addressType) =>
+  (division, district, address1,  zipCode, addressType) =>
   async (dispatch) => {
     try {
       dispatch({
@@ -103,10 +104,9 @@ export const updatUserAddress =
       const { data } = await axios.put(
         `${server}/update-user-addresses`,
         {
-          country,
-          city,
+          division,
+          district,
           address1,
-          address2,
           zipCode,
           addressType,
         },
@@ -143,7 +143,7 @@ export const deleteUserAddress = (id) => async (dispatch) => {
     dispatch({
       type: "deleteUserAddressSuccess",
       payload: {
-        successMessage: "User deleted successfully!",
+        successMessage: "address  deleted successfully!",
         user: data.user,
       },
     });

@@ -1,33 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "../../styles/style";
+import React from 'react'
 
-function DropDown({ catagoriesData, setDropdown, dropDown }) {
-  const navigate = useNavigate();
-
-  const SubmitHandler = (i) => {
-    navigate(`/all-products?category=${i.title}`);
-    setDropdown(false);
-    window.location.reload(true);
-  };
+function DropDown() {
   return (
-    <div className=" pb-4 w-[270px] bg-[#fff] absolute z-50   rounded-b-md shadow-sm ">
-      {catagoriesData &&
-        catagoriesData.map((i, index) => {
-          return (
-            <div
-              key={index}
-              className={`${styles.normalFlex} `}
-              onClick={() => SubmitHandler(i)}
-            >
-              <h3 className=" cursor-pointer select-none m-2 text-cyan-950">
-                {i.title}
-              </h3>
-            </div>
-          );
-        })}
-    </div>
-  );
+    <div>DropDown</div>
+  )
 }
 
-export default DropDown;
+export default DropDown

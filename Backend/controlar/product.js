@@ -1,9 +1,10 @@
 const Product = require("../Modal/product");
 const Seller = require("../Modal/seller");
-const Order=require("../Modal/order.js")
-const fs = require("fs"); 
+const Order = require("../Modal/order.js");
+const fs = require("fs");
 const Errorhandeler = require("../utils/Errorhandeler");
 const CatchAsyncError = require("../Middleware/CatchAsyncError");
+const APIFilters = require("../utils/APIFilters");
 
 // create product
 const createproduct = CatchAsyncError(async (req, res, next) => {
@@ -81,90 +82,135 @@ const ShopDeleteProduct = CatchAsyncError(async (req, res, next) => {
 });
 
 //get all products
-const getAllProducts=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const products = await Product.find().sort({ createdAt: -1 });
-      
-  
+// const getAllProducts=
+//   CatchAsyncError(async (req, res, next) => {
+//     try {
+//       const products = await Product.find().sort({ createdAt: -1 });
 
-      res.status(201).json({
-        success: true,
-        products,
-      });
-     
-    } catch (error) {
-      return next(new Errorhandeler(error, 400));
+//       res.status(201).json({
+//         success: true,
+//         products,
+//       });
+
+//     } catch (error) {
+//       return next(new Errorhandeler(error, 400));
+//     }
+//   });
+
+const getAllProducts = CatchAsyncError(async (req, res, next) => {
+  try {
+    const resPerPage = 4;
+    const { category, page } = req.query;
+
+    // Create a base query for fetching products
+    let query = Product.find().sort({ createdAt: -1 });
+
+    // Create an instance of the APIFilters class
+    const filters = new APIFilters(query, req.query);
+
+    // If a category is specified, add it to the search filter
+    if (category) {
+      filters.filter().search();
+    } else {
+      filters.search().filter();
     }
-  });
+
+    // Execute the query and get the total count of products matching the filters
+    const products = await filters.query;
+    const filteredProductsCount = products.length;
+
+    // Apply pagination
+    filters.pagination(resPerPage);
+
+    // Execute the final query with pagination
+    const paginatedProducts = await filters.query.clone();
+
+    // Get the total count of all products (without filtering)
+    const totalProductsCount = await Product.countDocuments();
+
+    res.status(200).json({
+      products: paginatedProducts,
+      productsCount: totalProductsCount,
+      resPerPage,
+      filteredProductsCount,
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error, 400));
+  }
+});
 
 // review for a product
-const reviewProduct=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const { user, rating, comment, productId, orderId } = req.body;
+const reviewProduct = CatchAsyncError(async (req, res, next) => {
+  try {
+    const { user, rating, comment, productId, orderId } = req.body;
 
-      const product = await Product.findById(productId);
+    const product = await Product.findById(productId);
 
-      const review = {
-        user,
-        rating,
-        comment,
-        productId,
-      };
+    const review = {
+      user,
+      rating,
+      comment,
+      productId,
+    };
 
-      const isReviewed = product.reviews.find(
-        (rev) => rev.user._id === req.user._id
-      );
+    const isReviewed = product.reviews.find(
+      (rev) => rev.user._id === req.user._id
+    );
 
-      if (isReviewed) {
-        product.reviews.forEach((rev) => {
-          if (rev.user._id === req.user._id) {
-            (rev.rating = rating), (rev.comment = comment), (rev.user = user);
-          }
-        });
-      } else {
-        product.reviews.push(review);
-      }
-
-      let avg = 0;
-
+    if (isReviewed) {
       product.reviews.forEach((rev) => {
-        avg += rev.rating;
+        if (rev.user._id === req.user._id) {
+          (rev.rating = rating), (rev.comment = comment), (rev.user = user);
+        }
       });
-
-      product.ratings = avg / product.reviews.length;
-
-      await product.save({ validateBeforeSave: false });
-
-      await Order.findByIdAndUpdate(
-        orderId,
-        { $set: { "cart.$[elem].isReviewed": true } },
-        { arrayFilters: [{ "elem._id": productId }], new: true }
-      );
-
-      res.status(200).json({
-        success: true,
-        message: "Reviwed succesfully!",
-      });
-    } catch (error) {
-      return next(new Errorhandeler(error, 400));
+    } else {
+      product.reviews.push(review);
     }
-  });
+
+    let avg = 0;
+
+    product.reviews.forEach((rev) => {
+      avg += rev.rating;
+    });
+
+    product.ratings = avg / product.reviews.length;
+
+    await product.save({ validateBeforeSave: false });
+
+    await Order.findByIdAndUpdate(
+      orderId,
+      { $set: { "cart.$[elem].isReviewed": true } },
+      { arrayFilters: [{ "elem._id": productId }], new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Reviwed succesfully!",
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error, 400));
+  }
+});
 
 // all products --- for admin
-const adminAllProduct=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const products = await Product.find().sort({
-        createdAt: -1,
-      });
-      res.status(201).json({
-        success: true,
-        products,
-      });
-    } catch (error) {
-      return next(new Errorhandeler(error.message, 500));
-    }
-  });
-module.exports = { createproduct, getShopProduct,ShopDeleteProduct,getAllProducts,reviewProduct,adminAllProduct };
+const adminAllProduct = CatchAsyncError(async (req, res, next) => {
+  try {
+    const products = await Product.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error.message, 500));
+  }
+});
+module.exports = {
+  createproduct,
+  getShopProduct,
+  ShopDeleteProduct,
+  getAllProducts,
+  reviewProduct,
+  adminAllProduct,
+};

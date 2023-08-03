@@ -43,7 +43,7 @@ export const getAllOrdersOfShop = (shopId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAllOrdersShopFailed",
-      payload: error.response.data.message,
+      // payload: error.response.data.message,
     });
   }
 };

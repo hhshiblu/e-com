@@ -10,7 +10,8 @@ slug:{
     type:String,
     required:true,
     unique:true
-},
+    },
+cateImage:{type:String},
 parentId:{
     type:String
 }

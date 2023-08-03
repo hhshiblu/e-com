@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { navItems } from "../../staticData/data.js";
 import styles from "../../styles/style";
-const Navbar = ({active}) => {
+const Navbar = () => {
   
   return (
     <>
@@ -13,9 +13,7 @@ const Navbar = ({active}) => {
               <div className="flex" key={index}>
                 <Link
                   to={i.url}
-                  className={`${
-                    active === index + 1 ? "text-[#041C32]" : "text-amber-800"
-                  } px-6 items-center cursor-pointer font-[500]`}
+                  className={` text-white px-6 items-center cursor-pointer font-[400] text-[15px] hover:border-[1px]  pt-[9px] pb-[6px] rounded-md`}
                 >
                   {i.title}
                 </Link>

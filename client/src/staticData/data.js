@@ -1,23 +1,20 @@
 // navigation Data
 export const navItems = [
-    {
-      title: "Home",
-      url: "/",
-    },
-    {
-      title: "Best Selling",
-      url: "/best-selling-products",
-    },
-    {
-      title: "Products",
-      url: "/all-products",
-    },
-    {
-      title: "Events",
-      url: "/events",
-    },
-   
-  ];
+
+  {
+    title: "Best Deals",
+    url: "/best-selling-products",
+  },
+
+  {
+    title: "FAQ's",
+    url: "/some-related-faq",
+  },
+  {
+    title: "About",
+    url: "/about",
+  },
+];
   
   // branding data
   export const brandingData = [
@@ -314,4 +311,101 @@ export const navItems = [
     {
       name: "Live chat",
     },
-  ];
+];
+  
+export const Division = [
+  {
+    name: "Dhaka",
+    value: "Dh",
+    district: [
+      "Dhaka",
+      "Gazipur",
+      "Faridpur",
+      "Gopalganj",
+      "Kishoreganj",
+      "Tangail",
+      "Shariatpur ",
+      "Rajbari",
+      "Narsingdi",
+      "Narayanganj",
+      "Manikganj",
+      "Madaripur",
+    ],
+  },
+  {
+    name: "Mymenshingh",
+    value: "My",
+    district: ["Mymensingh", "Netrakona", "Jamalpur", "Sherpur"],
+  },
+  {
+    name: "Khulna",
+    value: "Kh",
+    district: [
+      "Khulna",
+      "Bagherhat",
+      "Sathkhira",
+      "Jessore",
+      "Magura",
+      "Jhenaidah",
+      "Narail ",
+      "Kushtia",
+      "Chuadanga ",
+      "Meherpur",
+    ],
+  },
+  {
+    name: "Barishal",
+    value: "Ba",
+    district: [
+      "Barishal",
+      "Pirojpur",
+      "Jhalokathi",
+      "Barguna",
+      "Bhola",
+      "Pirojpur",
+    ],
+  },
+  {
+    name: "Rajshahi",
+    value: "Ra",
+    district: [
+      "Rajshahi",
+      "Sirajganj",
+      "Pabna",
+      "Natore",
+      "Naogaon",
+      "Tangail",
+      "Bogra ",
+      "Chapinawabganj",
+      "Joypurhat",
+    ],
+  },
+  {
+    name: "Chittagong",
+    value: "Ch",
+    district: [
+      "Chittagong",
+      "Chandpur",
+      "Brahmanbaria ",
+      "Noakhali",
+      "Comilla",
+      "Lakshmipur",
+      "Feni ",
+      "Khagrachhari",
+      "Bandarban",
+      "Rangamati",
+      "Cox's Bazar",
+    ],
+  },
+  {
+    name: "Sylhet",
+    value: "Sy",
+    district: [
+      "Sylhet",
+      "Sunamganj ",
+      "Moulvibazar",
+      "Habiganj",
+     
+    ],
+  },
+];

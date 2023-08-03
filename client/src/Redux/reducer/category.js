@@ -1,9 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-const initialState={
+const initialState = {
+
     isloading:true,
 }
 
+const buildNewCategory = (asf, asfas)=>{
+  
+}
 
 export const categoryReducer=createReducer(initialState,{
     CategoryCreateRequest:(state)=>{
@@ -11,7 +15,7 @@ export const categoryReducer=createReducer(initialState,{
     },
     CategoryCreateSuccess:(state,action)=>{
         state.isloading=false;
-        state.category=action.payload;
+      state.category = buildNewCategory(state.category, action.payload.category);
         state.success=true;
     },
     CategoryCreateFail:(state,action)=>{
