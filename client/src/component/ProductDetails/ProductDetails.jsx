@@ -113,270 +113,276 @@ const ProductDetails = ({ data }) => {
     }
   };
   return (
-    <div className="bg-white ">
-      {data ? (
-        <div className={`${styles.section} w-[90%] 800px:w-[90%]`}>
-          <div className="w-full py-7">
-            <div className="block w-full md:flex gap-5 ">
-              {/* ---------------------------------------image part------------------- */}
+    <div>
+      
+      <div className="bg-white ">
+        {data ? (
+          <div className={`${styles.section} w-[90%] 800px:w-[90%]`}>
+            <div className="w-full py-7">
+              <div className="block w-full md:flex gap-5 ">
+                {/* ---------------------------------------image part------------------- */}
 
-              <div className="w-full md:w-[50%] lg:w-[30%] h-[55vh]">
-                <div className="h-[80%]  m-auto">
-                  <img
-                    src={`${backend_URL}upload/${data && data.images[select]}`}
-                    alt=""
-                    className="w-[100%] 800px:w-[98%] m-auto h-[100%]  "
-                  />
+                <div className="w-full md:w-[50%] lg:w-[30%] h-[55vh]">
+                  <div className="h-[80%]  m-auto">
+                    <img
+                      src={`${backend_URL}upload/${
+                        data && data.images[select]
+                      }`}
+                      alt=""
+                      className="w-[100%] 800px:w-[98%] m-auto h-[100%]  "
+                    />
+                  </div>
+
+                  <div className=" flex gap-4 w-full pt-6">
+                    {data &&
+                      data.images.map((i, index) => (
+                        <div
+                          className={`${
+                            select === index
+                              ? "border-[2px] border-red-400"
+                              : "null border"
+                          } cursor-pointer h-[40px] w-[40px] flex justify-center items-center `}
+                        >
+                          <img
+                            src={`${backend_URL}upload/${i}`}
+                            alt=""
+                            className="  h-full overflow-hidden mx-auto"
+                            onClick={() => setSelect(index)}
+                          />
+                        </div>
+                      ))}
+                  </div>
                 </div>
+                {/* ------------------------ product Information part ---------------------------- */}
 
-                <div className=" flex gap-4 w-full pt-6">
-                  {data &&
-                    data.images.map((i, index) => (
-                      <div
-                        className={`${
-                          select === index
-                            ? "border-[2px] border-red-400"
-                            : "null border"
-                        } cursor-pointer h-[40px] w-[40px] flex justify-center items-center `}
-                      >
-                        <img
-                          src={`${backend_URL}upload/${i}`}
-                          alt=""
-                          className="  h-full overflow-hidden mx-auto"
-                          onClick={() => setSelect(index)}
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-              {/* ------------------------ product Information part ---------------------------- */}
-
-              <div className="!w-full md:!w-[50%] lg:w-[40%] pt-5 ">
-                <p className="pb-2">
-                  {" "}
-                  {data.stock > 0 ? (
-                    <span className=" text-red-700 font-[400]">In Stock</span>
-                  ) : (
-                    <span>no Stock</span>
-                  )}
-                </p>
-
-                <hr />
-                <h1 className={`${styles.productTitle} py-2`}>{data.name}</h1>
-                <hr />
-                <p className="font-semibold pt-2">
-                  Brand:
-                  {data.brand ? (
-                    <span>{data.brandName}</span>
-                  ) : (
-                    <span className="pl-2">No brand</span>
-                  )}{" "}
-                </p>
-
-                <div className="flex items-center pb-2">
-                  <Rating rating={data?.ratings} />
-                  <div className="ml-3 text-gray-500"></div>
-                  <span>
-                    ({data.ratings ? <span>{averageRating}/5</span> : ""})
-                  </span>
-                  <span className="pl-3">
+                <div className="!w-full md:!w-[50%] lg:w-[40%] pt-5 ">
+                  <p className="pb-2">
                     {" "}
-                    |{" "}
-                    <span className="text-[#0d14e4]">
-                      {" "}
-                      {totalReviewsLength} Ratings
-                    </span>{" "}
-                  </span>
-                </div>
-                <hr />
-
-                <div className="flex pt-3 my-2">
-                  <h4 className={`${styles.productDiscountPrice}`}>
-                    <span className="font-semibold pr-2">৳</span>{" "}
-                    {data.discountPrice}
-                  </h4>
-                  <h3 className={`${styles.price} pl-5 flex`}>
-                    {data.originalPrice ? (
-                      <span>{"৳" + data.originalPrice} </span>
-                    ) : null}
-                  </h3>
-                  <div className="text-sm  text-blue-950 pl-4">
-                    ({percentageDiscount.toFixed(0)}%)
-                  </div>
-                  {/* <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
-                </div>
-                <hr />
-                <div className="py-2 flex items-center">
-                  <h1 className="font-semibold text-sm md:text-lg">
-                    {data?.color?.length > 0 ? "Color :" : ""}{" "}
-                  </h1>
-                  {data.color ? (
-                    <div className="flex">
-                      {data.color.map((color, index) => {
-                        // Change 'i' to 'color' here
-                        return (
-                          <span
-                            key={index}
-                            className={`${
-                              selectedColor === index
-                                ? "border border-red-400"
-                                : null
-                            } cursor-pointer p-[3px] mx-2`}
-                          >
-                            <h1 onClick={() => setSelectedColor(index)}>
-                              {color}{" "}
-                            </h1>{" "}
-                            {/* Change 'i.color' to 'color' here */}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  ) : null}
-                </div>
-                <div className="py-2 flex items-center">
-                  <h1 className="font-semibold text-sm md:text-lg">
-                    {data?.size?.length > 0 ? "Size :" : ""}{" "}
-                  </h1>
-                  {data.size ? (
-                    <h1 className="flex">
-                      {data.size.map((size, index) => {
-                        // Change 'i' to 'color' here
-                        return (
-                          <span
-                            key={index}
-                            className={`${
-                              selectedSize === index
-                                ? "border border-red-400"
-                                : null
-                            } cursor-pointer px-[2px] mx-2`}
-                          >
-                            <h1 onClick={() => setSelectedSize(index)}>
-                              {size}{" "}
-                            </h1>{" "}
-                            {/* Change 'i.color' to 'color' here */}
-                          </span>
-                        );
-                      })}
-                    </h1>
-                  ) : null}
-                </div>
-
-                <div className="flex items-center mt-4 justify-between pr-3">
-                  <div class="inline-flex pl-12">
-                    <div
-                      className={`bg-[#f24729] border-[#e4434373] mt-2  rounded-sm w-[30px] h-[30px] ${styles.normalFlex}  justify-center cursor-pointer  shadow-lg hover:opacity-75 transition duration-300 ease-in-out`}
-                      onClick={incrementCount}
-                    >
-                      <HiPlus size={30} color="#fff" className="" />
-                    </div>
-                    <span class="inline-flex  justify-center w-8 p-2 px-5">
-                      {count}
-                    </span>
-                    <div
-                      className="bg-[#3435364f]  rounded-sm w-[30px] mt-2  h-[30px] flex items-center  justify-center cursor-pointer shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={decrementCount}
-                    >
-                      <HiOutlineMinus size={16} color="" />
-                    </div>
-                  </div>
-                  <div>
-                    {click ? (
-                      <AiFillHeart
-                        size={30}
-                        className="cursor-pointer"
-                        // onClick={() => removeFromWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Remove from wishlist"
-                      />
+                    {data.stock > 0 ? (
+                      <span className=" text-red-700 font-[400]">In Stock</span>
                     ) : (
-                      <AiOutlineHeart
-                        size={30}
-                        className="cursor-pointer"
-                        // onClick={() => addToWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Add to wishlist"
-                      />
+                      <span>no Stock</span>
                     )}
-                  </div>
-                </div>
-                {/* -------------------------buy now /add to cart----------- */}
-                <div className="flex justify-center mr-5 mt-4">
-                  <div
-                    className={`${styles.button} bg-[#c72e2e] !mt-6 !rounded !h-11 flex items-center mr-5`}
-                    // onClick={() => addToCartHandler(data._id)}
-                  >
-                    <span className="text-white flex items-center">
-                      Buy Now
-                      <AiOutlineShoppingCart className="ml-1" />
+                  </p>
+
+                  <hr />
+                  <h1 className={`${styles.productTitle} py-2`}>{data.name}</h1>
+                  <hr />
+                  <p className="font-semibold pt-2">
+                    Brand:
+                    {data.brand ? (
+                      <span>{data.brandName}</span>
+                    ) : (
+                      <span className="pl-2">No brand</span>
+                    )}{" "}
+                  </p>
+
+                  <div className="flex items-center pb-2">
+                    <Rating rating={data?.ratings} />
+                    <div className="ml-3 text-gray-500"></div>
+                    <span>
+                      ({data.ratings ? <span>{averageRating}/5</span> : ""})
                     </span>
-                  </div>
-                  <div
-                    className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
-                    onClick={() => addToCartHandler(data._id)}
-                  >
-                    <span className="text-white flex items-center">
-                      Add to cart <AiOutlineShoppingCart className="ml-1" />
-                    </span>
-                  </div>
-                </div>
-                {/* -----------------------------------shop name------ */}
-              </div>
-              {/* ------------------------------------------- shop adress part------------------------           */}
-              <div className="hidden lg:block lg:w-[25%] border float-left  shadow-md px-4">
-                <div className="flex justify-between pt-8  text-base ">
-                  <div className="text-gray-400">
-                    <p> shop Location</p>
-                  </div>
-
-                  <IoLocation size={20} className="text-gray-400 " />
-                </div>
-
-                <div className="block py-4 text-[15px] text-gray-700 ">
-                  {/* <h1> {data.shop.name}  </h1> */}
-                  <h1>{data?.seller?.address}</h1>
-                </div>
-                <hr />
-
-                <div className="flex justify-between pt-8  text-base ">
-                  <div className="text-lg text-gray-500">
-                    <p> service</p>
-                  </div>
-
-                  <GrServices size={15} className="text-gray-400" />
-                </div>
-                <div className="flex flex-col pb-5">
-                  <div className="pt-2 pl-3 text-[18px]">
-                    <h2>7 days Returns</h2>
-                    <p className="text-gray-400 text-sm">
+                    <span className="pl-3">
                       {" "}
-                      change mind not allow
-                    </p>
+                      |{" "}
+                      <span className="text-[#0d14e4]">
+                        {" "}
+                        {totalReviewsLength} Ratings
+                      </span>{" "}
+                    </span>
                   </div>
-                  <div className="pl-3 text-lg pt-2">
-                    <h3>Warranty not available</h3>
+                  <hr />
+
+                  <div className="flex pt-3 my-2">
+                    <h4 className={`${styles.productDiscountPrice}`}>
+                      <span className="font-semibold pr-2">৳</span>{" "}
+                      {data.discountPrice}
+                    </h4>
+                    <h3 className={`${styles.price} pl-5 flex`}>
+                      {data.originalPrice ? (
+                        <span>{"৳" + data.originalPrice} </span>
+                      ) : null}
+                    </h3>
+                    <div className="text-sm  text-blue-950 pl-4">
+                      ({percentageDiscount.toFixed(0)}%)
+                    </div>
+                    {/* <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
                   </div>
-                </div>
-                <hr />
-                <div className="py-5">
-                  <h2> Cash on Delivery Available</h2>
-                </div>
-                <hr />
-                <div className="flex justify-around items-center py-4">
-                  <div>
-                    <p className="text-gray-400">Ship on Time</p>
-                    <h1 className=" text-bold text-xl pt-4 text-center">90%</h1>
-                  </div>
-                  <div>
-                    <p className="text-gray-400">Chat Response</p>
-                    <h1 className=" text-bold text-xl pt-4 text-center">
-                      100%
+                  <hr />
+                  <div className="py-2 flex items-center">
+                    <h1 className="font-semibold text-sm md:text-lg">
+                      {data?.color?.length > 0 ? "Color :" : ""}{" "}
                     </h1>
+                    {data.color ? (
+                      <div className="flex">
+                        {data.color.map((color, index) => {
+                          // Change 'i' to 'color' here
+                          return (
+                            <span
+                              key={index}
+                              className={`${
+                                selectedColor === index
+                                  ? "border border-red-400"
+                                  : null
+                              } cursor-pointer p-[3px] mx-2`}
+                            >
+                              <h1 onClick={() => setSelectedColor(index)}>
+                                {color}{" "}
+                              </h1>{" "}
+                              {/* Change 'i.color' to 'color' here */}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="py-2 flex items-center">
+                    <h1 className="font-semibold text-sm md:text-lg">
+                      {data?.size?.length > 0 ? "Size :" : ""}{" "}
+                    </h1>
+                    {data.size ? (
+                      <h1 className="flex">
+                        {data.size.map((size, index) => {
+                          // Change 'i' to 'color' here
+                          return (
+                            <span
+                              key={index}
+                              className={`${
+                                selectedSize === index
+                                  ? "border border-red-400"
+                                  : null
+                              } cursor-pointer px-[2px] mx-2`}
+                            >
+                              <h1 onClick={() => setSelectedSize(index)}>
+                                {size}{" "}
+                              </h1>{" "}
+                              {/* Change 'i.color' to 'color' here */}
+                            </span>
+                          );
+                        })}
+                      </h1>
+                    ) : null}
+                  </div>
+
+                  <div className="flex items-center mt-4 justify-between pr-3">
+                    <div class="inline-flex pl-12">
+                      <div
+                        className={`bg-[#f24729] border-[#e4434373] mt-2  rounded-sm w-[30px] h-[30px] ${styles.normalFlex}  justify-center cursor-pointer  shadow-lg hover:opacity-75 transition duration-300 ease-in-out`}
+                        onClick={incrementCount}
+                      >
+                        <HiPlus size={30} color="#fff" className="" />
+                      </div>
+                      <span class="inline-flex  justify-center w-8 p-2 px-5">
+                        {count}
+                      </span>
+                      <div
+                        className="bg-[#3435364f]  rounded-sm w-[30px] mt-2  h-[30px] flex items-center  justify-center cursor-pointer shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                        onClick={decrementCount}
+                      >
+                        <HiOutlineMinus size={16} color="" />
+                      </div>
+                    </div>
+                    <div>
+                      {click ? (
+                        <AiFillHeart
+                          size={30}
+                          className="cursor-pointer"
+                          // onClick={() => removeFromWishlistHandler(data)}
+                          color={click ? "red" : "#333"}
+                          title="Remove from wishlist"
+                        />
+                      ) : (
+                        <AiOutlineHeart
+                          size={30}
+                          className="cursor-pointer"
+                          // onClick={() => addToWishlistHandler(data)}
+                          color={click ? "red" : "#333"}
+                          title="Add to wishlist"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {/* -------------------------buy now /add to cart----------- */}
+                  <div className="flex justify-center mr-5 mt-4">
+                    <div
+                      className={`${styles.button} bg-[#c72e2e] !mt-6 !rounded !h-11 flex items-center mr-5`}
+                      // onClick={() => addToCartHandler(data._id)}
+                    >
+                      <span className="text-white flex items-center">
+                        Buy Now
+                        <AiOutlineShoppingCart className="ml-1" />
+                      </span>
+                    </div>
+                    <div
+                      className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                      onClick={() => addToCartHandler(data._id)}
+                    >
+                      <span className="text-white flex items-center">
+                        Add to cart <AiOutlineShoppingCart className="ml-1" />
+                      </span>
+                    </div>
+                  </div>
+                  {/* -----------------------------------shop name------ */}
+                </div>
+                {/* ------------------------------------------- shop adress part------------------------           */}
+                <div className="hidden lg:block lg:w-[25%] border float-left  shadow-md px-4">
+                  <div className="flex justify-between pt-8  text-base ">
+                    <div className="text-gray-400">
+                      <p> shop Location</p>
+                    </div>
+
+                    <IoLocation size={20} className="text-gray-400 " />
+                  </div>
+
+                  <div className="block py-4 text-[15px] text-gray-700 ">
+                    {/* <h1> {data.shop.name}  </h1> */}
+                    <h1>{data?.seller?.address}</h1>
+                  </div>
+                  <hr />
+
+                  <div className="flex justify-between pt-8  text-base ">
+                    <div className="text-lg text-gray-500">
+                      <p> service</p>
+                    </div>
+
+                    <GrServices size={15} className="text-gray-400" />
+                  </div>
+                  <div className="flex flex-col pb-5">
+                    <div className="pt-2 pl-3 text-[18px]">
+                      <h2>7 days Returns</h2>
+                      <p className="text-gray-400 text-sm">
+                        {" "}
+                        change mind not allow
+                      </p>
+                    </div>
+                    <div className="pl-3 text-lg pt-2">
+                      <h3>Warranty not available</h3>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="py-5">
+                    <h2> Cash on Delivery Available</h2>
+                  </div>
+                  <hr />
+                  <div className="flex justify-around items-center py-4">
+                    <div>
+                      <p className="text-gray-400">Ship on Time</p>
+                      <h1 className=" text-bold text-xl pt-4 text-center">
+                        90%
+                      </h1>
+                    </div>
+                    <div>
+                      <p className="text-gray-400">Chat Response</p>
+                      <h1 className=" text-bold text-xl pt-4 text-center">
+                        100%
+                      </h1>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            {/* ----------------------------------- shop name---------------------- */}
-            {/* <div className="flex items-center pt-6">
+              {/* ----------------------------------- shop name---------------------- */}
+              {/* <div className="flex items-center pt-6">
               <Link to={`/shop/view/${data?.seller._id}`}>
                 <img
                   src={`${backend_URL}upload/${data?.seller?.avatar}`}
@@ -403,19 +409,20 @@ const ProductDetails = ({ data }) => {
                 </span>
               </div>
             </div> */}
+            </div>
+            {/* ------------------product details info-------------------- */}
+            <ProductDetailsInfo
+              data={data}
+              products={products}
+              totalReviewsLength={totalReviewsLength}
+              averageRating={averageRating}
+              handleMessageSubmit={handleMessageSubmit}
+            />
+            <br />
+            <br />
           </div>
-          {/* ------------------product details info-------------------- */}
-          <ProductDetailsInfo
-            data={data}
-            products={products}
-            totalReviewsLength={totalReviewsLength}
-            averageRating={averageRating}
-            handleMessageSubmit={handleMessageSubmit}
-          />
-          <br />
-          <br />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -18,7 +18,7 @@ router.put("/order-refund/:id", UserOrderRefund);
 router.put("/order-refund-success/:id", isSeller, SellerAcceptRefund);
 router.get(
   "/admin-all-orders",
-  isAuthenticated,
+  // isAuthenticated,
  allOrders)
 
 module.exports = router;

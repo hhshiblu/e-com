@@ -4,33 +4,36 @@ import axios from "axios";
 
 import { server } from "../../serverUrl";
 
-export const createCategory = (newForm) => async (dispatch) => {
+export const addCategory = (form) => async (dispatch) => {
   try {
     dispatch({
       type: "CategoryCreateRequest",
     });
 
-    const config = { headers: { "Content-Type": "Multipart/form-data" } };
+    const config = {
+      headers: { "Content-Type": "Multipart/form-data" },
+      withCredentials: true,
+    };
 
     const { data } = await axios.post(
       `${server}/category/create`,
-      newForm,
+      form,
       config
     );
 
     dispatch({
       type: "CategoryCreateSuccess",
-      payload: {category:data.category },
+      payload: data.category,
     });
   } catch (error) {
     dispatch({
       type: "CategoryCreateFail",
-      payload: error.response.data.message,
+      payload: error.response.data.message, // The server's error message may be "invalid category name"
     });
   }
 };
 
-//get all event 
+//get all event
 
 export const getAllCategory = () => async (dispatch) => {
   try {
@@ -38,11 +41,11 @@ export const getAllCategory = () => async (dispatch) => {
       type: "getAllCategoryRequest",
     });
 
-    const {data} = await axios.get(`${server}/category/get-all-category`);
+    const { data } = await axios.get(`${server}/category/get-all-category`);
 
     dispatch({
       type: "getAllCategorySuccess",
-      payload: data.categoryList,
+      payload: { categories: data.categoryList },
     });
   } catch (error) {
     dispatch({
@@ -50,4 +53,4 @@ export const getAllCategory = () => async (dispatch) => {
       payload: error.response.data.message,
     });
   }
-}
+};
