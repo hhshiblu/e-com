@@ -1,33 +1,29 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import { BiMenuAltLeft } from "react-icons/bi";
-
-import {
-
-  AiOutlineShoppingCart,
-  AiFillDashboard,
-} from "react-icons/ai";
+import { BiMenuAltLeft, BiRightArrowAlt } from "react-icons/bi";
+import { IoIosArrowForward } from "react-icons/io";
+import { AiOutlineShoppingCart, AiFillDashboard } from "react-icons/ai";
 import { ImCancelCircle } from "react-icons/im";
 import { BiCategoryAlt } from "react-icons/bi";
 import { FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import styles from "../../styles/style";
-import { categoriesData } from "../../staticData/data";
+
 // import DropDown from "./DropDown.jsx";
 import { useSelector } from "react-redux";
 
-import { BsArrowLeftShort } from "react-icons/bs";
+import { BsArrowLeftShort, BsArrowRight } from "react-icons/bs";
 const Search = () => {
   const navigate = useNavigate();
-
+  const { categories } = useSelector((state) => state.category);
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const [activemenu, setActiveMenu] = useState("nav_menu");
   const [activeMenu2, setactiveMenu2] = useState("nav_menu2");
   const [isSticky, setIsSticky] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [SubMenuDetails, setSubMenuDetails] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [searchData, setSearchData] = useState([]);
   const { isSeller } = useSelector((state) => state.seller);
@@ -35,9 +31,6 @@ const Search = () => {
 
   const [keyWord, setKeyWord] = useState("");
 
-  // const filterCart = cart?.filter((item) => item.user === user?._id);
-  // console.log(filterCart);
-  // const cartLength=filterCart?.length > 0 ? filterCart[0]?.cartItems?.length : 0;
   const ToggleMenu = () => {
     if (activemenu === "nav_menu") {
       setActiveMenu("nav_menu nav_phone");
@@ -47,7 +40,8 @@ const Search = () => {
     }
   };
 
-  const ToggleMenu2 = () => {
+  const ToggleMenu2 = (item) => {
+    setSubMenuDetails(item);
     if (activeMenu2 === "nav_menu2") {
       setactiveMenu2("nav_menu2 nav_phone2");
     } else {
@@ -55,53 +49,31 @@ const Search = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const crossIcon = document.querySelector(".cross-icon");
-
-  //     setTimeout(() => {
-  //       crossIcon.classList.add("visiable");
-
-  //     }, 500); // 500 milliseconds delay
-
-  // }, []);
-  // const handelSearch = (e) => {
-  //   const Item = e.target.value;
-  //   setSearchItem(Item);
-
-  //   const filterItem =
-  //     productData &&
-  //     productData.filter((product) =>
-  //       product.name.toLowerCase().includes(Item.toLowerCase())
-  //     );
-
-  //   setSearchData(filterItem);
-  // };
-
   const handelSubmit = () => {
     if (keyWord) navigate(`/products/all-products/?category=${keyWord}`);
   };
   // fixed Header
 
-
-
   // --------------------------------------sticky navbar---------------
-  
-    const handleScroll = () => {
-      if (window.scrollY > 200) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
+
+  const handleScroll = () => {
+    if (window.scrollY > 200) {
+      setIsSticky(true);
+    } else {
+      setIsSticky(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
 
-    useEffect(() => {
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }, []);
-
-
+  const handleMenuItemClick = (e, itemData) => {
+    ToggleMenu2(itemData);
+  };
 
   return (
     <>
@@ -220,43 +192,69 @@ const Search = () => {
           <div className={activemenu}>
             <div className=" text-left border-b-2 bg-[#01032d] border-b-black  py-2 pl-8 flex items-center">
               <h1 className="font-bold pr-2 text-lg text-white">Hello , </h1>
-              <h2 className="font-semibold text-lg text-white">
+              <h2 className="font-semibold text-lg text-white ">
                 {isAuthenticated ? <h1> {user?.name} </h1> : <h1> Sign In </h1>}
               </h2>
             </div>
-
-            {categoriesData.map((i, index) => {
-              return (
-                <div key={index} className={`${styles.normalFlex}`}>
-                  <h3
-                    className=" cursor-pointer select-none m-2 "
-                    onClick={ToggleMenu2}
+            <div className="bg-[#445069] text-white py-[2px] m-auto">
+              <h2>Best wishes for you</h2>
+            </div>
+            <div className="pt-3">
+              {categories.map((i, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`${styles.normalFlex}  justify-between px-4 hover:bg-[#EAEDED] mx-2 text-[16px]  rounded-md cursor-pointer  leading-[26px] forHover `}
+                    onClick={(e) => handleMenuItemClick(e, i)} // Pass the 'i' data as an argument
                   >
-                    {i.title}
-                  </h3>
-                </div>
-              );
-            })}
+                    <h3 className=" cursor-pointer select-none m-2  font-[510]    text-gray-600">
+                      {i.name}
+                    </h3>
+                    <h2>
+                      <IoIosArrowForward className="text-gray-300" />
+                    </h2>
+                  </div>
+                );
+              })}
+            </div>
 
             <div className={activeMenu2}>
               <div
-                className="text-left border-b-2 border-black py-2 pl-6 flex items-center text-lg font-semibold"
+                className="text-left border-b-2 border-black py-2 pl-6 flex  text-lg font-semibold"
                 onClick={ToggleMenu2}
               >
                 <BsArrowLeftShort size={30} className="cursor-pointer" />
                 <h1 className="pl-4 cursor-pointer"> Main Categories</h1>
               </div>
-              <div className="">
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
-                <li>ljsdfkajshf</li>
+              <div className="pt-3 pb-1">
+                <h1 className="text-left pl-8 font-semibold text-lg text-gray-900 mx-2 ">
+                  {SubMenuDetails.name}
+                </h1>
+              </div>
+
+              <hr />
+              <hr />
+              
+              <div className="pt-1">
+                {SubMenuDetails?.children?.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="hover:bg-gray-300 mx-2 text-gray-700 hover:text-gray-950  rounded-md leading-[24px] py-[6px]  "
+                      onClick={() => {
+                        navigate(
+                          `/products/all-products/?category?${SubMenuDetails.name}=${item.name}`
+                        );
+                        window.location.reload(true);
+                      }}
+                    >
+                      <h2 className="text-left pl-7 cursor-pointer text-[16px] ">
+                        {item.name}
+                        
+                      </h2>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

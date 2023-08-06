@@ -24,7 +24,7 @@ const AllUsers = () => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
-console.log(users);
+
 
   const handleDelete = async (id) => {
     await axios

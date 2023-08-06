@@ -24,11 +24,9 @@ function createCategoryList(category, parentId = null) {
   return categoryList;
 }
 
-const createCategory = CatchAsyncError(async (req, res) => {
-  console.log(req.body);
-
+const createCategory = CatchAsyncError(async (req, res,next) => {
   if (!req.body.name || req.body.name.trim() === "") {
-    return res.status(400).json({ error: "Category name is required." });
+    return next(new Errorhandeler(error.message, 500));
   }
 
   const categoryObj = {
@@ -45,7 +43,7 @@ const createCategory = CatchAsyncError(async (req, res) => {
     const category = await cat.save();
     res.status(201).json({ category });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    return next(new Errorhandeler(error.message, 500));
   }
 });
 

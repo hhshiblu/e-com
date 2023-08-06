@@ -26,7 +26,7 @@ const Payment = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-   console.log("order data:", leatestorderData, user);
+  
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
     

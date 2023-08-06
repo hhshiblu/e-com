@@ -1,45 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addCategory,
-
-  getAllCategory,
-} from "../../Redux/Action/category";
+import { addCategory, getAllCategory } from "../../Redux/Action/category";
 import { RxAvatar, RxCross1 } from "react-icons/rx";
-
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Category() {
   const dispatch = useDispatch();
-  const category = useSelector((state) => state.category);
+  const navigate = useNavigate();
+  const { categories, isloading } = useSelector((state) => state.category);
 
   const [confirm, setConfirm] = useState(false);
   const [name, setName] = useState("");
-  
+
   const [parentCategoryId, setParentCateId] = useState("");
-
-
 
   useEffect(() => {
     dispatch(getAllCategory());
   }, [dispatch]);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-
-  try {
-    const form = new FormData();
-    form.append("name", name);
-    form.append("parentId", parentCategoryId);
-
-   
-
-    dispatch(addCategory(form));
-  } catch (error) {
-    console.error("Error creating category:", error);
-  }
-};
-
+    try {
+      dispatch(addCategory({ name, parentId: parentCategoryId }));
+      dispatch(getAllCategory());
+      window.location.reload(true);
+       toast.success("category added successfully!");
+    } catch (error) {
+      toast.error("category cann't added successfully!");
+    }
+  };
 
   const renderCategory = (categories) => {
     let myCaregories = [];
@@ -70,7 +61,7 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="w-full  pt-5">
+    <div className="w-full  pt-5 overflow-y-scroll overflow-hidden h-[88vh]">
       <div className="w-[97%] pl-12">
         <div className="flex justify-between items-center md:px-12 sm:px-2 mt-4">
           <h1 className="font-semibold "> All Category</h1>
@@ -84,7 +75,7 @@ const handleSubmit = async (e) => {
           </h1>
         </div>
 
-        {category && <ul>{renderCategory(category.categories)}</ul>}
+        {categories && <ul>{renderCategory(categories)}</ul>}
       </div>
 
       <div>
@@ -118,7 +109,7 @@ const handleSubmit = async (e) => {
                     onChange={(e) => setParentCateId(e.target.value)}
                   >
                     <option>select categories</option>
-                    {createCategoryList(category.categories).map((option) => (
+                    {createCategoryList(categories).map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.name}
                       </option>
@@ -128,18 +119,17 @@ const handleSubmit = async (e) => {
                 <br />
 
                 <div>
-                  {/* <button
+                  <button
                     type="submit"
-                    // disabled={isLoading}
+                    disabled={isloading}
                     className={`group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white shadow-sm ${
-                      // isLoading
+                      isloading
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-blue-600 hover:bg-blue-800"
                     }`}
                   >
-                    {isLoading ? "Submitting..." : "Submit"}
-                  </button> */}
-                  <button type="submit">Submit</button>
+                    {isloading ? "Submitting..." : "Submit"}
+                  </button>
                 </div>
               </form>
             </div>

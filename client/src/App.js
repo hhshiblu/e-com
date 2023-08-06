@@ -71,6 +71,7 @@ import ProtectedAdminRoute from "./ProtectRoutes/ProtectedAdminRoute";
 import { leatestOrderData } from "./Redux/Action/orderData";
 import { getAllBanar } from "./Redux/Action/banar";
 import ScrollTop from "./component/scrollToTop/ScrollTop";
+import { getAllCategory } from "./Redux/Action/category";
 
 axios.defaults.withCredentials = true;
 function App() {
@@ -81,6 +82,7 @@ function App() {
     setStripeApiKey(data.stripeApikey);
   }
   useEffect(() => {
+    Store.dispatch(getAllCategory());
     Store.dispatch(getAllBanar());
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());

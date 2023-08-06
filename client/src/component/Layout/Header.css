@@ -95,3 +95,10 @@ header ul li a:hover {
     transform: translateY(0);
   }
 }
+
+.forHover:hover h3{
+color: #000;
+}
+.forHover:hover svg{
+color: #000;
+}

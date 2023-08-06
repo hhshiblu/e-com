@@ -11,7 +11,6 @@ export const addCategory = (form) => async (dispatch) => {
     });
 
     const config = {
-      headers: { "Content-Type": "Multipart/form-data" },
       withCredentials: true,
     };
 
@@ -23,12 +22,12 @@ export const addCategory = (form) => async (dispatch) => {
 
     dispatch({
       type: "CategoryCreateSuccess",
-      payload: data.category,
+      payload: { category: data.category },
     });
   } catch (error) {
     dispatch({
       type: "CategoryCreateFail",
-      payload: error.response.data.message, // The server's error message may be "invalid category name"
+      payload: error.response.data.message,
     });
   }
 };
