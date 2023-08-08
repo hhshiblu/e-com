@@ -99,7 +99,7 @@ const ShopDeleteProduct = CatchAsyncError(async (req, res, next) => {
 
 const getAllProducts = CatchAsyncError(async (req, res, next) => {
   try {
-    const resPerPage = 4;
+    const resPerPage = 25;
     const { category, page } = req.query;
 
     // Create a base query for fetching products

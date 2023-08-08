@@ -10,8 +10,11 @@ const colorsData = ["Red", "White", "Green"];
 const sizesData = ["22", "23", "29", "42"];
 
 function CreateProduct() {
+  const{categories}= useSelector((state)=>state.category)
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.products);
+  const [category, setCategory] = useState("")
+   const [subCategory, setSubCategory] = useState("");
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
 
@@ -23,7 +26,7 @@ function CreateProduct() {
       setSelectedColors((prevColors) => prevColors.filter((c) => c !== color));
     }
   };
-
+console.log(categories);
   const handleSizeChange = (e, size) => {
     const { checked } = e.target;
     if (checked) {
@@ -33,7 +36,7 @@ function CreateProduct() {
     }
   };
 
-  console.log(selectedColors, selectedSizes);
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,11 +45,11 @@ function CreateProduct() {
   const [product, setProduct] = useState({
     ProductName: "",
     description: "",
-    category: "",
     tags: "",
     originalPrice: "",
     discountPrice: "",
     stock: "",
+     
   });
 
   useEffect(() => {
@@ -84,7 +87,8 @@ function CreateProduct() {
 
    newForm.append("name", product.ProductName);
    newForm.append("description", product.description);
-   newForm.append("category", product.category);
+   newForm.append("category", category);
+   newForm.append("subCategory", subCategory);
    newForm.append("tags", product.tags);
    newForm.append("originalPrice", product.originalPrice);
    newForm.append("discountPrice", product.discountPrice);
@@ -142,25 +146,49 @@ function CreateProduct() {
           ></textarea>
         </div>
         <br />
-        <div>
-          <label className="pb-2">
-            Category <span className="text-red-500">*</span>
-          </label>
-          <select
-            className="w-full mt-2 border h-[35px] rounded-[5px]"
-            name="category"
-            value={product.category}
-            onChange={handelChange}
-          >
-            <option value="Choose a category">Choose a category</option>
-            {categoriesData &&
-              categoriesData.map((i) => (
-                <option value={i.title} key={i.title}>
-                  {i.title}
-                </option>
-              ))}
-          </select>
+        <div className=" flex gap-6">
+          <div className="w-[45%]">
+            <label className="pb-2">
+              Category <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full mt-2 border h-[35px] rounded-[5px] pl-2"
+              name="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="Choose a category">Choose a category</option>
+              {categories &&
+                categories.map((i) => (
+                  <option value={i.name} key={i.name}>
+                    {i.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="w-[45%]">
+            <label className="pb-2">
+              Subcategory <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full mt-2 border h-[35px] rounded-[5px]"
+              name="subcategory"
+              value={subCategory}
+              onChange={(e) => setSubCategory(e.target.value)}
+            >
+              <option value="Choose a subcategory">Choose a subcategory</option>
+              {categories &&
+                categories
+                  .find((cat) => cat.name === category)
+                  ?.children.map((i, index) => (
+                    <option key={index} value={i.name}>
+                      {i.name}
+                    </option>
+                  ))}
+            </select>
+          </div>
         </div>
+
         <br />
         <div>
           <label className="pb-2">Tags</label>

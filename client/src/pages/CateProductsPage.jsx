@@ -2,39 +2,43 @@ import React, { useEffect, useState } from "react";
 import Footer from "../component/Layout/Footer.jsx";
 import Header from "../component/Layout/Header.jsx";
 import styles from "../styles/style.js";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import ProductCart from "../component/Route/ProductCart/ProductCart.jsx";
 // import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CateProductCard from "../component/Route/ProductCart/CateProductCard.jsx";
-import Category from "./../component/admin/Category";
+
 import Filters from "../component/Route/Cetagories/Filters.jsx";
 
-// Define the SubmitHendel function outside the component
+
 
 function CateProductsPage() {
+    const location = useLocation();
   const [searchParams] = useSearchParams();
   const { allProducts, isLoading } = useSelector((state) => state.products);
-  const categoryData = searchParams.get("category");
+  const categoryData = searchParams.get("search_query");
+console.log(categoryData);
   const [data, setData] = useState([]);
+  
+ useEffect(() => {
+   if (categoryData && allProducts) {
+     const filteredProducts = allProducts.filter((product) =>
+       product.name.toLowerCase().includes(categoryData.toLowerCase())
+     );
+     setData(filteredProducts);
+   } else {
+     setData(allProducts);
+   }
+ }, [categoryData, allProducts]);
 
-  useEffect(() => {
-
-      const d =
-        allProducts && allProducts.filter((i) => i.category === categoryData);
-      setData(d);
-    
-  }, [categoryData, allProducts]);
-
-    
   return (
     <div>
       {/* {
     isLoading ? (
       <Loader />
     ) : ( */}
-      <Header activeHeading={3} />
+      <Header  />
       <br />
       <br />
 

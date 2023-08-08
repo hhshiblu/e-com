@@ -18,6 +18,7 @@ import { BsArrowLeftShort, BsArrowRight } from "react-icons/bs";
 const Search = () => {
   const navigate = useNavigate();
   const { categories } = useSelector((state) => state.category);
+  const { allProducts, isLoading } = useSelector((state) => state.products);
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const [activemenu, setActiveMenu] = useState("nav_menu");
@@ -49,9 +50,9 @@ const Search = () => {
     }
   };
 
-  const handelSubmit = () => {
-    if (keyWord) navigate(`/products/all-products/?category=${keyWord}`);
-  };
+  // const handelSubmit = () => {
+  //   if (keyWord) navigate(`/products/all-products/?category=${keyWord}`);
+  // };
   // fixed Header
 
   // --------------------------------------sticky navbar---------------
@@ -70,6 +71,19 @@ const Search = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const handelSubmit = () => {
+    // const newKeyword = e.target.value;
+    // setKeyWord(newKeyword);
+
+    // const filteredProducts =
+    //   allProducts &&
+    //   allProducts.filter((cate) =>
+    //     cate.name?.toLowerCase().includes(newKeyword.toLowerCase())
+    //   );
+
+    // setSearchData(filteredProducts);
+    navigate(`/products/all-products/?search_query=${keyWord}`);
+  };
 
   const handleMenuItemClick = (e, itemData) => {
     ToggleMenu2(itemData);
@@ -78,7 +92,7 @@ const Search = () => {
   return (
     <>
       <div
-        className={` search  shadow-md font-300 sticky bg-white pt-0 md:pt-1`}
+        className={` search  shadow-md font-300 sticky  text-black pt-0 md:pt-1`}
       >
         <div className={`navbar ${isSticky ? "sticky" : ""}`}>
           <div className="  h-[60px] min- min-w-fit md:bg-slate-900  md:grid grid-cols-4">
@@ -90,10 +104,10 @@ const Search = () => {
                 type="text"
                 placeholder="search any item.."
                 value={keyWord}
-                // onChange={handelSearch}
-                onChange={(e) => setKeyWord(e.target.value)}
-                className="h-[40px] w-full px-2 border-[2px] border-[#3957db] rounded-md  "
+                onChange={(e)=>setKeyWord(e.target.value)}
+                className="h-[40px] w-full px-2 border-[2px] border-[#06229b] rounded-md f focus:border-spacing-1.5 "
               />
+
               <button
                 type="submit"
                 onClick={handelSubmit}
@@ -101,20 +115,23 @@ const Search = () => {
               >
                 Search
               </button>
-              {/* {searchItem && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm z-[9] p-4">
-                {searchData &&
-                  searchData.map((d, index) => {
-                    const data = d.name;
-                    const Product_name = data.replace("/s+g", "-");
-                    return (
-                      <Link to={`/product/${Product_name}`}>
-                        <h1>{d.name}</h1>
-                      </Link>
-                    );
-                  })}
-              </div>
-            ) : null} */}
+              {keyWord && keyWord.length !== 0 ? (
+                <div className="absolute w-full min-h-[30vh] bg-slate-50 shadow-sm z-[9] p-4">
+                  {searchData &&
+                    searchData.map((d, index) => {
+                      const data = d.name;
+                      const Product_name = data?.replace("/s+g", "-");
+                      return (
+                        <Link
+                          to={`/products/all-products/?category=${Product_name}`}
+                          onClick={() => setKeyWord("")}
+                        >
+                          <h1>{d.category}</h1>
+                        </Link>
+                      );
+                    })}
+                </div>
+              ) : null}
             </div>
             <div className="hidden m-auto  md:flex items-center">
               <div className={`${styles.normalFlex}`}>
@@ -234,7 +251,7 @@ const Search = () => {
 
               <hr />
               <hr />
-              
+
               <div className="pt-1">
                 {SubMenuDetails?.children?.map((item, index) => {
                   return (
@@ -243,14 +260,13 @@ const Search = () => {
                       className="hover:bg-gray-300 mx-2 text-gray-700 hover:text-gray-950  rounded-md leading-[24px] py-[6px]  "
                       onClick={() => {
                         navigate(
-                          `/products/all-products/?category?${SubMenuDetails.name}=${item.name}`
+                          `/products/all-products/?category=${item.name}`
                         );
                         window.location.reload(true);
                       }}
                     >
                       <h2 className="text-left pl-7 cursor-pointer text-[16px] ">
                         {item.name}
-                        
                       </h2>
                     </div>
                   );

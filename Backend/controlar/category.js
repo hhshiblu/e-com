@@ -47,30 +47,6 @@ const createCategory = CatchAsyncError(async (req, res,next) => {
   }
 });
 
-// const createCategory= CatchAsyncError( async (req,res,next)=>{
-//     try {
-//         const categoryObj={
-//             name:req.body.name,
-//             slug:slugify(req.body.name)
-//          }
-
-//          if(req.body.parentId){
-//             categoryObj.parentId=req.body.parentId;
-//          }
-
-//           const cat=new Category(categoryObj);
-
-//          await cat.save();
-//          res.status(201).json({
-//             success: true,
-//             message: 'category added successfully',
-//             cat,
-//           })
-//     } catch (error) {
-//         return next(new Errorhandeler(error, 400))
-//     }
-
-// })
 
 const getCategory = CatchAsyncError(async (req, res, next) => {
   try {

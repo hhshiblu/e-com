@@ -44,19 +44,19 @@ function FeaturedProduct() {
   // Function to fetch more products
 
   const getCardData = async () => {
-    const res = await fetch(
+    const {data} = await axios.get(
       `http://localhost:5000/api/v1/product/get-all-products?page=${page}`
     );
-    const data = await res.json();
-    // console.log(data);
-    // setProducts((pre)=> [...pre,...data]);
-    const obj = { x: 1, y: 2, z: 3 };
-    const { x, ...rest } = obj;
-    console.log(x, rest);
+console.log(data);
+    
+   
+    // setProducts((pre)=> [...pre, ...data]);
+
     setLoading(false);
   };
 
   useEffect(() => {
+
     getCardData();
   }, [page]);
   const handelInfiniteScroll = async () => {
@@ -65,8 +65,8 @@ function FeaturedProduct() {
     // console.log("scrollTop" + document.documentElement.scrollTop);
     try {
       if (
-        window.innerHeight + document.documentElement.scrollTop + 1 >=
-        document.documentElement.scrollHeight
+        window.innerHeight + document.documentElement.scrollHeight + 1 >=
+        document.documentElement.scrollTop
       ) {
         setLoading(true);
         setPage((prev) => prev + 1);
