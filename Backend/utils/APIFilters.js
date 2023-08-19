@@ -5,23 +5,23 @@ class APIFilters {
   }
 
   search() {
-    const keyword = this.queryStr.keyword
+    const search_query = this.queryStr.search_query
       ? {
           name: {
-            $regex: this.queryStr.keyword,
+            $regex: this.queryStr.search_query,
             $options: "i",
           },
         }
       : {};
 
-    this.query = this.query.find({ ...keyword });
+    this.query = this.query.find({ ...search_query });
     return this;
   }
 
   filter() {
     const queryCopy = { ...this.queryStr };
 
-    const removeFields = ["keyword", "page"];
+    const removeFields = ["search_query", "page"];
     removeFields.forEach((el) => delete queryCopy[el]);
 
     let output = {};

@@ -81,63 +81,24 @@ const ShopDeleteProduct = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-//get all products
-// const getAllProducts=
-//   CatchAsyncError(async (req, res, next) => {
-//     try {
-//       const products = await Product.find().sort({ createdAt: -1 });
+// get all products
 
-//       res.status(201).json({
-//         success: true,
-//         products,
-//       });
+const getAllProducts=
+  CatchAsyncError(async (req, res, next) => {
+    try {
+      const products = await Product.find().sort({ createdAt: -1 });
 
-//     } catch (error) {
-//       return next(new Errorhandeler(error, 400));
-//     }
-//   });
+      res.status(201).json({
+        success: true,
+        products,
+      });
 
-const getAllProducts = CatchAsyncError(async (req, res, next) => {
-  try {
-    const resPerPage = 25;
-    const { category, page } = req.query;
-
-    // Create a base query for fetching products
-    let query = Product.find().sort({ createdAt: -1 });
-
-    // Create an instance of the APIFilters class
-    const filters = new APIFilters(query, req.query);
-
-    // If a category is specified, add it to the search filter
-    if (category) {
-      filters.filter().search();
-    } else {
-      filters.search().filter();
+    } catch (error) {
+      return next(new Errorhandeler(error, 400));
     }
+  });
 
-    // Execute the query and get the total count of products matching the filters
-    const products = await filters.query;
-    const filteredProductsCount = products.length;
 
-    // Apply pagination
-    filters.pagination(resPerPage);
-
-    // Execute the final query with pagination
-    const paginatedProducts = await filters.query.clone();
-
-    // Get the total count of all products (without filtering)
-    const totalProductsCount = await Product.countDocuments();
-
-    res.status(200).json({
-      products: paginatedProducts,
-      productsCount: totalProductsCount,
-      resPerPage,
-      filteredProductsCount,
-    });
-  } catch (error) {
-    return next(new Errorhandeler(error, 400));
-  }
-});
 
 // review for a product
 const reviewProduct = CatchAsyncError(async (req, res, next) => {

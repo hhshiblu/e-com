@@ -22,6 +22,7 @@ if (process.env.NODE_ENV != "PRODUCTION") {
 const user = require("../Routes/user");
 const seller = require("../Routes/seller");
 const products = require("../Routes/products");
+const productsquery = require("../Routes/productsQuery");
 const event = require("../Routes/event");
 const coupon = require("../Routes/couponCode");
 const order = require("../Routes/order");
@@ -38,11 +39,12 @@ const message = require("../Routes/message");
 app.use("/api/v1", user);
 app.use("/api/v1/seller", seller);
 app.use("/api/v1/product", products);
+app.use("/api/v1/products", productsquery);
 app.use("/api/v1/event", event);
 app.use("/api/v1/coupon", coupon);
 app.use("/api/v1/order", order);
 app.use("/api/v1/payment", payment);
-app.use("/api/v1/cart", cart);
+app.use("/api/v1/product/cart", cart);
 app.use("/api/v1/banar", banar);
 app.use("/api/v1/upItem",upItem)
 app.use("/api/v1/category", category);
