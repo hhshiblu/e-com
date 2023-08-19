@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import { BiMenuAltLeft, BiRightArrowAlt } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
@@ -11,16 +10,17 @@ import { FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import styles from "../../styles/style";
 
-// import DropDown from "./DropDown.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { BsArrowLeftShort, BsArrowRight } from "react-icons/bs";
+import { BsArrowLeftShort } from "react-icons/bs";
+import { get_card_products } from "../../Redux/Action/cart";
 const Search = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+    const { card_product_count } = useSelector((state) => state.cart);
   const { categories } = useSelector((state) => state.category);
   const { allProducts, isLoading } = useSelector((state) => state.products);
   const { isAuthenticated, user } = useSelector((state) => state.user);
-  const { cart } = useSelector((state) => state.cart);
   const [activemenu, setActiveMenu] = useState("nav_menu");
   const [activeMenu2, setactiveMenu2] = useState("nav_menu2");
   const [isSticky, setIsSticky] = useState(false);
@@ -28,10 +28,10 @@ const Search = () => {
   const [searchItem, setSearchItem] = useState("");
   const [searchData, setSearchData] = useState([]);
   const { isSeller } = useSelector((state) => state.seller);
-  const [dropDown, setDropdown] = useState(false);
 
+ const [category, setCategory] = useState("");
   const [keyWord, setKeyWord] = useState("");
-
+  const [searchValue, setSearchValue] = useState("");
   const ToggleMenu = () => {
     if (activemenu === "nav_menu") {
       setActiveMenu("nav_menu nav_phone");
@@ -50,10 +50,7 @@ const Search = () => {
     }
   };
 
-  // const handelSubmit = () => {
-  //   if (keyWord) navigate(`/products/all-products/?category=${keyWord}`);
-  // };
-  // fixed Header
+
 
   // --------------------------------------sticky navbar---------------
 
@@ -66,23 +63,15 @@ const Search = () => {
   };
 
   useEffect(() => {
+    dispatch(get_card_products(user?._id));
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [user?._id,dispatch]);
   const handelSubmit = () => {
-    // const newKeyword = e.target.value;
-    // setKeyWord(newKeyword);
-
-    // const filteredProducts =
-    //   allProducts &&
-    //   allProducts.filter((cate) =>
-    //     cate.name?.toLowerCase().includes(newKeyword.toLowerCase())
-    //   );
-
-    // setSearchData(filteredProducts);
-    navigate(`/products/all-products/?search_query=${keyWord}`);
+  
+     navigate(`/products/search?category=${category}&value=${searchValue}`);
   };
 
   const handleMenuItemClick = (e, itemData) => {
@@ -103,15 +92,15 @@ const Search = () => {
               <input
                 type="text"
                 placeholder="search any item.."
-                value={keyWord}
-                onChange={(e)=>setKeyWord(e.target.value)}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
                 className="h-[40px] w-full px-2 border-[2px] border-[#06229b] rounded-md f focus:border-spacing-1.5 "
               />
 
               <button
                 type="submit"
                 onClick={handelSubmit}
-                className="text-white bg-[#050320] absolute right-0 h-[40px] w-[100px] rounded-r-md font-[600]  text "
+                className="text-white bg-[#050320] absolute right-0 h-[40px] w-[100px] rounded-r-md font-[600]   "
               >
                 Search
               </button>
@@ -157,7 +146,7 @@ const Search = () => {
                   <div className="relative cursor-pointer mr-[15px] text-white">
                     <FiShoppingCart size={30} className="text-white" />
                     <span className=" absolute right-[-6px] top-[-5px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[14px] font-[50] loading-tight text-center">
-                      {cart && cart.length}
+                      {card_product_count}
                     </span>
                   </div>
                 </Link>
@@ -259,9 +248,7 @@ const Search = () => {
                       key={index}
                       className="hover:bg-gray-300 mx-2 text-gray-700 hover:text-gray-950  rounded-md leading-[24px] py-[6px]  "
                       onClick={() => {
-                        navigate(
-                          `/products/all-products/?category=${item.name}`
-                        );
+                        navigate(`/products/search?subCategory=${item.name}`);
                         window.location.reload(true);
                       }}
                     >
@@ -280,10 +267,7 @@ const Search = () => {
 
         <div className="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[60px] mx-auto z-50">
           <div className="flex">
-            <div
-              className="grow rounded-tr-[30px] "
-              // style="width:calc(50% - 35px)"
-            >
+            <div className="grow rounded-tr-[30px] ">
               <div className="flex justify-around">
                 <button
                   type="button"
@@ -334,7 +318,7 @@ const Search = () => {
                       size={18}
                     />
                     <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center">
-                      {cart && cart.length}
+                      {card_product_count}
                     </span>
                     <p className="mt-[1px] text-xs text-white font-[700] ">
                       Cart

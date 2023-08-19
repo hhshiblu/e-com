@@ -23,6 +23,7 @@ import {
   TrackOrderPage,
   UserInbox,
   CateProductsPage,
+  SearchProducts,
 } from "./Routes.js";
 import { useEffect, useState } from "react";
 // import axios from "axios";
@@ -72,6 +73,7 @@ import { leatestOrderData } from "./Redux/Action/orderData";
 import { getAllBanar } from "./Redux/Action/banar";
 import ScrollTop from "./component/scrollToTop/ScrollTop";
 import { getAllCategory } from "./Redux/Action/category";
+import { query_products } from "./Redux/Action/filterproduct";
 
 axios.defaults.withCredentials = true;
 function App() {
@@ -82,6 +84,8 @@ function App() {
     setStripeApiKey(data.stripeApikey);
   }
   useEffect(() => {
+
+   
     Store.dispatch(getAllCategory());
     Store.dispatch(getAllBanar());
     Store.dispatch(loadUser());
@@ -128,6 +132,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
           <Route path="/some-related-faq" element={<FaqPage />} />
+          <Route path="/products/search?" element={<SearchProducts />} />
           <Route path="/all-cart-products" element={<CartPage />} />
           <Route
             path="/profile"

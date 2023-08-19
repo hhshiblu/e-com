@@ -1,48 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
   AiFillHeart,
   AiOutlineHeart,
   AiOutlineMessage,
   AiOutlineShoppingCart,
-  AiFillStar,
+
 } from "react-icons/ai";
 import { BsChatDots } from "react-icons/bs";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { IoLocation } from "react-icons/io5";
 import { GrServices } from "react-icons/gr";
 
-import { Link, useNavigate } from "react-router-dom";
-
-// import {
-//   addToWishlist,
-//   removeFromWishlist,
-// } from "../../redux/actions/wishlist";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
-
 import axios from "axios";
 import styles from "../../styles/style";
 import { backend_URL, server } from "../../serverUrl";
 import { useSelector, useDispatch } from "react-redux";
-import { addTocart } from "../../Redux/Action/cart";
-import { getAllShopProduct } from "../../Redux/Action/product";
-import Rating from "./Rating";
+import {  add_To_cart, get_card_products } from "../../Redux/Action/cart";
 
-const ProductDetails = ({ data }) => {
+import Rating from "./Rating";
+ 
+const ProductDetails = ({ data, products ,loading}) => {
+  const location = useLocation();
+  const [state, setState] = useState("reviews");
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  const { products } = useSelector((state) => state.products);
+  // const { products } = useSelector((state) => state.products);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
+  // const [quantity, setQuantity] = useState(1);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getAllShopProduct(data && data?.seller._id));
-  }, [data, dispatch]);
 
   const percentageDiscount =
     data?.originalPrice === 0
@@ -60,18 +54,50 @@ const ProductDetails = ({ data }) => {
     }
   };
 
-  const addToCartHandler = (id) => {
-    const isItemExists = cart && cart.find((i) => i._id === id);
-    if (isItemExists) {
-      toast.error("Item already in cart!");
+  // const addToCartHandler = (id) => {
+  //   const isItemExists = cart && cart.find((i) => i._id === id);
+  //   if (isItemExists) {
+  //     toast.error("Item already in cart!");
+  //   } else {
+  //     if (data?.stock < 1) {
+  //       toast.error("Product stock limited!");
+  //     } else {
+  //       const cartdata? = { ...data?, qty: count };
+  //       dispatch(addTocart(cartdata?));
+  //       toast.success("Item added to cart successfully!");
+  //     }
+  //   }
+  // };
+  // const inc = () => {
+  //   if (quantity >= data?.stock) {
+  //     toast.error("Out of stock");
+  //   } else {
+  //     setQuantity(quantity + 1);
+  //   }
+  // };
+
+  // const dec = () => {
+  //   if (quantity > 1) {
+  //     setQuantity(quantity - 1);
+  //   }
+  // };
+
+  const addToCartHandler = () => {
+    if (user) {
+      const info = {
+        userId: user._id,
+        cartItems: [
+          {
+            quantity: count,
+            productId: data?._id,
+          },
+        ],
+      };
+
+      dispatch(add_To_cart(info));
+      dispatch(get_card_products(user?._id));
     } else {
-      if (data.stock < 1) {
-        toast.error("Product stock limited!");
-      } else {
-        const cartData = { ...data, qty: count };
-        dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
-      }
+      navigate("/login");
     }
   };
 
@@ -93,9 +119,9 @@ const ProductDetails = ({ data }) => {
 
   const handleMessageSubmit = async () => {
     if (isAuthenticated) {
-      const groupTitle = data._id + user._id;
+      const groupTitle = data?._id + user._id;
       const userId = user._id;
-      const sellerId = data.seller._id;
+      const sellerId = data?.seller._id;
       await axios
         .post(`${server}/conversation/create-new-conversation`, {
           groupTitle,
@@ -103,10 +129,10 @@ const ProductDetails = ({ data }) => {
           sellerId,
         })
         .then((res) => {
-          navigate(`/inbox?${res.data.conversation._id}`);
+          navigate(`/inbox?${res.data?.conversation._id}`);
         })
         .catch((error) => {
-          toast.error(error.response.data.message);
+          toast.error(error.response.data?.message);
         });
     } else {
       toast.error("Please login to create a conversation");
@@ -114,7 +140,6 @@ const ProductDetails = ({ data }) => {
   };
   return (
     <div>
-      
       <div className="bg-white ">
         {data ? (
           <div className={`${styles.section} w-[90%] 800px:w-[90%]`}>
@@ -124,18 +149,20 @@ const ProductDetails = ({ data }) => {
 
                 <div className="w-full md:w-[50%] lg:w-[30%] h-[55vh]">
                   <div className="h-[80%]  m-auto">
-                    <img
-                      src={`${backend_URL}upload/${
-                        data && data.images[select]
-                      }`}
-                      alt=""
-                      className="w-[100%] 800px:w-[98%] m-auto h-[100%]  "
-                    />
+                
+                    {data && data.images && data.images[select] && (
+                      <img
+                        src={`${backend_URL}upload/${data.images[select]}`}
+                        alt=""
+                        className=" overflow-hidden  w-[100%] 800px:w-[98%] m-auto h-[100%]"
+                  
+                      />
+                    )}
                   </div>
 
                   <div className=" flex gap-4 w-full pt-6">
                     {data &&
-                      data.images.map((i, index) => (
+                      data?.images?.map((i, index) => (
                         <div
                           className={`${
                             select === index
@@ -158,7 +185,7 @@ const ProductDetails = ({ data }) => {
                 <div className="!w-full md:!w-[50%] lg:w-[40%] pt-5 ">
                   <p className="pb-2">
                     {" "}
-                    {data.stock > 0 ? (
+                    {data?.stock > 0 ? (
                       <span className=" text-red-700 font-[400]">In Stock</span>
                     ) : (
                       <span>no Stock</span>
@@ -166,12 +193,14 @@ const ProductDetails = ({ data }) => {
                   </p>
 
                   <hr />
-                  <h1 className={`${styles.productTitle} py-2`}>{data.name}</h1>
+                  <h1 className={`${styles.productTitle} py-2`}>
+                    {data?.name}
+                  </h1>
                   <hr />
                   <p className="font-semibold pt-2">
                     Brand:
-                    {data.brand ? (
-                      <span>{data.brandName}</span>
+                    {data?.brand ? (
+                      <span>{data?.brandName}</span>
                     ) : (
                       <span className="pl-2">No brand</span>
                     )}{" "}
@@ -181,7 +210,7 @@ const ProductDetails = ({ data }) => {
                     <Rating rating={data?.ratings} />
                     <div className="ml-3 text-gray-500"></div>
                     <span>
-                      ({data.ratings ? <span>{averageRating}/5</span> : ""})
+                      ({data?.ratings ? <span>{averageRating}/5</span> : ""})
                     </span>
                     <span className="pl-3">
                       {" "}
@@ -197,26 +226,26 @@ const ProductDetails = ({ data }) => {
                   <div className="flex pt-3 my-2">
                     <h4 className={`${styles.productDiscountPrice}`}>
                       <span className="font-semibold pr-2">৳</span>{" "}
-                      {data.discountPrice}
+                      {data?.discountPrice}
                     </h4>
                     <h3 className={`${styles.price} pl-5 flex`}>
-                      {data.originalPrice ? (
-                        <span>{"৳" + data.originalPrice} </span>
+                      {data?.originalPrice ? (
+                        <span>{"৳" + data?.originalPrice} </span>
                       ) : null}
                     </h3>
                     <div className="text-sm  text-blue-950 pl-4">
                       ({percentageDiscount.toFixed(0)}%)
                     </div>
-                    {/* <h3 className="pl-3 mt-[-4px] "> {data.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
+                    {/* <h3 className="pl-3 mt-[-4px] "> {data?.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
                   </div>
                   <hr />
                   <div className="py-2 flex items-center">
                     <h1 className="font-semibold text-sm md:text-lg">
                       {data?.color?.length > 0 ? "Color :" : ""}{" "}
                     </h1>
-                    {data.color ? (
+                    {data?.color ? (
                       <div className="flex">
-                        {data.color.map((color, index) => {
+                        {data?.color.map((color, index) => {
                           // Change 'i' to 'color' here
                           return (
                             <span
@@ -241,9 +270,9 @@ const ProductDetails = ({ data }) => {
                     <h1 className="font-semibold text-sm md:text-lg">
                       {data?.size?.length > 0 ? "Size :" : ""}{" "}
                     </h1>
-                    {data.size ? (
+                    {data?.size ? (
                       <h1 className="flex">
-                        {data.size.map((size, index) => {
+                        {data?.size.map((size, index) => {
                           // Change 'i' to 'color' here
                           return (
                             <span
@@ -288,7 +317,7 @@ const ProductDetails = ({ data }) => {
                         <AiFillHeart
                           size={30}
                           className="cursor-pointer"
-                          // onClick={() => removeFromWishlistHandler(data)}
+                          // onClick={() => removeFromWishlistHandler(data?)}
                           color={click ? "red" : "#333"}
                           title="Remove from wishlist"
                         />
@@ -296,7 +325,7 @@ const ProductDetails = ({ data }) => {
                         <AiOutlineHeart
                           size={30}
                           className="cursor-pointer"
-                          // onClick={() => addToWishlistHandler(data)}
+                          // onClick={() => addToWishlistHandler(data?)}
                           color={click ? "red" : "#333"}
                           title="Add to wishlist"
                         />
@@ -307,7 +336,7 @@ const ProductDetails = ({ data }) => {
                   <div className="flex justify-center mr-5 mt-4">
                     <div
                       className={`${styles.button} bg-[#c72e2e] !mt-6 !rounded !h-11 flex items-center mr-5`}
-                      // onClick={() => addToCartHandler(data._id)}
+                      // onClick={() => addToCartHandler(data?._id)}
                     >
                       <span className="text-white flex items-center">
                         Buy Now
@@ -316,7 +345,7 @@ const ProductDetails = ({ data }) => {
                     </div>
                     <div
                       className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
-                      onClick={() => addToCartHandler(data._id)}
+                      onClick={() => addToCartHandler(data?._id)}
                     >
                       <span className="text-white flex items-center">
                         Add to cart <AiOutlineShoppingCart className="ml-1" />
@@ -336,8 +365,8 @@ const ProductDetails = ({ data }) => {
                   </div>
 
                   <div className="block py-4 text-[15px] text-gray-700 ">
-                    {/* <h1> {data.shop.name}  </h1> */}
-                    <h1>{data?.seller?.address}</h1>
+                    <h1 className="text-[#007185]"> {data?.seller?.name} </h1>
+                    <h1 className="">{data?.seller?.address}</h1>
                   </div>
                   <hr />
 
@@ -382,161 +411,160 @@ const ProductDetails = ({ data }) => {
                 </div>
               </div>
               {/* ----------------------------------- shop name---------------------- */}
-              {/* <div className="flex items-center pt-6">
-              <Link to={`/shop/view/${data?.seller._id}`}>
-                <img
-                  src={`${backend_URL}upload/${data?.seller?.avatar}`}
-                  alt=""
-                  className="w-[50px] h-[50px] rounded-full mr-2"
-                />
-              </Link>
-              <div className="pr-8">
-                <Link to={`/shop/view/${data?.seller._id}`}>
-                  <h5 className="text-[#0C134F] pb-0.5 text-sm sm:text-md">
-                    {data.seller.name}
-                  </h5>
-                </Link>
-                <h5 className="pb-3 text-[15px]">
-                  ({averageRating}/5) Ratings
-                </h5>
-              </div>
-              <div
-                className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
-                onClick={handleMessageSubmit}
-              >
-                <span className="text-white flex items-center">
-                  Send Message <AiOutlineMessage className="ml-1" />
-                </span>
-              </div>
-            </div> */}
             </div>
             {/* ------------------product details info-------------------- */}
-            <ProductDetailsInfo
-              data={data}
-              products={products}
-              totalReviewsLength={totalReviewsLength}
-              averageRating={averageRating}
-              handleMessageSubmit={handleMessageSubmit}
-            />
+
             <br />
             <br />
           </div>
         ) : null}
       </div>
-    </div>
-  );
-};
-
-const ProductDetailsInfo = ({ data, averageRating, handleMessageSubmit }) => {
-  const [active, setActive] = useState(1);
-
-  return (
-    <div className="bg-[#f5f6fb] md:px-5 px-3 800px:px-10 py-2  rounded">
-      <div className="w-full flex justify-between border-b pt-10 pb-2">
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[17px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(1)}
-          >
-            Product Details
-          </h5>
-          {active === 1 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[17px]   px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(2)}
-          >
-            Product Reviews
-          </h5>
-          {active === 2 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-      </div>
-      {active === 1 ? (
-        <>
-          <p className="py-2 text-sm md:text-md leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
-        </>
-      ) : null}
-
-      {active === 2 ? (
-        <div className="w-full min-h-[40vh]  py-2 mt-2 overflow-y-scroll bg-white rounded-md ">
-          <div className="flex  md:justify-around  items-center justify-center mx-auto ">
-            <div className="flex items-center mx-auto">
-              <Link to={`/shop/view/${data?.seller._id}`}>
-                <img
-                  src={`${backend_URL}upload/${data?.seller?.avatar}`}
-                  alt=""
-                  className="w-[50px] h-[50px] rounded-full mr-2 mx-auto"
-                />
-              </Link>
-              <div className="pl-3">
-                <Link to={`/shop/view/${data?.seller._id}`}>
-                  <h3 className={`${styles.shop_name}`}>{data.seller.name}</h3>
-                </Link>
-                <h5 className="pb-2 text-[15px]">
-                  ({averageRating}/5) Ratings
-                </h5>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-2 pl-8 text-sm md:text-md font-[760] cursor-pointer mx-auto pb-2 md:pb-0 text-current">
-              <div onClick={handleMessageSubmit}>
-                <h1>live chat</h1>
-              </div>
-              <div>
-                <BsChatDots className="" />
-              </div>
-            </div>
-          </div>
-          <hr />
-          <hr />
-          <hr />
-          {data &&
-            data.reviews.map((item, index) => {
-              return (
-                <div
-                  className="w-full h-min   my-4 p-4 rounded-md "
-                  key={index}
-                >
-                  <div className="flex ">
-                    {item && item.user.avatar ? (
-                      <img
-                        src={`${backend_URL}upload/${item.user.avatar}`}
-                        alt=""
-                        className="w-[50px] h-[50px] rounded-full"
-                      />
-                    ) : null}
-                    <div className="w-full flex  pl-6 relative">
-                      <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                      <span className="mr-2"> </span>{" "}
-                      <Rating rating={data?.ratings} />
-                    </div>
-                  </div>
-
-                  <div className="pl-16 mt-[-22px] text-gray-500 text-sm">
-                    {item.comment}
-                  </div>
+      <section>
+        <div className="w-[100%] md:w-[90%] sm:w-[95%] lg:w-[90%] h-full mx-auto pb-16">
+          <div className="flex flex-wrap">
+            <div className="w-11/12 lg:w-8/12 mx-auto  md-lg:w-full">
+              <div className="pr-4 md-lg:pr-0">
+                <div className="grid grid-cols-2">
+                  <button
+                    onClick={() => setState("reviews")}
+                    className={`py-1 hover:text-white px-5 hover:bg-green-500 ${
+                      state === "reviews"
+                        ? "bg-green-500 text-white"
+                        : "bg-slate-200 text-slate-700"
+                    } rounded-sm`}
+                  >
+                    Reviews
+                  </button>
+                  <button
+                    onClick={() => setState("description")}
+                    className={`py-1 px-5 hover:text-white hover:bg-green-500 ${
+                      state === "description"
+                        ? "bg-green-500 text-white"
+                        : "bg-slate-200 text-slate-700"
+                    } rounded-sm`}
+                  >
+                    Description
+                  </button>
                 </div>
-              );
-            })}
+                <div>
+                  {state === "reviews" ? (
+                    // <Reviews />
 
-          <div className="w-full flex justify-center">
-            {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
-            )}
+                    <div className="w-full min-h-[40vh]  py-2 mt-2  bg-white rounded-md ">
+                      <div className="flex   items-center  bg-[#031735] text-white ">
+                        <div className="flex items-center pl-10 ">
+                          <Link to={`/shop/view/${data?.seller?._id}`}>
+                            <img
+                              src={`${backend_URL}upload/${data?.seller?.avatar}`}
+                              alt=""
+                              className="w-[30px] h-[30px] rounded-full mr-2 mx-auto"
+                            />
+                          </Link>
+                          <div className="pl-3 mt-[-10px]">
+                            <Link to={`/shop/view/${data?.seller?._id}`}>
+                              <h3 className={`${styles.shop_name} `}>
+                                {data?.seller?.name}
+                              </h3>
+                            </Link>
+                            <h5 className="mt-[-10px] pb-1 text-[15px]">
+                              ({averageRating}/5) Ratings
+                            </h5>
+                          </div>
+                          {/* <div className="flex justify-start items-center gap-3 pl-10 md:lg-20  text-sm md:text-md font-[760] cursor-pointer    text-current">
+                            <div onClick={handleMessageSubmit}>
+                              <h1>live chat</h1>
+                            </div>
+                            <div>
+                              <BsChatDots className="" />
+                            </div>
+                          </div> */}
+                        </div>
+                      </div>
+                      <hr />
+                      <hr />
+                      <hr />
+                      {data &&
+                        data?.reviews?.map((item, index) => {
+                          return (
+                            <div
+                              className="w-full h-min   my-4 p-4 rounded-md "
+                              key={index}
+                            >
+                              <div className="flex ">
+                                {item && item.user.avatar ? (
+                                  <img
+                                    src={`${backend_URL}upload/${item.user.avatar}`}
+                                    alt={item.name}
+                                    className="w-[50px] h-[50px] rounded-full"
+                                  />
+                                ) : null}
+                                <div className="w-full flex  pl-6 relative">
+                                  <h1 className="font-[500] mr-3">
+                                    {item.user.name}
+                                  </h1>
+                                  <span className="mr-2 !mt-1">
+                                    {" "}
+                                    <Rating rating={data?.ratings} />{" "}
+                                  </span>{" "}
+                                </div>
+                              </div>
+
+                              <div className="pl-16 mt-[-22px] text-gray-500 text-sm">
+                                {item.comment}
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                      <div className="w-full flex justify-center">
+                        {data && data?.reviews?.length === 0 && (
+                          <h5>No Reviews have for this product!</h5>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="py-5 text-slate-600">{data?.description}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="w-[28%] hidden lg:block md-lg:w-full">
+              <div className="pl-4 md-lg:pl-0">
+                <div className="px-3 py-1 rounded-md text-slate-600 bg-slate-200">
+                  <h2> From {data && data?.seller?.name}</h2>
+                </div>
+                <div className="lg:flex hidden flex-wrap gap-2 mt-3 border-2 p-1 m-auto rounded-md">
+                  {products?.slice(0, 4).map((p, i) => {
+                    return (
+                      <div className="w-[45%] h-[120px] m-auto">
+                        <Link to={`${`/product/${p._id}`}`}>
+                          <div className="relative ">
+                            <img
+                              src={`${backend_URL}upload/${p && p.images[0]}`}
+                              alt=""
+                              className="w-[100%] h-[120px] mx-auto"
+                            />
+                            <div className="flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2">
+                              {" "}
+                              {(p.originalPrice === 0
+                                ? 0
+                                : ((p.originalPrice - p.discountPrice) /
+                                    p.originalPrice) *
+                                  100
+                              ).toFixed(0)}
+                              %
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      ) : null}
+      </section>
     </div>
   );
 };

@@ -20,17 +20,22 @@ function CateProductsPage() {
   const categoryData = searchParams.get("search_query");
 console.log(categoryData);
   const [data, setData] = useState([]);
-  
- useEffect(() => {
-   if (categoryData && allProducts) {
-     const filteredProducts = allProducts.filter((product) =>
-       product.name.toLowerCase().includes(categoryData.toLowerCase())
-     );
-     setData(filteredProducts);
-   } else {
-     setData(allProducts);
-   }
- }, [categoryData, allProducts]);
+   
+useEffect(() => {
+  if (categoryData) {
+    const filteredProducts = allProducts?.filter((product) =>
+      product.name.toLowerCase().includes(categoryData.toLowerCase())
+    );
+
+    if (filteredProducts?.length > 0) {
+      setData(filteredProducts);
+    } else {
+      setData(allProducts);
+    }
+  } else {
+    setData(allProducts);
+  }
+}, [categoryData, allProducts]);
 
   return (
     <div>
@@ -46,7 +51,7 @@ console.log(categoryData);
         <h2 className="text-lg font-[600] py-1"> Category Name :</h2>
         <hr /> <hr />
         <div className="800px:flex  py-6">
-          <div className="hidden 800px:flex  w-[350px] pt-3   justify-center   items-center bg-white px-2 mx-4">
+          <div className="hidden 800px:flex  w-[350px] pt-3   justify-center   bg-white px-2 mx-4">
             <Filters />
           </div>
           <div>
@@ -58,12 +63,12 @@ console.log(categoryData);
                 ))}
             </div>
             <div>
-              {data && data.length === 0 ? (
+              {/* {data && data.length === 0 ? (
                 <h1 className="text-center text-gray-600 pb-[100px] md:text-base text-sm">
                   {" "}
                   no products found!
                 </h1>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </div>

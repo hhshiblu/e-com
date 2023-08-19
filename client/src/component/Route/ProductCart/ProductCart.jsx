@@ -6,7 +6,7 @@ import { backend_URL } from "../../../serverUrl";
 import Rating from "../../ProductDetails/Rating";
 function ProductCart({ data, isEvent }) {
   return (
-    <div className="bg-white hover:shadow-lg rounded-md">
+    <div className="bg-white hover:shadow-lg rounded-md ">
       <div className="w-full h-auto mb- p-3 relative rounded-md  cursor-pointer ">
         <div className=" flex  justify-end m-auto"></div>
         <Link

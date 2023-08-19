@@ -9,6 +9,7 @@ import { orderReducer } from "./reducer/order";
 import { categoryReducer } from "./reducer/category";
 import { orderData } from "./reducer/orderData";
 import { banarReducer } from "./reducer/banar";
+import { filterProducts } from './reducer/filterproducts';
 
 const Store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ const Store = configureStore({
     category: categoryReducer,
     banar:banarReducer,
     orderData: orderData,
+    filterProduct:filterProducts,
   },
 });
 export default Store;

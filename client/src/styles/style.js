@@ -6,6 +6,8 @@ const styles = {
   productTitle: "text-[18px] font-[600] font-Roboto text-gray-800 ",
   productDiscountPrice:
     "font-bold text-[#d55b45] text-[18px] text-[#333] font-Roboto",
+  letestDiscountPrice:
+    "font-semibold text-[#d55b45] text-[18px] text-[#333] font-Roboto",
   price: "font-[500] text-[16px]  pl-3 mt-[-4px] line-through",
   shop_name: "pt-3 text-[15px] text-blue-400 pb-3",
   active_indicator: "absolute bottom-[-27%] left-0 h-[3px] w-full bg-[crimson]",

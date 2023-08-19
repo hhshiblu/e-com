@@ -4,17 +4,16 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { createProduct } from "../../Redux/Action/product";
 import { useNavigate } from "react-router-dom";
-import { categoriesData } from "../../staticData/data";
 import { toast } from "react-toastify";
-const colorsData = ["Red", "White", "Green"];
-const sizesData = ["22", "23", "29", "42"];
+const colorsData = ["Red", "White", "Green","blue","yellow"];
+const sizesData = ["22", "23", "29", "42", "s", "m", "l", "xl", "xxl"];
 
 function CreateProduct() {
-  const{categories}= useSelector((state)=>state.category)
+  const { categories } = useSelector((state) => state.category);
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.products);
-  const [category, setCategory] = useState("")
-   const [subCategory, setSubCategory] = useState("");
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
 
@@ -26,7 +25,7 @@ function CreateProduct() {
       setSelectedColors((prevColors) => prevColors.filter((c) => c !== color));
     }
   };
-console.log(categories);
+
   const handleSizeChange = (e, size) => {
     const { checked } = e.target;
     if (checked) {
@@ -35,8 +34,6 @@ console.log(categories);
       setSelectedSizes((prevSizes) => prevSizes.filter((s) => s !== size));
     }
   };
-
-
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,7 +46,6 @@ console.log(categories);
     originalPrice: "",
     discountPrice: "",
     stock: "",
-     
   });
 
   useEffect(() => {
@@ -75,37 +71,35 @@ console.log(categories);
     setProduct({ ...product, [name]: value });
   };
 
+  const HandelSubmit = (e) => {
+    e.preventDefault();
 
- const HandelSubmit = (e) => {
-   e.preventDefault();
+    const newForm = new FormData();
 
-   const newForm = new FormData();
+    images.forEach((image) => {
+      newForm.append("images", image);
+    });
 
-   images.forEach((image) => {
-     newForm.append("images", image);
-   });
+    newForm.append("name", product.ProductName);
+    newForm.append("description", product.description);
+    newForm.append("category", category);
+    newForm.append("subCategory", subCategory);
+    newForm.append("tags", product.tags);
+    newForm.append("originalPrice", product.originalPrice);
+    newForm.append("discountPrice", product.discountPrice);
+    newForm.append("stock", product.stock);
 
-   newForm.append("name", product.ProductName);
-   newForm.append("description", product.description);
-   newForm.append("category", category);
-   newForm.append("subCategory", subCategory);
-   newForm.append("tags", product.tags);
-   newForm.append("originalPrice", product.originalPrice);
-   newForm.append("discountPrice", product.discountPrice);
-   newForm.append("stock", product.stock);
+    // Add selected colors and sizes to the form data
+    selectedColors.forEach((color) => {
+      newForm.append("color", color);
+    });
+    selectedSizes.forEach((size) => {
+      newForm.append("size", size);
+    });
 
-   // Add selected colors and sizes to the form data
-   selectedColors.forEach((color) => {
-     newForm.append("color", color);
-   });
-   selectedSizes.forEach((size) => {
-     newForm.append("size", size);
-   });
-
-   newForm.append("sellerId", seller._id);
-   dispatch(createProduct(newForm));
- };
-
+    newForm.append("sellerId", seller._id);
+    dispatch(createProduct(newForm));
+  };
 
   return (
     <div className="w-[90%] 800px:w-[84%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
@@ -114,6 +108,7 @@ console.log(categories);
       <form onSubmit={HandelSubmit}>
         <hr />
         <br />
+     
 
         <div>
           <label className="pb-2">
@@ -203,27 +198,28 @@ console.log(categories);
         </div>
         <br />
         <div>
-          <label className="pb-2">Colors</label>
+          <label className="pb-2">Colors : </label>
           {colorsData.map((color) => (
             <label key={color}>
               <input
                 type="checkbox"
                 name="colors"
                 value={color}
+                className="pl-2 text-red-900 "
                 checked={selectedColors.includes(color)}
                 onChange={(e) => handleColorChange(e, color)}
               />
-              {color}
+              <span className="px-1">{color}</span>
             </label>
           ))}
         </div>
         <br />
 
         {/* Size checkboxes */}
-        <div>
-          <label className="pb-2">Sizes</label>
+        <div className="">
+          <label className="pb-2 ">Sizes : </label>
           {sizesData.map((size) => (
-            <label key={size}>
+            <label key={size} className="pl-2">
               <input
                 type="checkbox"
                 name="sizes"
@@ -231,7 +227,7 @@ console.log(categories);
                 checked={selectedSizes.includes(size)}
                 onChange={(e) => handleSizeChange(e, size)}
               />
-              {size}
+              <span className="px-1">{size}</span>
             </label>
           ))}
         </div>
