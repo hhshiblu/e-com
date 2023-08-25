@@ -1,4 +1,5 @@
 const express = require("express");
+// import { seller_status_update } from './../../../multi-vendor-ecommerce/dashboard/src/store/Reducers/sellerReducer';
 const router = express.Router();
 
 const upload = require("../src/multer");
@@ -16,9 +17,10 @@ const {
   deleteSellerWithdroMethod,
   deleteSeller,
   getAllSeller,
+  sellerStatus_update,
 } = require("../controlar/seller");
 const { isSeller, isAdmin, isAuthenticated } = require("../Middleware/auth");
-// const { getAllUser } = require("../controlar/user");
+
 
 router.post("/create-seller", upload.single("file"), SellerSignUp);
 
@@ -40,15 +42,28 @@ router.put(
 
 router.put("/update-seller-info", isSeller, UpdateSellerInfo);
 router.put("/update-payment-methods", isSeller, updatePayment);
+
 router.delete("/delete-withdraw-method/", isSeller, deleteSellerWithdroMethod);
+
+// ----------------------------------admin seller------------
+
 router.get(
   "/admin-all-sellers",
   isAuthenticated,
-  getAllSeller)
-
+  isAdmin("admin"),
+  getAllSeller
+);
+router.post(
+  "/seller-status-update",
+  isAuthenticated,
+  isAdmin("admin"),
+  sellerStatus_update
+);
   router.delete(
     "/delete-seller/:id",
     isAuthenticated,
-   deleteSeller)
+    isAdmin("admin"),
+    deleteSeller
+  );
 
 module.exports = router;

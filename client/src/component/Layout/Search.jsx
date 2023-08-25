@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
-import { BiMenuAltLeft, BiRightArrowAlt } from "react-icons/bi";
+import { BiMenuAltLeft } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
 import { AiOutlineShoppingCart, AiFillDashboard } from "react-icons/ai";
 import { ImCancelCircle } from "react-icons/im";
@@ -17,20 +17,18 @@ import { get_card_products } from "../../Redux/Action/cart";
 const Search = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-    const { card_product_count } = useSelector((state) => state.cart);
+  const { card_product_count } = useSelector((state) => state.cart);
   const { categories } = useSelector((state) => state.category);
-  const { allProducts, isLoading } = useSelector((state) => state.products);
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const [activemenu, setActiveMenu] = useState("nav_menu");
   const [activeMenu2, setactiveMenu2] = useState("nav_menu2");
   const [isSticky, setIsSticky] = useState(false);
   const [SubMenuDetails, setSubMenuDetails] = useState("");
-  const [searchItem, setSearchItem] = useState("");
-  const [searchData, setSearchData] = useState([]);
+
+  // const [searchData, setSearchData] = useState([]);
   const { isSeller } = useSelector((state) => state.seller);
 
- const [category, setCategory] = useState("");
-  const [keyWord, setKeyWord] = useState("");
+  // const [keyWord, setKeyWord] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const ToggleMenu = () => {
     if (activemenu === "nav_menu") {
@@ -50,8 +48,6 @@ const Search = () => {
     }
   };
 
-
-
   // --------------------------------------sticky navbar---------------
 
   const handleScroll = () => {
@@ -68,15 +64,15 @@ const Search = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [user?._id,dispatch]);
+  }, [user?._id, dispatch]);
   const handelSubmit = () => {
-  
-     navigate(`/products/search?category=${category}&value=${searchValue}`);
+    navigate(`/products/search?value=${searchValue}`);
   };
 
   const handleMenuItemClick = (e, itemData) => {
     ToggleMenu2(itemData);
   };
+  const { id } = useParams();
 
   return (
     <>
@@ -104,7 +100,7 @@ const Search = () => {
               >
                 Search
               </button>
-              {keyWord && keyWord.length !== 0 ? (
+              {/* {keyWord && keyWord.length !== 0 ? (
                 <div className="absolute w-full min-h-[30vh] bg-slate-50 shadow-sm z-[9] p-4">
                   {searchData &&
                     searchData.map((d, index) => {
@@ -120,7 +116,7 @@ const Search = () => {
                       );
                     })}
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
             <div className="hidden m-auto  md:flex items-center">
               <div className={`${styles.normalFlex}`}>
@@ -133,9 +129,7 @@ const Search = () => {
                         </h1>
                       </div>
                     ) : (
-                      <Link to="/login">
-                        <CgProfile size={30} color="#fff" />
-                      </Link>
+                      <CgProfile size={30} color="#fff" />
                     )}
                   </Link>
                 </div>
@@ -167,7 +161,7 @@ const Search = () => {
             </div>
             <div className="my-auto">
               <Link
-                to={`${isSeller ? "/dashboard" : "/become-seller"}`}
+                to={`${isSeller ? "/seller_DashBoard" : "/become-seller"}`}
                 className="mr-8  text-[#ffffff] font-semibold hover:border-[1px] px-[8px] pt-[9px] pb-[9px]  rounded-md "
               >
                 {" "}
@@ -198,9 +192,9 @@ const Search = () => {
           <div className={activemenu}>
             <div className=" text-left border-b-2 bg-[#01032d] border-b-black  py-2 pl-8 flex items-center">
               <h1 className="font-bold pr-2 text-lg text-white">Hello , </h1>
-              <h2 className="font-semibold text-lg text-white ">
-                {isAuthenticated ? <h1> {user?.name} </h1> : <h1> Sign In </h1>}
-              </h2>
+              <h1 className="font-semibold text-lg text-white ">
+                {isAuthenticated ? <p> {user?.name} </p> : <p> Sign In </p>}
+              </h1>
             </div>
             <div className="bg-[#445069] text-white py-[2px] m-auto">
               <h2>Best wishes for you</h2>
@@ -264,14 +258,146 @@ const Search = () => {
         </div>
 
         {/* ----------------------------------phn menu--------------------------------- */}
+        {/* {id ? (
+          <div className="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[50px] mx-auto z-50 ">
+            <div className="flex">
+              <div className="grow rounded-tr-[30px] ">
+                <div className="flex mx-auto justify-between ">
+                  <div className="flex w-[45%]  justify-around">
+                    <button
+                      type="button"
+                      className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                      onClick={ToggleMenu}
+                    >
+                      <BiCategoryAlt className="text-white " size={18} />
+                      <p className="mt-[1px] text-xs text-white font-[700] ">
+                        Category
+                      </p>
+                    </button>
+                    {isSeller ? (
+                      <Link
+                        to={`${
+                          isSeller ? "/seller_DashBoard" : "/become-seller"
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                        >
+                          <AiFillDashboard className="text-white " size={18} />
+                          <p className="mt-[1px] text-xs text-white font-[700] ">
+                            {isSeller ? "Dashboard" : "Shop"}
+                          </p>
+                        </button>
+                      </Link>
+                    ) : (
+                      <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
+                        <button
+                          type="button"
+                          className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                        >
+                          <CgProfile className="text-white " size={18} />
+                          <p className="mt-[1px] text-xs text-white font-[700] ">
+                            Account
+                          </p>
+                        </button>
+                      </Link>
+                    )}
+                  </div>
 
-        <div className="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[60px] mx-auto z-50">
+                  <div className="flex w-[55%] bg-green-500 font-medium ">
+                    <h1 className="text-center  pt-3 text-white  w-[45%]   bg-green-500">
+                      Buy Now
+                    </h1>
+
+                    <h1
+                      className="text-center bg-[#D61355] w-[55%] pt-3 px-2  text-white  font-medium "
+                      style={{
+                        clipPath: "polygon(21% 0, 100% 0, 100% 100%, 0% 100%)",
+                      }}
+                    >
+                      Add to Cart
+                    </h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[50px] mx-auto z-50">
+            <div className="flex">
+              <div className="grow rounded-tr-[30px] ">
+                <div className="flex justify-around">
+                  <button
+                    type="button"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
+                    onClick={ToggleMenu}
+                  >
+                    <BiCategoryAlt className="text-white " size={18} />
+                    <p className="mt-[1px] text-xs text-white font-[700] ">
+                      Category
+                    </p>
+                  </button>
+                  <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
+                    <button
+                      type="button"
+                      className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
+                    >
+                      <CgProfile className="text-white " size={18} />
+                      <p className="mt-[1px] text-xs text-white font-[700] ">
+                        Account
+                      </p>
+                    </button>
+                  </Link>
+                  <button
+                    type="button"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-10px]"
+                  >
+                    <AiOutlineShoppingCart className="text-white " size={18} />
+                  </button>
+                  <Link
+                    to={`${isSeller ? "/seller_DashBoard" : "/become-seller"}`}
+                  >
+                    <button
+                      type="button"
+                      className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
+                    >
+                      <AiFillDashboard className="text-white " size={18} />
+                      <p className="mt-[1px] text-xs text-white font-[700] ">
+                        {isSeller ? "Dashboard" : "Shop"}
+                      </p>
+                    </button>
+                  </Link>
+                  <button
+                    type="button"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px] "
+                  >
+                    <Link to="/all-cart-products" className="relative">
+                      <FiShoppingCart
+                        className="text-white  relative"
+                        size={18}
+                      />
+                      <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center">
+                        {card_product_count}
+                      </span>
+                      <p className="mt-[1px] text-xs text-white font-[700] ">
+                        Cart
+                      </p>
+                    </Link>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )} */}
+
+        <div className="fixed bottom-0 left-0 w-full md:hidden bg-[#050320] h-[50px] mx-auto z-50">
           <div className="flex">
             <div className="grow rounded-tr-[30px] ">
               <div className="flex justify-around">
                 <button
                   type="button"
-                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
                   onClick={ToggleMenu}
                 >
                   <BiCategoryAlt className="text-white " size={18} />
@@ -282,7 +408,7 @@ const Search = () => {
                 <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
                   <button
                     type="button"
-                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
                   >
                     <CgProfile className="text-white " size={18} />
                     <p className="mt-[1px] text-xs text-white font-[700] ">
@@ -296,22 +422,23 @@ const Search = () => {
                 >
                   <AiOutlineShoppingCart className="text-white " size={18} />
                 </button>
-                <Link to={`${isSeller ? "/dashboard" : "/become-seller"}`}>
+                <Link
+                  to={`${isSeller ? "/seller_DashBoard" : "/become-seller"}`}
+                >
                   <button
                     type="button"
-                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px]"
+                    className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
                   >
                     <AiFillDashboard className="text-white " size={18} />
                     <p className="mt-[1px] text-xs text-white font-[700] ">
-                      {isSeller ? "Dashboard" : "Shop"}{" "}
+                      {isSeller ? "Dashboard" : "Shop"}
                     </p>
                   </button>
                 </Link>
                 <button
                   type="button"
-                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-8px] "
+                  className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px] "
                 >
-                  {" "}
                   <Link to="/all-cart-products" className="relative">
                     <FiShoppingCart
                       className="text-white  relative"
@@ -330,7 +457,6 @@ const Search = () => {
           </div>
         </div>
       </div>
-      {/* ///////////////////////////////search */}
     </>
   );
 };

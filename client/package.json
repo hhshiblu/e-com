@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.2.5",
     "@material-ui/core": "^4.12.4",
     "@material-ui/data-grid": "^4.0.0-alpha.37",
     "@reduxjs/toolkit": "^1.9.5",
@@ -11,6 +12,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.8.4",
     "axios": "^1.4.0",
     "country-state-city": "^3.1.4",
     "js-cookie": "^3.0.1",
@@ -32,7 +34,6 @@
     "redux-toolkit": "^1.1.2",
     "socket.io-client": "^4.6.2",
     "swiper": "^9.3.2",
-    "timeago.js": "^4.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

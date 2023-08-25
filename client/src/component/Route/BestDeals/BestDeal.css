@@ -10,7 +10,7 @@
 .custom-scrollbar::-webkit-scrollbar 
 { 
   width: 16px; 
-  height: 10px;
+  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track-piece 
@@ -28,3 +28,22 @@
 {
   display: none;
 }
+  @media (max-width: 800px){
+.container {
+  max-width: 910px;
+}
+  }
+
+
+    @media (max-width: 400px){
+.container {
+  max-width: 687px;
+}
+    }
+
+      @media (max-width: 1536px){
+.container {
+  max-width: 1600px;
+}
+      }
+

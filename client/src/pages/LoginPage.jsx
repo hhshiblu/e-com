@@ -7,10 +7,10 @@ function LoginPage() {
   const {isAuthenticated}=useSelector(state=>state.user)
 
   useEffect(() => {
-if(isAuthenticated===true){
-  navigate("/")
-}
-  },[]);
+    if (isAuthenticated === true) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
   return (
     <div>
    <Login/>

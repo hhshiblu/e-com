@@ -212,7 +212,7 @@ const UpdateSellerPicture=
           seller,
         });
       } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
+        return next(new Errorhandeler(error.message, 500));
       }
     })
 
@@ -306,7 +306,23 @@ const getAllSeller=
       return next(new Errorhandeler(error.message, 500));
     }
   })
-;
+  ;
+  const sellerStatus_update = CatchAsyncError(async (req, res, next) => {
+    const { sellerId, status } = req.body;
+    try {
+      await Seller.findByIdAndUpdate(sellerId, {
+        status,
+      });
+      const seller = await Seller.findById(sellerId);
+      res.status(201).json({
+        seller,
+        message: "seller status update success",
+      });
+
+    } catch (error) {
+      return next(new Errorhandeler(error.message, 500));
+    }
+  });
 
 // delete seller ---admin
 const deleteSeller=
@@ -334,4 +350,18 @@ const deleteSeller=
 
 
 
-module.exports = { SellerSignUp, ActiveSeller,SellerLogIn,GetSeller ,SellerLogOut, getSellerInfo,UpdateSellerPicture,UpdateSellerInfo,deleteSellerWithdroMethod,updatePayment,getAllSeller,deleteSeller};
+module.exports = {
+  SellerSignUp,
+  ActiveSeller,
+  SellerLogIn,
+  GetSeller,
+  SellerLogOut,
+  getSellerInfo,
+  UpdateSellerPicture,
+  UpdateSellerInfo,
+  deleteSellerWithdroMethod,
+  sellerStatus_update,
+  updatePayment,
+  getAllSeller,
+  deleteSeller,
+};

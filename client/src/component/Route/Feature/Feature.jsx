@@ -16,7 +16,7 @@ function Feature() {
                   className="flex items-center px-3  shadow-md bg-white rounded-[30px] "
                 >
                   <div className="rounded-full">
-                    <span className="rounded-full h-2 w-2"> {i.icon}</span>
+                    <p className="rounded-full h-2 w-2"> {i.icon}</p>
                   </div>
                   <div className="px-3">
                     <h3 className="font-bold text-left text-sm md:text-base">

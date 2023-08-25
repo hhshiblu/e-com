@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineFolderAdd, AiOutlineGift } from "react-icons/ai";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { VscNewFile } from "react-icons/vsc";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
-
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 const DashBoardSideBar = ({ active }) => {
+  const location = useLocation();
+  console.log(location.pathname);
+  const [showProductSubMenu, setShowProductSubMenu] = useState(false); 
+
   return (
     <div className="!w-full   h-[89vh] bg-white shadow-sm overflow-y-scroll  top-0 left-0 z-10">
       {/* single item */}
@@ -44,40 +51,92 @@ const DashBoardSideBar = ({ active }) => {
           </h5>
         </Link>
       </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-products" className="w-full flex items-center">
-          <FiPackage size={30} color={`${active === 3 ? "crimson" : "#555"}`} />
+      <div className="relative">
+        <div className="w-full flex items-center p-4">
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 3 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-1 pr-5 text-[18px] font-[400] text-[#555]`}
+            onClick={() => setShowProductSubMenu(!showProductSubMenu)}
           >
             All Products
           </h5>
-        </Link>
+          {showProductSubMenu ? (
+            <MdOutlineKeyboardArrowDown size={20} color={`#555`} className="" />
+          ) : (
+            <MdOutlineKeyboardArrowUp size={20} color={`#555`} />
+          )}{" "}
+        </div>
+        {showProductSubMenu && (
+          <div className=" pl-5">
+            <div className="w-full flex items-center px-4">
+              {/* <Link
+                to="/dashboard-products"
+                className="w-full flex items-center"
+              >
+                <FiPackage
+                  size={30}
+                  color={`${active === 3 ? "crimson" : "#555"}`}
+                />
+                <h5
+                  className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+                    active === 3 ? "text-[crimson]" : "text-[#555]"
+                  }`}
+                >
+                  All Products
+                </h5>
+              </Link> */}
+              <Link to="/dashboard-events" className="w-full flex items-center">
+                <MdOutlineLocalOffer
+                  size={30}
+                  color={`${active === 5 ? "crimson" : "#555"}`}
+                />
+                <h5
+                  className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+                    active === 5 ? "text-[crimson]" : "text-[#555]"
+                  }`}
+                >
+                  All Events
+                </h5>
+              </Link>
+            </div>
+            <div className="w-full flex items-center p-4">
+              <Link
+                to="/dashboard-create-product"
+                className="w-full flex items-center"
+              >
+                <AiOutlineFolderAdd
+                  size={30}
+                  color={`${active === 4 ? "crimson" : "#555"}`}
+                />
+                <h5
+                  className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+                    active === 4 ? "text-[crimson]" : "text-[#555]"
+                  }`}
+                >
+                  Create Product
+                </h5>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
-
-      <div className="w-full flex items-center p-4">
-        <Link
-          to="/dashboard-create-product"
-          className="w-full flex items-center"
-        >
-          <AiOutlineFolderAdd
+      {/* 
+      <div className="w-full flex items-center p-4 relative">
+        <Link to="/dashboard-events" className="w-full flex items-center">
+          <MdOutlineLocalOffer
             size={30}
-            color={`${active === 4 ? "crimson" : "#555"}`}
+            color={`${active === 5 ? "crimson" : "#555"}`}
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 4 ? "text-[crimson]" : "text-[#555]"
+              active === 5 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Create Product
+            All Events
           </h5>
         </Link>
-      </div>
+      </div> */}
 
-      <div className="w-full flex items-center p-4">
+      <div className=" absolute  top-6 bg-black">
         <Link to="/dashboard-events" className="w-full flex items-center">
           <MdOutlineLocalOffer
             size={30}

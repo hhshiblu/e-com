@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { getAllShopProduct } from "../../Redux/Action/product";
 import { getAllShopevent } from "../../Redux/Action/event";
-import styles from "../../styles/style";
+// import styles from "../../styles/style";
 import ProductCart from "../Route/ProductCart/ProductCart";
 import { backend_URL } from "../../serverUrl";
 import Rating from "../ProductDetails/Rating";
@@ -17,7 +17,7 @@ const ShopProfileData = ({ isOwner }) => {
   useEffect(() => {
     dispatch(getAllShopProduct(id));
     dispatch(getAllShopevent(id));
-  }, [dispatch]);
+  }, [dispatch,id]);
 
   const [active, setActive] = useState(1);
 

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { server } from "../../serverUrl";
 import styles from "../../styles/style";
+import SellerLoader from "../Loader/SellerLOader";
 
 const CouponCode = () => {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ const CouponCode = () => {
       .catch((error) => {
         setIsLoading(false);
       });
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const handleDelete = async (id) => {
     axios.delete(`${server}/coupon/delete-coupon/${id}`,{withCredentials: true}).then((res) => {
@@ -121,128 +122,127 @@ const CouponCode = () => {
 
   return (
     <>
-      {/* {isLoading ? (
-        <Loader />
-      ) : ( */}
-        <div className="h-[82vh] overflow-y-scroll overflow-hidden w-full  mx-8 pt-1 mt-10 ">
-          <div className="w-full flex items-start justify-end">
-            <div
-              className={`${styles.button} !w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3`}
-              onClick={() => setOpen(true)}
-            >
-              <span className="text-white">Create Coupon Code</span>
-            </div>
+      {isLoading ? (
+         <SellerLoader />
+      ) : (
+      <div className="h-[82vh] overflow-y-scroll overflow-hidden w-full  px-3 md:px-6 pt-1 mt-10 ">
+        <div className="w-full flex items-start justify-end">
+          <div
+            className={`${styles.button} !w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3`}
+            onClick={() => setOpen(true)}
+          >
+            <span className="text-white">Create Coupon Code</span>
           </div>
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
-          {open && (
-            <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
-              <div className="w-[90%] 800px:w-[40%] h-[80vh] bg-white rounded-md shadow p-4">
-                <div className="w-full flex justify-end">
-                  <RxCross1
-                    size={30}
-                    className="cursor-pointer"
-                    onClick={() => setOpen(false)}
+        </div>
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
+        {open && (
+          <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
+            <div className="w-[90%] 800px:w-[40%] h-[80vh] bg-white rounded-md shadow p-4">
+              <div className="w-full flex justify-end">
+                <RxCross1
+                  size={30}
+                  className="cursor-pointer"
+                  onClick={() => setOpen(false)}
+                />
+              </div>
+              <h5 className="text-[30px] font-Poppins text-center">
+                Create Coupon code
+              </h5>
+              {/* create coupoun code */}
+              <form onSubmit={handleSubmit}>
+                <br />
+                <div>
+                  <label className="pb-2">
+                    Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    value={name}
+                    className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter your coupon code name..."
                   />
                 </div>
-                <h5 className="text-[30px] font-Poppins text-center">
-                  Create Coupon code
-                </h5>
-                {/* create coupoun code */}
-                <form onSubmit={handleSubmit} aria-required={true}>
-                  <br />
-                  <div>
-                    <label className="pb-2">
-                      Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      value={name}
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter your coupon code name..."
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">
-                      Discount Percentenge{" "}
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="value"
-                      value={value}
-                      required
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setValue(e.target.value)}
-                      placeholder="Enter your coupon code value..."
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">Min Amount</label>
-                    <input
-                      type="number"
-                      name="value"
-                      value={minAmount}
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setMinAmout(e.target.value)}
-                      placeholder="Enter your coupon code min amount..."
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">Max Amount</label>
-                    <input
-                      type="number"
-                      name="value"
-                      value={maxAmount}
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setMaxAmount(e.target.value)}
-                      placeholder="Enter your coupon code max amount..."
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">Selected Product</label>
-                    <select
-                      className="w-full mt-2 border h-[35px] rounded-[5px]"
-                      value={selectedProducts}
-                      onChange={(e) => setSelectedProducts(e.target.value)}
-                    >
-                      <option value="Choose your selected products">
-                        Choose a selected product
-                      </option>
-                      {products &&
-                        products.map((i) => (
-                          <option value={i.name} key={i.name}>
-                            {i.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <br />
-                  <div>
-                    <input
-                      type="submit"
-                      value="Create"
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    />
-                  </div>
-                </form>
-              </div>
+                <br />
+                <div>
+                  <label className="pb-2">
+                    Discount Percentenge <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="value"
+                    value={value}
+                    required
+                    className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="Enter your coupon code value..."
+                  />
+                </div>
+                <br />
+                <div>
+                  <label className="pb-2">Min Amount</label>
+                  <input
+                    type="number"
+                    name="value"
+                    value={minAmount}
+                    className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    onChange={(e) => setMinAmout(e.target.value)}
+                    placeholder="Enter your coupon code min amount..."
+                  />
+                </div>
+                <br />
+                <div>
+                  <label className="pb-2">Max Amount</label>
+                  <input
+                    type="number"
+                    name="value"
+                    value={maxAmount}
+                    className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    onChange={(e) => setMaxAmount(e.target.value)}
+                    placeholder="Enter your coupon code max amount..."
+                  />
+                </div>
+                <br />
+                <div>
+                  <label className="pb-2">Selected Product</label>
+                  <select
+                    className="w-full mt-2 border h-[35px] rounded-[5px]"
+                    value={selectedProducts}
+                    onChange={(e) => setSelectedProducts(e.target.value)}
+                  >
+                    <option value="Choose your selected products">
+                      Choose a selected product
+                    </option>
+                    {products &&
+                      products.map((i) => (
+                        <option value={i.name} key={i.name}>
+                          {i.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <br />
+                <div>
+                  <input
+                    type="submit"
+                    value="Create"
+                    className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  />
+                </div>
+              </form>
             </div>
-          )}
-        </div>
-      {/* )} */}
+          </div>
+        )}
+      </div>
+    )} 
     </>
   );
 };

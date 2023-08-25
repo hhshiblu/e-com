@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ProductDetails from "../component/ProductDetails/ProductDetails.jsx";
 // import {productData} from "../staticData/data.js"
 import Footer from "../component/Layout/Footer.jsx";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import SuggestProduct from "../component/SuggestProduct.jsx";
 // import SuggestedProduct from "../components/Products/SuggestedProduct";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,9 +10,11 @@ import Header from "../component/Layout/Header.jsx";
 
 import ShopProduct from "../component/Route/ProductCart/ShopProduct.jsx";
 import { get_product } from "../Redux/Action/filterproduct.js";
+import ProductDetailLoader from "./../component/Loader/ProductDetailLoader";
 function ProductDetailsPage() {
   const dispatch = useDispatch();
-
+  const location = useLocation();
+  console.log(location.pathname);
   const { product, relatedProducts, moreProducts, isloading } = useSelector(
     (state) => state.filterProduct
   );
@@ -24,7 +26,9 @@ function ProductDetailsPage() {
   return (
     <div>
       {isloading ? (
-        <div>this is loading</div>
+        <div>
+          <ProductDetailLoader />
+        </div>
       ) : (
         <div>
           <Header />

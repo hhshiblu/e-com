@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import styles from "../styles/style.js";
-import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { server } from "../serverUrl.js";
 import { toast } from "react-toastify";
+import styles from "../styles/style.js";
+import { Link } from "react-router-dom";
 
 function SignUp() {
   // const navigate=useNavigate();

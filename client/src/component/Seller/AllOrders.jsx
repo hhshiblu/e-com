@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { getAllOrdersOfShop } from "../../Redux/Action/order";
+import SellerLOader from "../Loader/SellerLOader";
 
 const AllOrders = () => {
   const { orders, isLoading } = useSelector((state) => state.order);
@@ -21,12 +22,12 @@ const AllOrders = () => {
 
   
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Order ID", minWidth: 120, flex: 0.7 },
 
     {
       field: "status",
       headerName: "Status",
-      minWidth: 130,
+      minWidth: 120,
       flex: 0.7,
       cellClassName: (params) => {
         return params.getValue(params.id, "status") === "Delivered"
@@ -38,7 +39,7 @@ const AllOrders = () => {
       field: "itemsQty",
       headerName: "Items Qty",
       type: "number",
-      minWidth: 130,
+      minWidth: 120,
       flex: 0.7,
     },
 
@@ -46,15 +47,15 @@ const AllOrders = () => {
       field: "total",
       headerName: "Total",
       type: "number",
-      minWidth: 130,
+      minWidth: 120,
       flex: 0.8,
     },
 
     {
-      field: " ",
-      flex: 1,
-      minWidth: 150,
-      headerName: "",
+      field: "Details",
+      flex: 0.8,
+      minWidth: 120,
+      headerName: "Details",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -92,10 +93,11 @@ const AllOrders = () => {
 
   return (
     <>
-      {/* {isLoading ? (
-        <Loader />
-      ) : ( */}
-        <div className="w-full mx-8 pt-1 mt-10 bg-white h-[82vh] overflow-y-scroll overflow-hidden">
+      {isLoading ? (
+        <SellerLOader />
+   
+      ) : (
+        <div className="w-full md:px-6 px-1 pt-4 mt-6 bg-white h-[88vh] overflow-y-scroll overflow-hidden">
           <DataGrid
             rows={row}
             columns={columns}
@@ -104,7 +106,7 @@ const AllOrders = () => {
             autoHeight
           />
         </div>
-      {/* )} */}
+      )}  
     </>
   );
 };

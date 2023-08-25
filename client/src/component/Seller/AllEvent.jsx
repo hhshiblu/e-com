@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 
 import { deleteEvent, getAllShopevent } from "../../Redux/Action/event";
+import SellerLoader from "../Loader/SellerLOader";
 
 const AllEvent = () => {
   const { events, isLoading } = useSelector((state) => state.events);
@@ -18,7 +19,7 @@ const AllEvent = () => {
  
   useEffect(() => {
     dispatch(getAllShopevent(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   
   const handleDelete = (id) => {
@@ -112,19 +113,19 @@ const AllEvent = () => {
 
   return (
     <>
-      {/* {isLoading ? (
-        <Loader />
-      ) : ( */}
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
-        </div>
-      {/* )} */}
+      {isLoading ? (
+        <SellerLoader />
+      ) : (
+      <div className="w-full md:px-6 px-3 pt-1 mt-10 bg-white">
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
+      </div>
+      )} 
     </>
   );
 };

@@ -32,6 +32,10 @@ const SellerSchema = new mongoose.Schema({
     type: String,
     default: "Seller",
   },
+  status: {
+    type: String,
+    default: "pending",
+  },
   avatar: {
     type: String,
     required: true,

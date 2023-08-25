@@ -71,26 +71,26 @@ const ShopInfo = ({ isOwner }) => {
       <div className="flex justify-between">
         <div className="w-full py-5 px-6 ">
           <div className="w-full flex items-center  justify-between md:justify-center">
-            
-          <div className={`${isOwner ? "" : "mx-auto"}`}>
-            <img
-              src={`${backend_URL}upload/${data.avatar}`}
-              alt=""
-              className="w-[90px] h-[90px] object-cover rounded-full border-[4px] p-1  border-blue-950"
-            />
+            <div className={`${isOwner ? "" : "mx-auto"}`}>
+              <img
+                src={`${backend_URL}upload/${data.avatar}`}
+                alt=""
+                className="w-[90px] h-[90px] object-cover rounded-full border-[4px] p-1  border-blue-950"
+              />
             </div>
             <div className=" mt-[-20px] md:mt-0 ">
-            {isOwner && (
-            <div className="!absolute right-20 top-20">
-              <Link to="/dashboard">
-                <div className={`border border-blue-700 px-2 py-1 bg-[#352a2a] rounded-md cursor-pointer`}>
-                  <span className="text-[#fff]">Go Dashboard</span>
+              {isOwner && (
+                <div className="!absolute right-24 top-20 ">
+                  <Link to="/seller_DashBoard">
+                    <div
+                      className={`border border-blue-700 px-2 py-1 bg-[#352a2a] rounded-md cursor-pointer`}
+                    >
+                      <span className="text-[#fff]">Go Dashboard</span>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
+              )}
             </div>
-          )}
-            </div>
-           
           </div>
           <div className="flex items-center justify-around">
             <div>

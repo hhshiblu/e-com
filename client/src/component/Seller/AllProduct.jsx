@@ -5,6 +5,7 @@ import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteProduct, getAllShopProduct } from "../../Redux/Action/product";
+import SellerLoader from "../Loader/SellerLOader";
 
 // import Loader from "../Layout/Loader";
 
@@ -16,7 +17,7 @@ const AllProducts = () => {
 
   useEffect(() => {
     dispatch(getAllShopProduct(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
@@ -105,10 +106,10 @@ const AllProducts = () => {
 
   return (
     <>
-      {/* {isLoading ? (
-        <Loader />
-      ) : ( */}
-        <div className=" h-[82vh] overflow-y-scroll overflow-hidden w-full mx-8 pt-1 mt-10 bg-white">
+      {isLoading ? (
+        <SellerLoader />
+      ) : (
+        <div className=" h-[82vh] overflow-y-scroll overflow-hidden w-full md:px-6 px-1 pt-1 mt-5 bg-white">
           <DataGrid
             rows={row}
             columns={columns}
@@ -117,7 +118,7 @@ const AllProducts = () => {
             autoHeight
           />
         </div>
-      {/* )} */}
+      )}
     </>
   );
 };

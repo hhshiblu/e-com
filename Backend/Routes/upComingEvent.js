@@ -16,7 +16,7 @@ router.delete("/delete-upEvent/:id", DeleteupEvent);
 // router.get(
 //   "/admin-all-products",
 //   isAuthenticated,
-//   // isAdmin("Admin"),
+  // isAdmin("Admin"),
 //   adminAllProduct
 // );
 

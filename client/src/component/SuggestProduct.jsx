@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "../styles/style";
 
 // import ProductCart from "./Route/ProductCart/ProductCart";
-import { useSelector } from "react-redux";
-import CateProductCard from "./Route/ProductCart/CateProductCard";
+// import { useSelector } from "react-redux";
+// import CateProductCard from "./Route/ProductCart/CateProductCard";
 import { Link } from "react-router-dom";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { backend_URL } from "../serverUrl";

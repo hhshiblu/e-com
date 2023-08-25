@@ -12,8 +12,15 @@ function Category() {
 
   const [confirm, setConfirm] = useState(false);
   const [name, setName] = useState("");
-
+  const [avatar, setAvatar] = useState(null);
   const [parentCategoryId, setParentCateId] = useState("");
+
+
+    const handleFileInputChange = (e) => {
+      const file = e.target.files[0];
+      console.log(file);
+      setAvatar(file);
+  };
 
   useEffect(() => {
     dispatch(getAllCategory());
@@ -23,9 +30,13 @@ function Category() {
     e.preventDefault();
 
     try {
-      dispatch(addCategory({ name, parentId: parentCategoryId }));
+      const formData = new FormData();
+      formData.append("name", name); // Assuming "name" is your category name
+      formData.append("parentId", parentCategoryId); // Assuming "parentCategoryId" is your parent category ID
+      formData.append("file", avatar); 
+      dispatch(addCategory(formData));
       dispatch(getAllCategory());
-      window.location.reload(true);
+      // window.location.reload(true);
        toast.success("category added successfully!");
     } catch (error) {
       toast.error("category cann't added successfully!");
@@ -89,7 +100,7 @@ function Category() {
                 Add Category
               </h3>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div>
                   <label className="pb-2">
                     Category <span className="text-red-500">*</span>
@@ -117,7 +128,32 @@ function Category() {
                   </select>
                 </div>
                 <br />
-
+                <div className="mt-2 flex items-center">
+                  <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
+                    {avatar ? (
+                      <img
+                        src={URL.createObjectURL(avatar)}
+                        alt="avatar"
+                        className="h-full w-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <RxAvatar className="h-8 w-8" />
+                    )}
+                  </span>
+                  <label
+                    htmlFor="file-input"
+                    className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  >
+                    <span>Upload a file</span>
+                    <input
+                      type="file"
+                      name="file"
+                      id="file-input"
+                      onChange={handleFileInputChange}
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
                 <div>
                   <button
                     type="submit"

@@ -10,7 +10,7 @@ import Footer from "../component/Layout/Footer.jsx";
 
 function ProductsPage() {
   const [data, setData] = useState([]);
-  const {allProducts,isLoading} = useSelector((state) => state.products);
+  const {allProducts} = useSelector((state) => state.products);
   useEffect(() => {
     const allProductsData = allProducts ? [...allProducts] : [];
     const sortedData = allProductsData?.sort((a,b) => b.sold_out - a.sold_out); 

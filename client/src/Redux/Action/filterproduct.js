@@ -22,7 +22,9 @@ export const query_products = (query) => async (dispatch) => {
  });
  if (query.maxPrice ) {
    queryParams.set("maxPrice", query.maxPrice);
- }
+    }
+    
+    
  const url = `${server}/products/query-products?${queryParams}`;
  const { data } = await axios.get(url);
 

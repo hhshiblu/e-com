@@ -4,7 +4,7 @@ import { AiOutlineCamera } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { backend_URL, server } from "../../serverUrl";
-import styles from "../../styles/style";
+// import styles from "../../styles/style";
 import { loadSeller } from "../../Redux/Action/user";
 
 const ShopSetting = () => {
@@ -70,7 +70,7 @@ const ShopSetting = () => {
   };
 
   return (
-    <div className="w-full h-[82vh] overflow-y-scroll overflow-hidden flex flex-col items-center">
+    <div className="w-full h-[91vh] overflow-y-scroll overflow-hidden flex flex-col items-center">
       <div className="flex w-full 800px:w-[90%] flex-col justify-center my-5 px-2">
         <div className="w-full flex items-center justify-center">
           <div className="relative">

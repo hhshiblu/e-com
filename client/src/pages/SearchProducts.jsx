@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link,  useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { Range } from "react-range";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-
 import { AiFillStar } from "react-icons/ai";
 import { CiStar } from "react-icons/ci";
 import { BsFillGridFill } from "react-icons/bs";
 import { FaThList } from "react-icons/fa";
-
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../component/Layout/Header";
 import Footer from "../component/Layout/Footer";
@@ -17,11 +20,14 @@ import {
 } from "../Redux/Action/filterproduct";
 import CateProductCard from "../component/Route/ProductCart/CateProductCard";
 import LatestProduct from "../component/Route/ProductCart/latestProduct";
+import Pagination from "./../component/pagination/Pagination";
 
 const SearchProducts = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const subCategory = searchParams.get("subCategory");
   const maxPrice = searchParams.get("maxPrice");
@@ -29,47 +35,54 @@ const SearchProducts = () => {
   const { products, totalProduct, latest_product, priceRange, parPage } =
     useSelector((state) => state.filterProduct);
   const { categories } = useSelector((state) => state.category);
-  const navigate = useNavigate(); 
-  const dispatch = useDispatch();
+
   const [pageNumber, setPageNumber] = useState(1);
   const [styles, setStyles] = useState("grid");
-  const [filter, setFilter] = useState(true);
+
+  const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState({
     values: [priceRange.low, priceRange.high],
   });
   const [rating, setRatingQ] = useState("");
   const [sortPrice, setSortPrice] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(
+    queryParams.get("category")
+  );
 
-  const checkHandler = (index) => {
-    const categoryName = categories[index].name;
+  function handleClick(index) {
+    const clickedCategory = categories[index].name;
+    const checkboxName = "category";
 
-    if (selectedCategory === categoryName) {
-      setSelectedCategory(""); // Uncheck if double-clicked on the same category
+    if (selectedCategory === clickedCategory) {
+      setSelectedCategory(null);
+      queryParams.delete(checkboxName);
     } else {
-      setSelectedCategory(categoryName);
+      setSelectedCategory(clickedCategory);
+      queryParams.set(checkboxName, clickedCategory);
     }
-  };
+
+    const path = location.pathname + "?" + queryParams.toString();
+    navigate(path);
+  }
 
   const segments = location.pathname
     .split("/")
     .filter((segment) => segment !== "");
 
   useEffect(() => {
-  
     dispatch(price_range_product());
   }, [dispatch]);
   useEffect(() => {
     setState({
       values: [priceRange.low, priceRange.high],
     });
-  }, [priceRange,location]);
+  }, [priceRange, location]);
 
   useEffect(() => {
     const query = {
       category: selectedCategory || "",
       subCategory: subCategory || "",
-      rating: "",
+      rating: rating || "",
       low: state.values[0] || "",
       high: state.values[1] || "",
       sortPrice: "asc",
@@ -80,10 +93,7 @@ const SearchProducts = () => {
       query.maxPrice = maxPrice;
     }
 
-
     dispatch(query_products(query));
-
-    
   }, [
     state.values[0],
     state.values[1],
@@ -93,7 +103,7 @@ const SearchProducts = () => {
     category,
     subCategory,
     selectedCategory,
-   
+    rating,
     dispatch,
   ]);
 
@@ -180,25 +190,31 @@ const SearchProducts = () => {
                 </div>
               </div>
             )}{" "}
-            <h3 className="font-semibold mb-2">Category</h3>
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className={`hover:bg-[#EAEDED] text-[16px] rounded-md cursor-pointer leading-[26px] forHover`}
-                onClick={() => checkHandler(index)}
-              >
-                <label className="flex items-center">
-                  <input
-                    name="category"
-                    type="checkbox"
-                    className="h-4 w-4"
-                    checked={selectedCategory === category.name}
-                    readOnly
-                  />
-                  <span className="ml-2 text-gray-500">{category.name}</span>
-                </label>
+            {subCategory || (maxPrice && category) ? null : (
+              <div>
+                <h3 className="font-semibold mb-2">Category</h3>
+                {categories.map((category, index) => (
+                  <div
+                    key={index}
+                    className={`hover:bg-[#EAEDED] text-[16px] rounded-md cursor-pointer leading-[26px] forHover`}
+                    onClick={() => handleClick(index)}
+                  >
+                    <label className="flex items-center">
+                      <input
+                        name="category"
+                        type="checkbox"
+                        className="h-4 w-4"
+                        checked={selectedCategory === category.name}
+                        readOnly
+                      />
+                      <span className="ml-2 text-gray-500">
+                        {category.name}
+                      </span>
+                    </label>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
             <div className="py-3 flex flex-col gap-4">
               <h2 className="md:text-2xl text-lg font-bold mb-1 text-slate-600">
                 Rating
@@ -378,6 +394,17 @@ const SearchProducts = () => {
                 ))}
             </div>
           </div>
+        </div>
+        <div className="flex justify-end pr-10">
+          {totalProduct > parPage && (
+            <Pagination
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+              totalItem={totalProduct}
+              parPage={parPage}
+              showItem={Math.floor(totalProduct / parPage)}
+            />
+          )}
         </div>
       </section>
       <Footer />

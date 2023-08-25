@@ -9,14 +9,16 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { getAllOrdersOfShop } from "../../../Redux/Action/order";
 
 const AllRefundOrders = () => {
-  const { orders, isLoading } = useSelector((state) => state.order);
+  const { orders,
+    // isLoading
+  } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const refundOrders = orders && orders.filter((item) => item.status === "Processing refund"  || item.status === "Refund Success");
 
@@ -88,7 +90,7 @@ const AllRefundOrders = () => {
       {/* {isLoading ? (
         <Loader />
       ) : ( */}
-        <div className="w-full mx-8 pt-1 mt-10 bg-white h-[82vh] overflow-y-scroll overflow-hidden">
+        <div className="w-full md:px-6 px-3 pt-1 mt-10 bg-white h-[82vh] overflow-y-scroll overflow-hidden">
           <DataGrid
             rows={row}
             columns={columns}

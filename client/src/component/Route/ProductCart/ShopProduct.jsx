@@ -48,7 +48,7 @@ function ShopProduct({ products }) {
                   <SwiperSlide>
                     <div className="bg-[#ffffff] hover:shadow-lg rounded-md">
                       <div className="w-full h-auto mb- p-3 relative rounded-md  cursor-pointer ">
-                        <Link to={`${`/product/${p._id}`}`}>
+                        <Link to={`/product/${p._id}`}>
                           <div className="relative ">
                             <img
                               src={`${backend_URL}upload/${p && p.images[0]}`}

@@ -45,7 +45,7 @@ router.put("/update-user-password", isAuthenticated, UpdatePass);
 router.get("/user-info/:id", userInfo);
 router.get(
   "/admin-all-users",
-  // isAuthenticated,
+  isAuthenticated,
  getAllUser);
   router.delete(
     "/delete-user/:id",

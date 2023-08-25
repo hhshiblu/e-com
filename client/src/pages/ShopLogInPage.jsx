@@ -8,10 +8,10 @@ function ShopLogInPage() {
   const {isSeller,isloading}=useSelector(state=>state.seller)
 
   useEffect(() => {
-if(isSeller===true){
-  navigate(`/dashboard`)
-}
-  },[isloading,isSeller]);
+    if (isSeller === true) {
+      navigate(`/seller_DashBoard`);
+    }
+  }, [isloading, isSeller, navigate]);
   return (
     <div>
       <ShopLogIn/>

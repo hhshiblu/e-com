@@ -32,6 +32,7 @@ const createCategory = CatchAsyncError(async (req, res,next) => {
   const categoryObj = {
     name: req.body.name,
     slug: slugify(req.body.name),
+    avatar: req.file.filename,
   };
 
   if (req.body.parentId) {

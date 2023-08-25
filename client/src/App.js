@@ -73,7 +73,8 @@ import { leatestOrderData } from "./Redux/Action/orderData";
 import { getAllBanar } from "./Redux/Action/banar";
 import ScrollTop from "./component/scrollToTop/ScrollTop";
 import { getAllCategory } from "./Redux/Action/category";
-import { query_products } from "./Redux/Action/filterproduct";
+
+import MainLayout from "./component/Seller/Layout/MainLayout";
 
 axios.defaults.withCredentials = true;
 function App() {
@@ -84,17 +85,14 @@ function App() {
     setStripeApiKey(data.stripeApikey);
   }
   useEffect(() => {
-
-   
     Store.dispatch(getAllCategory());
     Store.dispatch(getAllBanar());
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
-    Store.dispatch(getAllEvents());
+    // Store.dispatch(getAllEvents());
     Store.dispatch(leatestOrderData());
-    getStripeApikey();
-
+    // getStripeApikey();
   }, []);
 
   return (
@@ -127,7 +125,7 @@ function App() {
             path="/seller/activation/:activation_token"
             element={<SellerActivationPage />}
           />
-          <Route path="/all-products" element={<ProductsPage />} />
+          {/* <Route path="/all-products" element={<ProductsPage />} /> */}
           <Route path="/products/all-products" element={<CateProductsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
@@ -197,47 +195,91 @@ function App() {
             }
           />
           <Route path="/shop/view/:id" element={<ShopViewPage />} />
+          <Route path="/seller_DashBoard" element={<MainLayout />}>
+            <Route
+              index
+              element={
+                <ProtectSellerRoute>
+                  <ShopDashBoardPage />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="all-orders"
+              element={
+                <ProtectSellerRoute>
+                  <AllShopOrders />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="all-Products"
+              element={
+                <ProtectSellerRoute>
+                  <AllShopProduct />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="add-Product"
+              element={
+                <ProtectSellerRoute>
+                  <ShopCreateProduct />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="order-refunds"
+              element={
+                <ProtectSellerRoute>
+                  <ShopOrdersRefund />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="withdraw-money"
+              element={
+                <ProtectSellerRoute>
+                  <ShopWithDrawMoneyPage />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="coupon"
+              element={
+                <ProtectSellerRoute>
+                  <ShopAllCoupouns />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="all-events"
+              element={
+                <ProtectSellerRoute>
+                  <AllShopEvent />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="add-event"
+              element={
+                <ProtectSellerRoute>
+                  <ShopCreateEvent />
+                </ProtectSellerRoute>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <ProtectSellerRoute>
+                  <ShopSettingPage />
+                </ProtectSellerRoute>
+              }
+            />
+          </Route>
 
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectSellerRoute>
-                <ShopDashBoardPage />
-              </ProtectSellerRoute>
-            }
-          />
-          <Route
-            path="/dashboard-create-product"
-            element={
-              <ProtectSellerRoute>
-                <ShopCreateProduct />
-              </ProtectSellerRoute>
-            }
-          />
-          <Route
-            path="/dashboard-products"
-            element={
-              <ProtectSellerRoute>
-                <AllShopProduct />
-              </ProtectSellerRoute>
-            }
-          />
-          <Route
-            path="/dashboard-orders"
-            element={
-              <ProtectSellerRoute>
-                <AllShopOrders />
-              </ProtectSellerRoute>
-            }
-          />
-          <Route
-            path="/dashboard-refunds"
-            element={
-              <ProtectSellerRoute>
-                <ShopOrdersRefund />
-              </ProtectSellerRoute>
-            }
-          />
+   
+
           <Route
             path="/order/:id"
             element={
@@ -246,39 +288,8 @@ function App() {
               </ProtectSellerRoute>
             }
           />
-          <Route
-            path="/dashboard-create-event"
-            element={
-              <ProtectSellerRoute>
-                <ShopCreateEvent />
-              </ProtectSellerRoute>
-            }
-          />
-          <Route
-            path="/dashboard-events"
-            element={
-              <ProtectSellerRoute>
-                <AllShopEvent />
-              </ProtectSellerRoute>
-            }
-          />
-          <Route
-            path="/dashboard-withdraw-money"
-            element={
-              <ProtectSellerRoute>
-                <ShopWithDrawMoneyPage />
-              </ProtectSellerRoute>
-            }
-          />
+  
 
-          <Route
-            path="/dashboard-coupouns"
-            element={
-              <ProtectSellerRoute>
-                <ShopAllCoupouns />
-              </ProtectSellerRoute>
-            }
-          />
           <Route
             path="/dashboard-messages"
             element={
