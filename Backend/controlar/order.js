@@ -47,6 +47,8 @@ const CreateNewOrder = CatchAsyncError(async (req, res, next) => {
   }
 });
 
+
+
 // get all orders of user
 const getAllOrderUser = CatchAsyncError(async (req, res, next) => {
   try {
@@ -62,6 +64,8 @@ const getAllOrderUser = CatchAsyncError(async (req, res, next) => {
     return next(new Errorhandeler(error.message, 500));
   }
 });
+
+
 // get all orders of seller
 const getOderSeller = CatchAsyncError(async (req, res, next) => {
   try {
@@ -79,6 +83,8 @@ const getOderSeller = CatchAsyncError(async (req, res, next) => {
     return next(new Errorhandeler(error.message, 500));
   }
 });
+
+
 
 // update order status for seller
 const UpdateOrder = CatchAsyncError(async (req, res, next) => {
@@ -138,6 +144,8 @@ const UpdateOrder = CatchAsyncError(async (req, res, next) => {
 });
 
 
+
+
 // give a refund ----- user
 const UserOrderRefund=
   CatchAsyncError(async (req, res, next) => {
@@ -161,6 +169,8 @@ const UserOrderRefund=
       return next(new Errorhandeler(error.message, 500));
     }
   })
+
+  
 
 
 // accept the refund ---- seller

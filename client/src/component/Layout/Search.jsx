@@ -13,11 +13,11 @@ import styles from "../../styles/style";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BsArrowLeftShort } from "react-icons/bs";
-import { get_card_products } from "../../Redux/Action/cart";
+
 const Search = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { card_product_count } = useSelector((state) => state.cart);
+
   const { categories } = useSelector((state) => state.category);
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const [activemenu, setActiveMenu] = useState("nav_menu");
@@ -59,7 +59,6 @@ const Search = () => {
   };
 
   useEffect(() => {
-    dispatch(get_card_products(user?._id));
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -139,9 +138,7 @@ const Search = () => {
                 <Link to="/all-cart-products">
                   <div className="relative cursor-pointer mr-[15px] text-white">
                     <FiShoppingCart size={30} className="text-white" />
-                    <span className=" absolute right-[-6px] top-[-5px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[14px] font-[50] loading-tight text-center">
-                      {card_product_count}
-                    </span>
+                    <span className=" absolute right-[-6px] top-[-5px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[14px] font-[50] loading-tight text-center"></span>
                   </div>
                 </Link>
               </div>
@@ -444,9 +441,7 @@ const Search = () => {
                       className="text-white  relative"
                       size={18}
                     />
-                    <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center">
-                      {card_product_count}
-                    </span>
+                    <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center"></span>
                     <p className="mt-[1px] text-xs text-white font-[700] ">
                       Cart
                     </p>

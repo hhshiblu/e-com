@@ -19,11 +19,10 @@ import axios from "axios";
 import styles from "../../styles/style";
 import { backend_URL, server } from "../../serverUrl";
 import { useSelector, useDispatch } from "react-redux";
-import {  add_To_cart, get_card_products } from "../../Redux/Action/cart";
+
 
 import Rating from "./Rating";
-import { CgProfile } from "react-icons/cg";
-import { BiCategoryAlt } from "react-icons/bi";
+
  
 const ProductDetails = ({ data, products ,loading}) => {
   // const location = useLocation();
@@ -41,68 +40,10 @@ const ProductDetails = ({ data, products ,loading}) => {
   const dispatch = useDispatch();
 
 
-  const percentageDiscount =
-    data?.originalPrice === 0
-      ? 0
-      : ((data?.originalPrice - data?.discountPrice) / data?.originalPrice) *
-        100;
 
-  const incrementCount = () => {
-    setCount(count + 1);
-  };
 
-  const decrementCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
-    }
-  };
 
-  // const addToCartHandler = (id) => {
-  //   const isItemExists = cart && cart.find((i) => i._id === id);
-  //   if (isItemExists) {
-  //     toast.error("Item already in cart!");
-  //   } else {
-  //     if (data?.stock < 1) {
-  //       toast.error("Product stock limited!");
-  //     } else {
-  //       const cartdata? = { ...data?, qty: count };
-  //       dispatch(addTocart(cartdata?));
-  //       toast.success("Item added to cart successfully!");
-  //     }
-  //   }
-  // };
-  // const inc = () => {
-  //   if (quantity >= data?.stock) {
-  //     toast.error("Out of stock");
-  //   } else {
-  //     setQuantity(quantity + 1);
-  //   }
-  // };
 
-  // const dec = () => {
-  //   if (quantity > 1) {
-  //     setQuantity(quantity - 1);
-  //   }
-  // };
-
-  const addToCartHandler = () => {
-    if (user) {
-      const info = {
-        userId: user._id,
-        cartItems: [
-          {
-            quantity: count,
-            productId: data?._id,
-          },
-        ],
-      };
-
-      dispatch(add_To_cart(info));
-      dispatch(get_card_products(user?._id));
-    } else {
-      navigate("/login");
-    }
-  };
 
   const totalReviewsLength =
     products &&
@@ -234,9 +175,9 @@ const ProductDetails = ({ data, products ,loading}) => {
                         <span>{"৳" + data?.originalPrice} </span>
                       ) : null}
                     </h3>
-                    <div className="text-sm  text-blue-950 pl-4">
+                    {/* <div className="text-sm  text-blue-950 pl-4">
                       ({percentageDiscount.toFixed(0)}%)
-                    </div>
+                    </div> */}
                     {/* <h3 className="pl-3 mt-[-4px] "> {data?.originalPrice? ( "("+discountPercentage+"% )") :null }</h3> */}
                   </div>
                   <hr />
@@ -295,11 +236,14 @@ const ProductDetails = ({ data, products ,loading}) => {
                     ) : null}
                   </div>
 
+                  {/* increment button */}
+                  
+
                   <div className="flex items-center mt-4 justify-between pr-3">
                     <div class="inline-flex pl-12">
                       <div
                         className={`bg-[#f24729] border-[#e4434373] mt-2  rounded-sm w-[30px] h-[30px] ${styles.normalFlex}  justify-center cursor-pointer  shadow-lg hover:opacity-75 transition duration-300 ease-in-out`}
-                        onClick={incrementCount}
+                      
                       >
                         <HiPlus size={30} color="#fff" className="" />
                       </div>
@@ -308,7 +252,7 @@ const ProductDetails = ({ data, products ,loading}) => {
                       </span>
                       <div
                         className="bg-[#3435364f]  rounded-sm w-[30px] mt-2  h-[30px] flex items-center  justify-center cursor-pointer shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                        onClick={decrementCount}
+                    
                       >
                         <HiOutlineMinus size={16} color="" />
                       </div>
@@ -333,8 +277,14 @@ const ProductDetails = ({ data, products ,loading}) => {
                       )}
                     </div>
                   </div>
+
+
+
                   {/* -------------------------buy now /add to cart----------- */}
-                  {/* <div className="hidden md:block"> */}
+
+
+
+           
                   <div className="flex justify-center mr-5 mt-4 ">
                     <div
                       className={`w-[150px] bg-[#050320]  my-3  justify-center  cursor-pointer !mt-6 !rounded !h-10 flex items-center mr-5`}
@@ -347,14 +297,16 @@ const ProductDetails = ({ data, products ,loading}) => {
                     </div>
                     <div
                       className={`w-[150px] bg-[#D61355]  my-3  justify-center  cursor-pointer !mt-6 !rounded !h-10 flex items-center`}
-                      onClick={() => addToCartHandler(data?._id)}
+                 
                     >
                       <span className="text-white flex items-center">
                         Add to cart <AiOutlineShoppingCart className="ml-1" />
                       </span>
                     </div>
                   </div>
-                  {/* </div> */}
+            
+                  
+                  
 
                   {/* -----------------------------------shop name------ */}
                 </div>
@@ -488,108 +440,8 @@ const ProductDetails = ({ data, products ,loading}) => {
                     )}
                   </div>
                 </div>
-                {/* <div className="grid grid-cols-2">
-                  <button
-                    onClick={() => setState("reviews")}
-                    className={`py-1 hover:text-white px-5 hover:bg-green-500 ${
-                      state === "reviews"
-                        ? "bg-green-500 text-white"
-                        : "bg-slate-200 text-slate-700"
-                    } rounded-sm`}
-                  >
-                    Reviews
-                  </button>
-                  <button
-                    onClick={() => setState("description")}
-                    className={`py-1 px-5 hover:text-white hover:bg-green-500 ${
-                      state === "description"
-                        ? "bg-green-500 text-white"
-                        : "bg-slate-200 text-slate-700"
-                    } rounded-sm`}
-                  >
-                    Description
-                  </button>
-                </div> */}
-                {/* <div>
-                  {state === "reviews" ? (
-                    // <Reviews />
-
-                    <div className="w-full min-h-[40vh]  py-2 mt-2  bg-white rounded-md ">
-                      <div className="flex   items-center  bg-[#031735] text-white ">
-                        <div className="flex items-center pl-10 ">
-                          <Link to={`/shop/view/${data?.seller?._id}`}>
-                            <img
-                              src={`${backend_URL}upload/${data?.seller?.avatar}`}
-                              alt=""
-                              className="w-[30px] h-[30px] rounded-full mr-2 mx-auto"
-                            />
-                          </Link>
-                          <div className="pl-3 mt-[-10px]">
-                            <Link to={`/shop/view/${data?.seller?._id}`}>
-                              <h3 className={`${styles.shop_name} `}>
-                                {data?.seller?.name}
-                              </h3>
-                            </Link>
-                            <h5 className="mt-[-10px] pb-1 text-[15px]">
-                              ({averageRating}/5) Ratings
-                            </h5>
-                          </div>
-                          {/* <div className="flex justify-start items-center gap-3 pl-10 md:lg-20  text-sm md:text-md font-[760] cursor-pointer    text-current">
-                            <div onClick={handleMessageSubmit}>
-                              <h1>live chat</h1>
-                            </div>
-                            <div>
-                              <BsChatDots className="" />
-                            </div>
-                          </div> */}
-                {/* </div>
-                      </div>
-                      <hr />
-                      <hr />
-                      <hr />
-                      {data &&
-                        data?.reviews?.map((item, index) => {
-                          return (
-                            <div
-                              className="w-full h-min   my-4 p-4 rounded-md "
-                              key={index}
-                            >
-                              <div className="flex ">
-                                {item && item.user.avatar ? (
-                                  <img
-                                    src={`${backend_URL}upload/${item.user.avatar}`}
-                                    alt={item.name}
-                                    className="w-[50px] h-[50px] rounded-full"
-                                  />
-                                ) : null}
-                                <div className="w-full flex  pl-6 relative">
-                                  <h1 className="font-[500] mr-3">
-                                    {item.user.name}
-                                  </h1>
-                                  <span className="mr-2 !mt-1">
-                                    {" "}
-                                    <Rating rating={data?.ratings} />{" "}
-                                  </span>{" "}
-                                </div>
-                              </div>
-
-                              <div className="pl-16 mt-[-22px] text-gray-500 text-sm">
-                                {item.comment}
-                              </div>
-                            </div>
-                          );
-                        })}
-
-                      <div className="w-full flex justify-center">
-                        {data && data?.reviews?.length === 0 && (
-                          <h5>No Reviews have for this product!</h5>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="py-5 text-slate-600">{data?.description}</p>
-                  )}
-                </div> */}
+           
+               
               </div>
             </div>
             <div className="w-[28%] hidden lg:block md-lg:w-full">
