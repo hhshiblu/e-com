@@ -25,7 +25,7 @@ function Footer() {
             className="w-[100px] h-[70px] "
           />
           <br />
-          <p>The home and elements needed to create beautiful</p>
+          <p> </p>
           <div className="flex items-center mt-[15px] ">
             <AiFillFacebook size={25} className="cursor-pointer" />
             <AiFillInstagram
@@ -40,7 +40,7 @@ function Footer() {
               size={25}
               style={{ marginLeft: "15px", cursor: "pointer" }}
             />
-            {/* <AiFillInstagram size={25} style={{marginLeft:"15px", cursor:"pointer"}}/> */}
+ 
           </div>
         </ul>
 

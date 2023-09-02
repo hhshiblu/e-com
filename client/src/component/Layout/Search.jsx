@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
+// import logo from "../."
 import { BiMenuAltLeft } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
 import { AiOutlineShoppingCart, AiFillDashboard } from "react-icons/ai";
@@ -24,7 +25,7 @@ const Search = () => {
   const [activeMenu2, setactiveMenu2] = useState("nav_menu2");
   const [isSticky, setIsSticky] = useState(false);
   const [SubMenuDetails, setSubMenuDetails] = useState("");
-
+  const { cart } = useSelector((state) => state.cart);
   // const [searchData, setSearchData] = useState([]);
   const { isSeller } = useSelector((state) => state.seller);
 
@@ -64,7 +65,8 @@ const Search = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [user?._id, dispatch]);
-  const handelSubmit = () => {
+  const handelSubmit = (e) => {
+    e.preventDefault();
     navigate(`/products/search?value=${searchValue}`);
   };
 
@@ -80,25 +82,30 @@ const Search = () => {
       >
         <div className={`navbar ${isSticky ? "sticky" : ""}`}>
           <div className="  h-[60px] min- min-w-fit md:bg-slate-900  md:grid grid-cols-4">
-            <div className="hidden md:block text-white m-auto">
-              <Link to="/">EShoop</Link>
+            <div className="hidden md:block text-white m-auto h-[30px] ">
+              <Link to="/">
+                <img src="img/logo_title.svg" alt="" className="h-full" />
+              </Link>
             </div>
             <div className=" md:col-span-2 !m-auto w-[90%] py-[10px] relative">
-              <input
-                type="text"
-                placeholder="search any item.."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className="h-[40px] w-full px-2 border-[2px] border-[#06229b] rounded-md f focus:border-spacing-1.5 "
-              />
+              <form action="">
+                <input
+                  type="text"
+                  placeholder="search any item.."
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  className="h-[40px] w-full px-2 border-[2px] border-[#06229b] rounded-md f focus:border-spacing-1.5 "
+                />
 
-              <button
-                type="submit"
-                onClick={handelSubmit}
-                className="text-white bg-[#050320] absolute right-0 h-[40px] w-[100px] rounded-r-md font-[600]   "
-              >
-                Search
-              </button>
+                <button
+                  type="submit"
+                  onClick={handelSubmit}
+                  className="text-white bg-[#050320] absolute right-0 h-[40px] w-[100px] rounded-r-md font-[600]   "
+                >
+                  Search
+                </button>
+              </form>
+
               {/* {keyWord && keyWord.length !== 0 ? (
                 <div className="absolute w-full min-h-[30vh] bg-slate-50 shadow-sm z-[9] p-4">
                   {searchData &&
@@ -138,7 +145,10 @@ const Search = () => {
                 <Link to="/all-cart-products">
                   <div className="relative cursor-pointer mr-[15px] text-white">
                     <FiShoppingCart size={30} className="text-white" />
-                    <span className=" absolute right-[-6px] top-[-5px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[14px] font-[50] loading-tight text-center"></span>
+                    <span className=" absolute right-[-6px] top-[-5px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[14px] font-[50] loading-tight text-center">
+                      {" "}
+                      {cart.length}{" "}
+                    </span>
                   </div>
                 </Link>
               </div>
@@ -173,7 +183,7 @@ const Search = () => {
         <div
           className={
             activemenu === "nav_menu nav_phone"
-              ? "fixed top-0 left-0 w-full h-screen bg-[#00000199] z-[20000] "
+              ? "fixed top-0 left-0 w-full h-screen bg-[#00000199]  z-[20000] "
               : null
           }
         >
@@ -417,7 +427,13 @@ const Search = () => {
                   type="button"
                   className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-10px]"
                 >
-                  <AiOutlineShoppingCart className="text-white " size={18} />
+                  <Link to="/">
+                    <img
+                      src="img/circle_logo.svg"
+                      alt=""
+                      className="h-[35px]"
+                    />
+                  </Link>
                 </button>
                 <Link
                   to={`${isSeller ? "/seller_DashBoard" : "/become-seller"}`}
@@ -441,7 +457,9 @@ const Search = () => {
                       className="text-white  relative"
                       size={18}
                     />
-                    <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center"></span>
+                    <span className=" absolute  right-[-7px] top-[-4px] rounded-full bg-[#eb2828] w-5 h-5 top right p-0 m-0 text-white font-mono text-[13px] loading-tight text-center">
+                      {cart.length}
+                    </span>
                     <p className="mt-[1px] text-xs text-white font-[700] ">
                       Cart
                     </p>

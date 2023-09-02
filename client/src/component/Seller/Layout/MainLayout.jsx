@@ -128,8 +128,8 @@ useEffect(() => {
   if (localStorageActiveKey) {
     setActiveKey(localStorageActiveKey);
   } else {
-    // Set a default active key when localStorageActiveKey is empty
-     localStorage.removeItem("activeKey"); // or set it to the default route key
+  
+     localStorage.removeItem("activeKey");
   }
 }, []);
 
@@ -153,7 +153,7 @@ useEffect(() => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={[activeKey]}
+          defaultSelectedKeys={[pathname]}
           selectedKeys={[activeKey]}
           onClick={({ key }) => {
             navigate(key);

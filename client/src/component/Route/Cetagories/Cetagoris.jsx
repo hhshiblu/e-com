@@ -2,9 +2,12 @@ import React from "react";
 import styles from "../../../styles/style";
 import { brandingData, categoriesData } from "../../../staticData/data";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { backend_URL } from "../../../serverUrl";
 
 function Cetagoris() {
   const navigate = useNavigate();
+  const { categories } = useSelector((state) => state.category);
   const SubmitHendel = (i) => {
     navigate(`/products/all-products/phone?category=${i.title}`);
   };
@@ -20,8 +23,9 @@ function Cetagoris() {
           <h1>Categoris</h1>
         </div>
         <div className="grid grid-cols-3 gap-[5px] md:grid-cols-4 md:gap-[10px] lg:grid-cols-5 lg:gap-[10px] xl:grid-cols-7 xl:gap-[10px]">
-          {categoriesData &&
-            categoriesData.map((i, index) => {
+          {categories &&
+            categories?.map((i, index) => {
+
               return (
                 <div
                   key={index}
@@ -29,11 +33,11 @@ function Cetagoris() {
                   onClick={() => SubmitHendel(i)}
                 >
                   <img
-                    src={i.image_Url}
+                    src={`${backend_URL}upload/${i && i?.avatar}`}
                     alt={i.title}
                     className="w-[70px] h-[70px] rounded-full object-cover mt-2 transform hover:scale-110 transition duration-300"
                   />
-                  <h5 className=" text-sm px-2 mb-2 ">{i.title}</h5>
+                  <h5 className=" text-sm px-2 mb-2 ">{i.name}</h5>
                 </div>
               );
             })}

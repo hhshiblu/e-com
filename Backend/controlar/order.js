@@ -9,14 +9,67 @@ const CatchAsyncError = require("../Middleware/CatchAsyncError");
 const Errorhandeler = require("../utils/Errorhandeler");
 
 // create new order
+// const CreateNewOrder = CatchAsyncError(async (req, res, next) => {
+//   try {
+//     const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
+
+//     //   group cart items by shopId
+//     const shopItemsMap = new Map();
+
+//     for (const item of cart) {
+//       const sellerId = item.sellerId;
+//       if (!shopItemsMap.has(sellerId)) {
+//         shopItemsMap.set(sellerId, []);
+//       }
+//       shopItemsMap.get(sellerId).push(item);
+//     }
+
+//     // create an order for each shop
+//     const orders = [];
+
+//     for (const [sellerId, items] of shopItemsMap) {
+//       const order = await Order.create({
+//         cart: items,
+//         shippingAddress,
+//         user,
+//         totalPrice,
+//         paymentInfo,
+//       });
+//       orders.push(order);
+//     }
+
+//     res.status(201).json({
+//       success: true,
+//       orders,
+//     });
+//   } catch (error) {
+//     return next(new Errorhandeler(error.message, 500));
+//   }
+// });
 const CreateNewOrder = CatchAsyncError(async (req, res, next) => {
   try {
-    const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
+    const { cart, shippingAddress, user, paymentInfo } = req.body;
 
-    //   group cart items by shopId
+    // Fetch product details for each cart item
+    const cartWithProductDetails = await Promise.all(
+      cart.map(async (item) => {
+        const { product, quantity } = item;
+        const productInfo = await Product.findById(product);
+
+        return {
+          productInfo,
+          quantity,
+          sellerId: productInfo.sellerId, // Assuming your product model has a "seller" field
+          color: item.color,
+          size: item.size,
+        };
+      })
+    );
+
+    // Group cart items by sellerId
     const shopItemsMap = new Map();
 
-    for (const item of cart) {
+    for (const item of cartWithProductDetails) {
       const sellerId = item.sellerId;
       if (!shopItemsMap.has(sellerId)) {
         shopItemsMap.set(sellerId, []);
@@ -24,30 +77,39 @@ const CreateNewOrder = CatchAsyncError(async (req, res, next) => {
       shopItemsMap.get(sellerId).push(item);
     }
 
-    // create an order for each shop
+    // Create an order for each shop
     const orders = [];
+    let overallTotalPrice = 0; // Initialize overall total price
 
     for (const [sellerId, items] of shopItemsMap) {
+      const shopTotalPrice = items.reduce(
+        (total, item) => total + item.productInfo.discountPrice * item.quantity,
+        0
+      );
+
+      overallTotalPrice += shopTotalPrice; // Add shop total price to overall total price
+
       const order = await Order.create({
         cart: items,
         shippingAddress,
         user,
-        totalPrice,
+        totalPrice: overallTotalPrice,
+        shopTotalPrice,
         paymentInfo,
       });
+
       orders.push(order);
     }
 
     res.status(201).json({
       success: true,
       orders,
+      totalPrice: overallTotalPrice, // Include overall total price in the response
     });
   } catch (error) {
     return next(new Errorhandeler(error.message, 500));
   }
 });
-
-
 
 // get all orders of user
 const getAllOrderUser = CatchAsyncError(async (req, res, next) => {
@@ -64,7 +126,6 @@ const getAllOrderUser = CatchAsyncError(async (req, res, next) => {
     return next(new Errorhandeler(error.message, 500));
   }
 });
-
 
 // get all orders of seller
 const getOderSeller = CatchAsyncError(async (req, res, next) => {
@@ -83,8 +144,6 @@ const getOderSeller = CatchAsyncError(async (req, res, next) => {
     return next(new Errorhandeler(error.message, 500));
   }
 });
-
-
 
 // update order status for seller
 const UpdateOrder = CatchAsyncError(async (req, res, next) => {
@@ -143,91 +202,81 @@ const UpdateOrder = CatchAsyncError(async (req, res, next) => {
   }
 });
 
-
-
-
 // give a refund ----- user
-const UserOrderRefund=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const order = await Order.findById(req.params.id);
+const UserOrderRefund = CatchAsyncError(async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id);
 
-      if (!order) {
-        return next(new Errorhandeler("Order not found with this id", 400));
-      }
-
-      order.status = req.body.status;
-
-      await order.save({ validateBeforeSave: false });
-
-      res.status(200).json({
-        success: true,
-        order,
-        message: "Order Refund Request successfully!",
-      });
-    } catch (error) {
-      return next(new Errorhandeler(error.message, 500));
+    if (!order) {
+      return next(new Errorhandeler("Order not found with this id", 400));
     }
-  })
 
-  
+    order.status = req.body.status;
 
+    await order.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      order,
+      message: "Order Refund Request successfully!",
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error.message, 500));
+  }
+});
 
 // accept the refund ---- seller
-const SellerAcceptRefund=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const order = await Order.findById(req.params.id);
+const SellerAcceptRefund = CatchAsyncError(async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id);
 
-      if (!order) {
-        return next(new Errorhandeler("Order not found with this id", 400));
-      }
-
-      order.status = req.body.status;
-
-      await order.save();
-
-      res.status(200).json({
-        success: true,
-        message: "Order Refund successfull!",
-      });
-
-      if (req.body.status === "Refund Success") {
-        order.cart.forEach(async (o) => {
-          await updateOrder(o._id, o.qty);
-        });
-      }
-
-      async function updateOrder(id, qty) {
-        const product = await Product.findById(id);
-
-        product.stock += qty;
-        product.sold_out -= qty;
-
-        await product.save({ validateBeforeSave: false });
-      }
-    } catch (error) {
-      return next(new Errorhandeler(error.message, 500));
+    if (!order) {
+      return next(new Errorhandeler("Order not found with this id", 400));
     }
-  })
 
+    order.status = req.body.status;
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order Refund successfull!",
+    });
+
+    if (req.body.status === "Refund Success") {
+      order.cart.forEach(async (o) => {
+        await updateOrder(o._id, o.qty);
+      });
+    }
+
+    async function updateOrder(id, qty) {
+      const product = await Product.findById(id);
+
+      product.stock += qty;
+      product.sold_out -= qty;
+
+      await product.save({ validateBeforeSave: false });
+    }
+  } catch (error) {
+    return next(new Errorhandeler(error.message, 500));
+  }
+});
 
 // all orders --- for admin
-const allOrders=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const orders = await Order.find().sort({
-        deliveredAt: -1,
-        createdAt: -1,
-      });
-      res.status(201).json({
-        success: true,
-        orders,
-      });
-    } catch (error) {
-      return next(new Errorhandeler(error.message, 500));
-    }
-  });
+const allOrders = CatchAsyncError(async (req, res, next) => {
+  try {
+    const orders = await Order.find().sort({
+      deliveredAt: -1,
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error.message, 500));
+  }
+});
 
 module.exports = {
   CreateNewOrder,
@@ -236,5 +285,5 @@ module.exports = {
   UpdateOrder,
   UserOrderRefund,
   SellerAcceptRefund,
-  allOrders
+  allOrders,
 };

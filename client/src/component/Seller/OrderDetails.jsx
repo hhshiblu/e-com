@@ -20,7 +20,7 @@ const OrderDetails = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-
+console.log(orders);
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch, seller._id]);
@@ -66,7 +66,7 @@ const OrderDetails = () => {
   return (
     <div>
       {isLoading ? (
-        <SellerLoader/>
+        <SellerLoader />
       ) : (
         <div className={`p-5 min-h-screen ${styles.section} bg-white`}>
           <div className="w-full flex items-center justify-between">
@@ -101,7 +101,7 @@ const OrderDetails = () => {
             data?.cart.map((item, index) => (
               <div className="w-full flex items-start mb-5">
                 <img
-                  src={`${backend_URL}upload/${item.images[0]}`}
+                  src={`${backend_URL}upload/${item?.productInfo.images[0]}`}
                   alt=""
                   className="w-[50x] h-[50px]"
                 />

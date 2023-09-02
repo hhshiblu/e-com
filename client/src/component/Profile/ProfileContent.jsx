@@ -538,10 +538,12 @@ const ChangePassword = () => {
 
 const Address = () => {
   const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const[number,setNumber]=useState("")
   const [division, setdivision] = useState("");
   const [district, setdistrict] = useState("");
   const [zipCode, setZipCode] = useState();
-  const [address1, setAddress1] = useState("");
+  const [address, setAddress] = useState("");
   const [addressType, setAddressType] = useState("");
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -560,18 +562,18 @@ const Address = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (addressType === "" || division === "" || district === ""|| zipCode === "" || address1==="" ){
+// console.log(name, number, division, district, address, zipCode, addressType);
+    if (addressType === "" || division === "" || district === ""|| zipCode === "" || address==="" ){
       toast.error("Please fill all the fields!");
     } else {
       dispatch(
-        updatUserAddress(division, district, address1, zipCode, addressType)
+        updatUserAddress(name,number, division, district, address, zipCode, addressType)
       );
 
       setOpen(false);
       setdivision("");
       setdistrict("");
-      setAddress1("");
+      setAddress("");
 
       setZipCode(null);
       setAddressType("");
@@ -600,12 +602,34 @@ const Address = () => {
                 Add New Address
               </h1>
               <div className="w-full">
-                <form aria-required onSubmit={handleSubmit} className="w-full">
+                <form onSubmit={handleSubmit} className="w-full">
                   <div className="w-full block p-4">
+                    <div className="w-[95%] pb-2">
+                      <label className="block pb-2"> Full name</label>
+                      <input
+                        name="name"
+                        type="text"
+                        className={`${styles.input} `}
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>{" "}
+                    <div className="w-[95%] pb-2">
+                      <label className="block pb-2">number</label>
+                      <input
+                        name="number"
+                        type="number"
+                        className={`${styles.input}`}
+                        required
+                        value={zipCode}
+                        onChange={(e) => setNumber(e.target.value)}
+                      />
+                    </div>
                     <div className="w-full pb-2">
                       <label className="block pb-2">division</label>
                       <select
-                        name=""
+                        name="division"
                         id=""
                         value={division}
                         onChange={(e) => setdivision(e.target.value)}
@@ -624,11 +648,10 @@ const Address = () => {
                           })}
                       </select>
                     </div>
-
                     <div className="w-full pb-2">
                       <label className="block pb-2">Choose your district</label>
                       <select
-                        name=""
+                        name="district"
                         id=""
                         value={district}
                         onChange={(e) => setdistrict(e.target.value)}
@@ -645,33 +668,32 @@ const Address = () => {
                           ))}
                       </select>
                     </div>
-
                     <div className="w-[95%] pb-2">
-                      <label className="block pb-2">Address 1</label>
+                      <label className="block pb-2">Address </label>
                       <input
                         type="address"
+                        name="address"
                         className={`${styles.input} `}
                         required
-                        value={address1}
-                        onChange={(e) => setAddress1(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                       />
                     </div>
-
                     <div className="w-[95%] pb-2">
                       <label className="block pb-2">Zip Code</label>
                       <input
                         type="number"
+                        name="zipCode"
                         className={`${styles.input}`}
                         required
                         value={zipCode}
                         onChange={(e) => setZipCode(e.target.value)}
                       />
                     </div>
-
                     <div className="w-full pb-2">
                       <label className="block pb-2">Address Type</label>
                       <select
-                        name=""
+                        name="addressType"
                         id=""
                         value={addressType}
                         onChange={(e) => setAddressType(e.target.value)}
@@ -692,7 +714,6 @@ const Address = () => {
                           ))}
                       </select>
                     </div>
-
                     <div className=" w-[95%] pb-2">
                       <input
                         type="submit"
@@ -715,7 +736,9 @@ const Address = () => {
             className={` bg-[#050320] p-1 rounded-md px-2`}
             onClick={() => setOpen(true)}
           >
-            <span className="text-[#fff] sm:text-xs  cursor-pointer md:text-lg">Add New</span>
+            <span className="text-[#fff] sm:text-xs  cursor-pointer md:text-lg">
+              Add New
+            </span>
           </div>
         </div>
         <br />
@@ -732,12 +755,12 @@ const Address = () => {
                 </div>
                 <div className="pl-8 flex items-center">
                   <h6 className="text-[12px] 800px:text-[unset]">
-                    {item.address1}
+                    {item.address}
                   </h6>
                 </div>
                 <div className="pl-8 flex items-center">
                   <h6 className="text-[12px] 800px:text-[unset]">
-                    {user && user.phoneNumber}
+                    {item.number}
                   </h6>
                 </div>
                 <div className="min-w-[10%] flex items-center justify-between pl-8">

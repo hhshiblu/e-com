@@ -18,13 +18,14 @@ function createCategoryList(category, parentId = null) {
       name: cate.name,
       slug: cate.slug,
       parentId: cate.parentId,
+      avatar: cate.avatar,
       children: createCategoryList(category, cate._id),
     });
   }
   return categoryList;
 }
 
-const createCategory = CatchAsyncError(async (req, res,next) => {
+const createCategory = CatchAsyncError(async (req, res, next) => {
   if (!req.body.name || req.body.name.trim() === "") {
     return next(new Errorhandeler(error.message, 500));
   }
@@ -47,7 +48,6 @@ const createCategory = CatchAsyncError(async (req, res,next) => {
     return next(new Errorhandeler(error.message, 500));
   }
 });
-
 
 const getCategory = CatchAsyncError(async (req, res, next) => {
   try {

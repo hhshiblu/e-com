@@ -209,7 +209,7 @@ const UpdateAvatar = CatchAsyncError(async (req, res, next) => {
 const UpDateAdress = CatchAsyncError(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
-
+console.log(req.body.addressType);
     const sameTypeAddress = user.addresses.find(
       (address) => address.addressType === req.body.addressType
     );
@@ -219,17 +219,16 @@ const UpDateAdress = CatchAsyncError(async (req, res, next) => {
       );
     }
 
-    const existsAddress = user.addresses.find(
-      (address) => address._id === req.body._id
-    );
+    // const existsAddress = user.addresses.find(
+    //   (address) => address._id === req.body._id
+    // );
 
-    if (existsAddress) {
-      Object.assign(existsAddress, req.body);
-    } else {
-      // add the new address to the array
-      user.addresses.push(req.body);
-    }
-
+    // if (existsAddress) {
+    //   Object.assign(existsAddress, req.body);
+    // } else {
+    //   user.addresses.push(req.body);
+    // }
+    user.addresses.push(req.body);
     await user.save();
 
     res.status(200).json({
@@ -306,45 +305,40 @@ const userInfo = CatchAsyncError(async (req, res, next) => {
 });
 
 // all users --- for admin
-const getAllUser=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const users = await User.find().sort({
-        createdAt: -1,
-      });
+const getAllUser = CatchAsyncError(async (req, res, next) => {
+  try {
+    const users = await User.find().sort({
+      createdAt: -1,
+    });
 
-      res.status(201).json({
-        success: true,
-        users,
-      });
-    } catch (error) {
-      return next(new Errorhandeler(error.message, 500));
-    }
-  });
+    res.status(201).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error.message, 500));
+  }
+});
 
- 
 // delete users --- admin
-const deleteUserbyAdmin=
-  CatchAsyncError(async (req, res, next) => {
-    try {
-      const user = await User.findById(req.params.id);
+const deleteUserbyAdmin = CatchAsyncError(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
 
-      if (!user) {
-        return next(
-          new Errorhandeler("User is not available with this id", 400)
-        );
-      }
-
-      await User.findByIdAndDelete(req.params.id);
-
-      res.status(201).json({
-        success: true,
-        message: "User deleted successfully!",
-      });
-    } catch (error) {
-      return next(new Errorhandeler(error.message, 500));
+    if (!user) {
+      return next(new Errorhandeler("User is not available with this id", 400));
     }
-  });
+
+    await User.findByIdAndDelete(req.params.id);
+
+    res.status(201).json({
+      success: true,
+      message: "User deleted successfully!",
+    });
+  } catch (error) {
+    return next(new Errorhandeler(error.message, 500));
+  }
+});
 
 module.exports = {
   userSignUp,

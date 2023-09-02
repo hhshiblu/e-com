@@ -260,38 +260,22 @@ export const navItems = [
   export const footerProductLinks = [
     {
       name: "About us",
-      link: "/about"
+      link: "/about",
     },
     {
-      name: "Careers",
-      link: "/carrers"
-    },
-    {
-      name: "Store Locations",
-    },
-    {
-      name: "Our Blog",
-    },
-    {
-      name: "Reviews",
+      name: "Faq'S",
+      link: "/faq",
     },
   ];
   
   export const footercompanyLinks = [
     {
-      name: "Game & Video",
+      name: "About us",
+      link: "/about",
     },
     {
-      name: "Phone &Tablets",
-    },
-    {
-      name: "Computers & Laptop",
-    },
-    {
-      name: "Sport Watches",
-    },
-    {
-      name: "Events",
+      name: "FAQ",
+      link: "/faq",
     },
   ];
   

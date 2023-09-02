@@ -34,8 +34,7 @@ function HomePage() {
       {/* <Events /> */}
       <FeaturedProduct />
       <br />
-      <br />
-      <br />
+    
       {/* <Subscribe/> */}
       <Footer />
     </div>

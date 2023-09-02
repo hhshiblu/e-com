@@ -1,0 +1,12 @@
+.animation_sidebar{
+  transition: 0.7s ease-in-out;
+}
+.fold{
+    transition: 0.4s;
+    width: 60px;
+  
+}
+.lg_flod{
+    transition: 0.4s;
+    width: 280px;
+}

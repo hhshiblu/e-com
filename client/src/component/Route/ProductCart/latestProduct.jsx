@@ -8,7 +8,7 @@ import { backend_URL } from "../../../serverUrl";
 import Rating from "../../ProductDetails/Rating";
 import styles from "../../../styles/style";
 const latestProduct = ({ title, products }) => {
-  console.log(products);
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },

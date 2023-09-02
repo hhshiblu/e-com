@@ -77,7 +77,7 @@ function CateUnderP() {
         >
           <MdOutlineKeyboardArrowRight />
         </button>
-        <div className="flex gap-[7px]     overflow-x-scroll  scrollx custom-scrollbar">
+        <div className="flex gap-[7px] px-2    overflow-x-scroll  scrollx custom-scrollbar">
           {data?.map((p, i) => {
             return <AProductCard p={p} key={i}/>;
           })}

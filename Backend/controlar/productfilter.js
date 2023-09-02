@@ -182,6 +182,7 @@ class productfilter {
         products: result,
         totalProduct,
         parPage,
+   
       });
     } catch (error) {
       return next(new Errorhandeler(error, 400));

@@ -1,49 +1,82 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
   AiFillDashboard,
   AiFillHeart,
   AiOutlineHeart,
-
   AiOutlineShoppingCart,
-
 } from "react-icons/ai";
 // import { BsChatDots } from "react-icons/bs";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { IoLocation } from "react-icons/io5";
 import { GrServices } from "react-icons/gr";
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import axios from "axios";
+// import axios from "axios";
 import styles from "../../styles/style";
-import { backend_URL, server } from "../../serverUrl";
+import { backend_URL } from "../../serverUrl";
 import { useSelector, useDispatch } from "react-redux";
 
-
 import Rating from "./Rating";
+import { addTocart } from "../../Redux/Action/cart";
 
- 
-const ProductDetails = ({ data, products ,loading}) => {
-  // const location = useLocation();
-  const [state, setState] = useState("reviews");
 
-  const { user, isAuthenticated } = useSelector((state) => state.user);
+const ProductDetails = ({ data, products, loading }) => {
+
+  const { cart } = useSelector((state) => state.cart);
+  // const { user, isAuthenticated } = useSelector((state) => state.user);
   // const { products } = useSelector((state) => state.products);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState({
+    color: "", // Initial selected color
+    index: -1, // Initial index
+  });
+  const [selectedSize, setSelectedSize] = useState({
+    size: "", // Initial selected color
+    index: -1, // Initial index
+  });
   // const [quantity, setQuantity] = useState(1);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
+  const incrementCount = () => {
+       if (data.stock <= 1) {
+         toast.error("Product stock limited!");
+       } else {
+         setCount(count + 1);
+       }
+  };
 
+  const decrementCount = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
+  const addToCartHandler = () => {
+    const isItemExists = cart.find((item) => item.productId === data._id);
 
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+       console.log(data?.stock);
+      if (data.stock <= 1) {
+        toast.error("Product stock limited!");
+      } else {
+       
+        const cartData = {
+          productId: data?._id,
+          quantity: count, // Assuming count is the quantity
+          color: selectedColor.color,
+          size: selectedSize.size,
+        };
 
-
-
-
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  };
 
   const totalReviewsLength =
     products &&
@@ -91,7 +124,7 @@ const ProductDetails = ({ data, products ,loading}) => {
               <div className="block w-full md:flex gap-5 ">
                 {/* ---------------------------------------image part------------------- */}
 
-                <div className="w-full md:w-[50%] lg:w-[30%] h-[55vh]">
+                <div className=" w-full sm:w-[90%] md:w-[40%] lg:w-[26%] h-[55vh]">
                   <div className="h-[80%]  m-auto">
                     {data && data.images && data.images[select] && (
                       <img
@@ -193,12 +226,16 @@ const ProductDetails = ({ data, products ,loading}) => {
                             <span
                               key={index}
                               className={`${
-                                selectedColor === index
+                                selectedColor.index === index
                                   ? "border border-red-400"
                                   : null
                               } cursor-pointer p-[3px] mx-2`}
                             >
-                              <h1 onClick={() => setSelectedColor(index)}>
+                              <h1
+                                onClick={() =>
+                                  setSelectedColor({ color, index })
+                                }
+                              >
                                 {color}{" "}
                               </h1>{" "}
                               {/* Change 'i.color' to 'color' here */}
@@ -220,12 +257,14 @@ const ProductDetails = ({ data, products ,loading}) => {
                             <span
                               key={index}
                               className={`${
-                                selectedSize === index
+                                selectedSize.index === index
                                   ? "border border-red-400"
                                   : null
                               } cursor-pointer px-[2px] mx-2`}
                             >
-                              <h1 onClick={() => setSelectedSize(index)}>
+                              <h1
+                                onClick={() => setSelectedSize({ size, index })}
+                              >
                                 {size}{" "}
                               </h1>{" "}
                               {/* Change 'i.color' to 'color' here */}
@@ -237,13 +276,12 @@ const ProductDetails = ({ data, products ,loading}) => {
                   </div>
 
                   {/* increment button */}
-                  
 
                   <div className="flex items-center mt-4 justify-between pr-3">
                     <div class="inline-flex pl-12">
                       <div
                         className={`bg-[#f24729] border-[#e4434373] mt-2  rounded-sm w-[30px] h-[30px] ${styles.normalFlex}  justify-center cursor-pointer  shadow-lg hover:opacity-75 transition duration-300 ease-in-out`}
-                      
+                        onClick={incrementCount}
                       >
                         <HiPlus size={30} color="#fff" className="" />
                       </div>
@@ -252,7 +290,7 @@ const ProductDetails = ({ data, products ,loading}) => {
                       </span>
                       <div
                         className="bg-[#3435364f]  rounded-sm w-[30px] mt-2  h-[30px] flex items-center  justify-center cursor-pointer shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                    
+                        onClick={decrementCount}
                       >
                         <HiOutlineMinus size={16} color="" />
                       </div>
@@ -278,13 +316,8 @@ const ProductDetails = ({ data, products ,loading}) => {
                     </div>
                   </div>
 
-
-
                   {/* -------------------------buy now /add to cart----------- */}
 
-
-
-           
                   <div className="flex justify-center mr-5 mt-4 ">
                     <div
                       className={`w-[150px] bg-[#050320]  my-3  justify-center  cursor-pointer !mt-6 !rounded !h-10 flex items-center mr-5`}
@@ -297,16 +330,15 @@ const ProductDetails = ({ data, products ,loading}) => {
                     </div>
                     <div
                       className={`w-[150px] bg-[#D61355]  my-3  justify-center  cursor-pointer !mt-6 !rounded !h-10 flex items-center`}
-                 
                     >
-                      <span className="text-white flex items-center">
+                      <span
+                        className="text-white flex items-center"
+                        onClick={addToCartHandler}
+                      >
                         Add to cart <AiOutlineShoppingCart className="ml-1" />
                       </span>
                     </div>
                   </div>
-            
-                  
-                  
 
                   {/* -----------------------------------shop name------ */}
                 </div>
@@ -376,7 +408,7 @@ const ProductDetails = ({ data, products ,loading}) => {
         ) : null}
       </div>
       <section>
-        <div className="w-[100%] md:w-[90%] sm:w-[95%] lg:w-[90%] h-full mx-auto pb-16   bg-[#efeeee]">
+        <div className="w-[100%] md:w-[90%] sm:w-[95%] bg-white lg:w-[90%] h-full mx-auto pb-16  ">
           <div className="flex flex-wrap">
             <div className="w-10/12 lg:w-8/12 mx-auto  md-lg:w-full">
               <div className="pr-4 md-lg:pr-0">
@@ -389,8 +421,12 @@ const ProductDetails = ({ data, products ,loading}) => {
                   <p className="py-5 text-slate-600">{data?.description}</p>
                 </div>
                 <div>
+                  <hr />
                   <h1 className="text-[20px] md:text-[22px] py-2 text-slate-800  ">
-                    Some popular reviews
+                    Some popular reviews of :{" "}
+                    <span className="text-[14px]  ">
+                      {data?.name?.slice(0, 35)} ...
+                    </span>
                   </h1>
                   <Link to={`/shop/view/${data?.seller?._id}`}>
                     <h2 className="text-[15px] cursor-pointer hover:text-[#db3615] text-gray-500 pb-2">
@@ -440,8 +476,6 @@ const ProductDetails = ({ data, products ,loading}) => {
                     )}
                   </div>
                 </div>
-           
-               
               </div>
             </div>
             <div className="w-[28%] hidden lg:block md-lg:w-full">

@@ -21,6 +21,7 @@ import {
 import CateProductCard from "../component/Route/ProductCart/CateProductCard";
 import LatestProduct from "../component/Route/ProductCart/latestProduct";
 import Pagination from "./../component/pagination/Pagination";
+import LoadingOverlay from "../component/Loader/LoadingOverlay";
 
 const SearchProducts = () => {
   const location = useLocation();
@@ -32,7 +33,7 @@ const SearchProducts = () => {
   const subCategory = searchParams.get("subCategory");
   const maxPrice = searchParams.get("maxPrice");
   const searchValue = searchParams.get("value");
-  const { products, totalProduct, latest_product, priceRange, parPage } =
+  const { products,isloading, totalProduct, latest_product, priceRange, parPage } =
     useSelector((state) => state.filterProduct);
   const { categories } = useSelector((state) => state.category);
 
@@ -86,7 +87,7 @@ const SearchProducts = () => {
       low: state.values[0] || "",
       high: state.values[1] || "",
       sortPrice: "asc",
-      pageNumber: 1,
+      pageNumber: pageNumber,
       searchValue: searchValue || "", // Use the provided searchValue or default to an empty string
     };
     if (maxPrice) {
@@ -104,6 +105,7 @@ const SearchProducts = () => {
     subCategory,
     selectedCategory,
     rating,
+    pageNumber,
     dispatch,
   ]);
 
@@ -123,7 +125,7 @@ const SearchProducts = () => {
   return (
     <div>
       <Header />
-
+      <LoadingOverlay isLoading={isloading} />
       <section className="h-[37px] my-[15px]  bg-gray-300 w-full ">
         <div className="flex items-center text-sm  mt-2 justify-start pl-24  gap-2  w-full  ">
           <Link to="/" className=" my-auto text-center mt-2  ">
@@ -155,7 +157,7 @@ const SearchProducts = () => {
 
       <section className="py-8 w-11/12 mx-auto">
         <div className="flex   gap-10">
-          <div className="   w-3/12 hidden md:block">
+          <div className="  bg-white px-3  800px:w-[45%] 1000px:w-[25%] hidden md:block">
             {maxPrice ? null : (
               <div className="py-2 flex flex-col gap-5">
                 <h2 className="text-3xl font-bold mb-3 text-slate-600">
@@ -190,32 +192,30 @@ const SearchProducts = () => {
                 </div>
               </div>
             )}{" "}
-            {subCategory || (maxPrice && category) ? null : (
-              <div>
-                <h3 className="font-semibold mb-2">Category</h3>
-                {categories.map((category, index) => (
-                  <div
-                    key={index}
-                    className={`hover:bg-[#EAEDED] text-[16px] rounded-md cursor-pointer leading-[26px] forHover`}
-                    onClick={() => handleClick(index)}
-                  >
-                    <label className="flex items-center">
-                      <input
-                        name="category"
-                        type="checkbox"
-                        className="h-4 w-4"
-                        checked={selectedCategory === category.name}
-                        readOnly
-                      />
-                      <span className="ml-2 text-gray-500">
-                        {category.name}
-                      </span>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="py-3 flex flex-col gap-4">
+            {/* {subCategory  ? null : ( */}
+            <div>
+              <h3 className="font-semibold mb-2">Category</h3>
+              {categories.map((category, index) => (
+                <div
+                  key={index}
+                  className={`hover:bg-[#EAEDED] text-[16px] rounded-md cursor-pointer leading-[26px] forHover`}
+                  onClick={() => handleClick(index)}
+                >
+                  <label className="flex items-center">
+                    <input
+                      name="category"
+                      type="checkbox"
+                      className="h-4 w-4"
+                      checked={selectedCategory === category.name}
+                      readOnly
+                    />
+                    <span className="ml-2 text-gray-500">{category.name}</span>
+                  </label>
+                </div>
+              ))}
+            </div>
+            {/* )} */}
+            {/* <div className="py-3 flex flex-col gap-4">
               <h2 className="md:text-2xl text-lg font-bold mb-1 text-slate-600">
                 Rating
               </h2>
@@ -341,7 +341,7 @@ const SearchProducts = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="py-5 lg:flex flex-col gap-4 hidden ">
               {latest_product && (
                 <LatestProduct
@@ -356,7 +356,7 @@ const SearchProducts = () => {
               <h2 className="text-lg font-medium text-slate-600">
                 {totalProduct} Products
               </h2>
-              <div className="flex justify-center items-center gap-3">
+              {/* <div className="flex justify-center items-center gap-3">
                 <select
                   onChange={(e) => setSortPrice(e.target.value)}
                   className="p-1 border outline-0 text-slate-600 font-semibold"
@@ -385,7 +385,7 @@ const SearchProducts = () => {
                     <FaThList />
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="pb-8 grid grid-cols-2 gap-[15px] md:grid-cols-2 md:gap-[15px] lg:grid-cols-3 lg:gap-[15px] xl:grid-cols-4 xl:gap-[15px]">
               {products &&

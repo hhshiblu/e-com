@@ -76,14 +76,16 @@ import { getAllCategory } from "./Redux/Action/category";
 
 import MainLayout from "./component/Seller/Layout/MainLayout";
 
+import DashBoard from "./component/Layout/DashBoard.jsx";
+import UserOrder from "./component/userProfile/UserOrder";
+import UserOrderRefunds from "./component/userProfile/UserOrderRefunds";
+import Address from "./component/userProfile/Address";
+// import UserDashBorad from "./component/Layout/UserDashBoard";
+// import UserDashBoard from "./component/Layout/UserDashBoard";
+
 axios.defaults.withCredentials = true;
 function App() {
-  const [stripeApikey, setStripeApiKey] = useState("");
 
-  async function getStripeApikey() {
-    const { data } = await axios.get(`${server}/payment/stripeapikey`);
-    setStripeApiKey(data.stripeApikey);
-  }
   useEffect(() => {
     Store.dispatch(getAllCategory());
     Store.dispatch(getAllBanar());
@@ -99,20 +101,7 @@ function App() {
     <div>
       <BrowserRouter>
         <ScrollTop />
-        {stripeApikey && (
-          <Elements stripe={loadStripe(stripeApikey)}>
-            <Routes>
-              <Route
-                path="/payment"
-                element={
-                  <ProtectedRoute>
-                    <PaymentPage />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </Elements>
-        )}
+
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -126,20 +115,20 @@ function App() {
             element={<SellerActivationPage />}
           />
           {/* <Route path="/all-products" element={<ProductsPage />} /> */}
-          <Route path="/products/all-products" element={<CateProductsPage />} />
+          {/* <Route path="/products/all-products" element={<CateProductsPage />} /> */}
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
           <Route path="/some-related-faq" element={<FaqPage />} />
           <Route path="/products/search?" element={<SearchProducts />} />
           <Route path="/all-cart-products" element={<CartPage />} />
-          <Route
+          {/* <Route
             path="/profile"
             element={
               <ProtectedRoute>
                 <UserProfilePage />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/user/track/order/:id"
             element={
@@ -158,7 +147,7 @@ function App() {
           />
           <Route path="/order/success" element={<OrderSuccessPage />} />
           <Route
-            path="/checkout"
+            path="/checkout_products"
             element={
               <ProtectedRoute>
                 <CheckoutPage />
@@ -173,6 +162,11 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/account/profile" element={<DashBoard />}>
+            <Route path="all-orders" element={<UserOrder />} />
+            <Route path="refund-orders" element={<UserOrderRefunds />} />
+            <Route path="address" element={<Address />} />
+          </Route>
 
           {/* all shop route */}
 
@@ -278,8 +272,6 @@ function App() {
             />
           </Route>
 
-   
-
           <Route
             path="/order/:id"
             element={
@@ -288,7 +280,6 @@ function App() {
               </ProtectSellerRoute>
             }
           />
-  
 
           <Route
             path="/dashboard-messages"

@@ -13,6 +13,7 @@ const initialState = {
     low: 0,
     high: 100000,
   },
+  arrayProducts:[],
   product: {},
   relatedProducts: [],
   moreProducts: [],
@@ -76,7 +77,7 @@ export const filterProducts = createReducer(initialState, {
   getProductSuccess: (state, action) => {
     state.isloading = false;
     state.product = action.payload.product;
-    
+    state.arrayProducts = action.payload.product;
     state.relatedProducts = action.payload.relatedProducts;
     state.moreProducts = action.payload.moreProducts;
     state.success = true;

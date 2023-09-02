@@ -1,8 +1,6 @@
 import axios from "axios";
 import { server } from "../../serverUrl";
 
-
-
 // load user
 export const loadUser = () => async (dispatch) => {
   try {
@@ -55,7 +53,6 @@ export const loadSeller = () => async (dispatch) => {
   }
 };
 
-
 // user update information
 export const updateUserInformation =
   (name, email, phoneNumber, password) => async (dispatch) => {
@@ -94,8 +91,16 @@ export const updateUserInformation =
 
 // update user address
 export const updatUserAddress =
-  (division, district, address1,  zipCode, addressType) =>
-  async (dispatch) => {
+  (name,number,division, district, address, zipCode, addressType) => async (dispatch) => {
+    console.log(
+      name,
+      number,
+      division,
+      district,
+      address,
+      zipCode,
+      addressType
+    );
     try {
       dispatch({
         type: "updateUserAddressRequest",
@@ -103,13 +108,7 @@ export const updatUserAddress =
 
       const { data } = await axios.put(
         `${server}/update-user-addresses`,
-        {
-          division,
-          district,
-          address1,
-          zipCode,
-          addressType,
-        },
+        { name, number, division, district, address, zipCode, addressType },
         { withCredentials: true }
       );
 
@@ -135,10 +134,9 @@ export const deleteUserAddress = (id) => async (dispatch) => {
       type: "deleteUserAddressRequest",
     });
 
-    const { data } = await axios.delete(
-      `${server}/delete-user-address/${id}`,
-      { withCredentials: true }
-    );
+    const { data } = await axios.delete(`${server}/delete-user-address/${id}`, {
+      withCredentials: true,
+    });
 
     dispatch({
       type: "deleteUserAddressSuccess",
@@ -157,7 +155,6 @@ export const deleteUserAddress = (id) => async (dispatch) => {
 
 // --------------------------
 // get all seller ---admin
-
 
 // get all users --- admin
 export const getAllUsers = () => async (dispatch) => {

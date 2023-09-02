@@ -8,12 +8,14 @@ import { categoryReducer } from "./reducer/category";
 import { orderData } from "./reducer/orderData";
 import { banarReducer } from "./reducer/banar";
 import { filterProducts } from "./reducer/filterproducts";
+import { cartReducer } from "./reducer/cart";
 
 const Store = configureStore({
   reducer: {
     user: userReducer,
     seller: sellerReducer,
     products: productReducer,
+    cart: cartReducer,
     events: eventReducer,
     order: orderReducer,
     category: categoryReducer,

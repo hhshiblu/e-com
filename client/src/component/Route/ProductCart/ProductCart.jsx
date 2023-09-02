@@ -8,7 +8,6 @@ function ProductCart({ data, isEvent }) {
   return (
     <div className="bg-white hover:shadow-lg rounded-md ">
       <div className="w-full h-auto mb- p-3 relative rounded-md  cursor-pointer ">
-        <div className=" flex  justify-end m-auto"></div>
         <Link
           to={`${
             isEvent === true
@@ -19,7 +18,7 @@ function ProductCart({ data, isEvent }) {
           <img
             src={`${backend_URL}upload/${data.images && data.images[0]}`}
             alt={data.name}
-            className="w-full pb-1 m-auto h-[160px] object-contain  transform hover:scale-110 transition duration-500"
+            className="w-full pb-1 m-auto h-[160px] object-contain  transform hover:scale-104 transition duration-500"
           />
         </Link>
         <Link to={`/shop/view/${data?.seller._id}`}>
@@ -34,7 +33,7 @@ function ProductCart({ data, isEvent }) {
               : `/product/${data._id}`
           }`}
         >
-          <h5 className="pb-3 font-[500] text-sm md:text-lg  hover:text-red-500">
+          <h5 className="pb-3 font-[500] text-sm md:text-[17px]  hover:text-red-500">
             {data.name.length > 20 ? data.name.slice(0, 35) + "..." : data.name}
           </h5>
         </Link>
