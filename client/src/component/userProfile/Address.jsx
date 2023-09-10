@@ -6,8 +6,11 @@ import { RxCross1 } from "react-icons/rx";
 import { deleteUserAddress, updatUserAddress } from "../../Redux/Action/user";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Address() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
@@ -16,9 +19,9 @@ function Address() {
   const [zipCode, setZipCode] = useState();
   const [address, setAddress] = useState("");
   const [addressType, setAddressType] = useState("");
-  const { user } = useSelector((state) => state.user);
+  const { user,successMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
+console.log(location);
   const addressTypeData = [
     {
       name: "Default",
@@ -31,40 +34,50 @@ function Address() {
     },
   ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // console.log(name, number, division, district, address, zipCode, addressType);
-    if (
-      addressType === "" ||
-      division === "" ||
-      district === "" ||
-      zipCode === "" ||
-      address === ""
-    ) {
-      toast.error("Please fill all the fields!");
-    } else {
-      dispatch(
-        updatUserAddress(
-          name,
-          number,
-          division,
-          district,
-          address,
-          zipCode,
-          addressType
-        )
-      );
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (
+    addressType === "" ||
+    division === "" ||
+    district === "" ||
+    zipCode === "" ||
+    address === ""
+  ) {
+    toast.error("Please fill all the fields!");
+  } else {
+    dispatch(
+      updatUserAddress(
+        name,
+        number,
+        division,
+        district,
+        address,
+        zipCode,
+        addressType
+      )
+    );
 
-      setOpen(false);
-      setdivision("");
-      setdistrict("");
-      setName("");
-      setNumber("");
-      setAddress("");
-      setZipCode(null);
-      setAddressType("");
+    // Assuming successMessage is set when the update is successful
+    if (successMessage) {
+      toast.success(successMessage);
+
+      if (location.state && location.state.checkout) {
+        // If location.state.checkout is true, navigate to "/checkout_products"
+        navigate("/checkout_products");
+      }
     }
-  };
+
+    // Reset form fields and close the form
+    setOpen(false);
+    setdivision("");
+    setdistrict("");
+    setName("");
+    setNumber("");
+    setAddress("");
+    setZipCode(null);
+    setAddressType("");
+  }
+};
 
   const handleDelete = (item) => {
     const id = item._id;

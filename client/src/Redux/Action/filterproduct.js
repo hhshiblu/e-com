@@ -45,15 +45,11 @@ export const query_products = (query) => async (dispatch) => {
 
 export const price_range_product = () => async (dispatch) => {
   try {
-    dispatch({
-      type: "PriceRangeRequest",
-    });
+
 
     const { data } = await axios.get(
       `${server}/products/price-range-latest-product`
     );
-
-
 
     dispatch({
       type: "PriceRangeSuccess",
@@ -62,7 +58,7 @@ export const price_range_product = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "PriceRangeFailed",
-      // payload: error.response.data.message,
+      payload: error.response.data.message,
     });
   }
 };

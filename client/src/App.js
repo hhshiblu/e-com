@@ -63,11 +63,7 @@ import {
 import ProtectedRoute from "./ProtectRoutes/ProtectedRoute";
 import ProtectSellerRoute from "./ProtectRoutes/ProtectSellerRoute";
 import { getAllProducts } from "./Redux/Action/product";
-import { getAllEvents } from "./Redux/Action/event";
 import axios from "axios";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { server } from "./serverUrl";
 import ProtectedAdminRoute from "./ProtectRoutes/ProtectedAdminRoute";
 import { leatestOrderData } from "./Redux/Action/orderData";
 import { getAllBanar } from "./Redux/Action/banar";
@@ -80,6 +76,7 @@ import DashBoard from "./component/Layout/DashBoard.jsx";
 import UserOrder from "./component/userProfile/UserOrder";
 import UserOrderRefunds from "./component/userProfile/UserOrderRefunds";
 import Address from "./component/userProfile/Address";
+import UserProfile from "./component/userProfile/UserProfile";
 // import UserDashBorad from "./component/Layout/UserDashBoard";
 // import UserDashBoard from "./component/Layout/UserDashBoard";
 
@@ -114,7 +111,7 @@ function App() {
             path="/seller/activation/:activation_token"
             element={<SellerActivationPage />}
           />
-          {/* <Route path="/all-products" element={<ProductsPage />} /> */}
+          <Route path="/all-products" element={<ProductsPage />} />
           {/* <Route path="/products/all-products" element={<CateProductsPage />} /> */}
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
@@ -163,6 +160,14 @@ function App() {
             }
           />
           <Route path="/account/profile" element={<DashBoard />}>
+            <Route
+              index
+              element={
+             
+                  <UserProfile />
+               
+              }
+            />
             <Route path="all-orders" element={<UserOrder />} />
             <Route path="refund-orders" element={<UserOrderRefunds />} />
             <Route path="address" element={<Address />} />

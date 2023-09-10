@@ -125,7 +125,7 @@ class productfilter {
     try {
       const priceRange = {
         low: 0,
-        high: 0,
+        high: 100000,
       };
       const products = await productModel.find({}).limit(9).sort({
         createdAt: -1,

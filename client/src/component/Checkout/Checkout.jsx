@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "../../styles/style";
 import { Division } from "../../staticData/data";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { server } from "../../serverUrl";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -194,7 +194,14 @@ const ShippingInfo = ({
     setNumber(selectedAddress.number);
     setSelectedAddressIndex(index);
   };
-
+    const navigate = useNavigate();
+  const HandelNavigate = () => {
+   navigate("/account/profile/address", {
+     state: {
+       cheakout:"cheakout"
+     },
+   });
+ }
   useEffect(() => {
     setSelectedAddressIndex(0); // Initialize with the default index
     if (userInfo && user && user.addresses.length > 0) {
@@ -210,13 +217,21 @@ const ShippingInfo = ({
         </h5>
 
         <hr />
-
-        <h5
-          className="text-[16px] font-[500] pb-2 cursor-pointer inline-block"
-          onClick={() => setUserInfo(userInfo)}
-        >
-          Choose From saved address
-        </h5>
+        <div className="flex justify-between md:justify-normal ">
+          <h5
+            className="text-[16px] font-[500] pb-2 cursor-pointer inline-block md:pr-20 "
+            onClick={() => setUserInfo(userInfo)}
+          >
+            Choose your address
+          </h5>
+          <h5
+            className="!bg-[#D61355] p-1 text-sm text-white rounded-md  mt-1 cursor-pointer"
+            onClick={HandelNavigate}
+          >
+            {" "}
+            Add address
+          </h5>
+        </div>
 
         {user &&
           user.addresses.map((item, index) => (

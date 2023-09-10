@@ -38,7 +38,7 @@ export const filterProducts = createReducer(initialState, {
 
   // ..............?
   PriceRangeRequest: (state) => {
-    state.isloading = true;
+    state.isloading = false;
   },
   PriceRangeSuccess: (state, action) => {
     state.isloading = false;

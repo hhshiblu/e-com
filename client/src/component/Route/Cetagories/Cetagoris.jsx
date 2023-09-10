@@ -9,7 +9,12 @@ function Cetagoris() {
   const navigate = useNavigate();
   const { categories } = useSelector((state) => state.category);
   const SubmitHendel = (i) => {
-    navigate(`/products/all-products/phone?category=${i.title}`);
+   const queryParams = new URLSearchParams({
+     category: i?.name,
+   });
+
+   const url = `/products/search?${queryParams}`;
+   navigate(url);
   };
   return (
     <div>

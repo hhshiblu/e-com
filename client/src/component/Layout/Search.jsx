@@ -73,8 +73,16 @@ const Search = () => {
   const handleMenuItemClick = (e, itemData) => {
     ToggleMenu2(itemData);
   };
-  const { id } = useParams();
+  // const { id } = useParams();
 
+  const subCateHandel = (i) => {
+     const queryParams = new URLSearchParams({
+       subCategory:i,
+     });
+     const url = `/products/search?${queryParams}`;
+    navigate(url);
+    ToggleMenu();
+  }
   return (
     <>
       <div
@@ -248,10 +256,7 @@ const Search = () => {
                     <div
                       key={index}
                       className="hover:bg-gray-300 mx-2 text-gray-700 hover:text-gray-950  rounded-md leading-[24px] py-[6px]  "
-                      onClick={() => {
-                        navigate(`/products/search?subCategory=${item.name}`);
-                        window.location.reload(true);
-                      }}
+                      onClick={() => subCateHandel(item.name)}
                     >
                       <h2 className="text-left pl-7 cursor-pointer text-[16px] ">
                         {item.name}
