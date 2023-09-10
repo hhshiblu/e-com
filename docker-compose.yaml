@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    image: myapp-backend
+    container_name: myapp-backend-server
+    command: npm start
+    ports:
+      - "5000:5000"
+
+    env_file: ./Backend/config/.env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: myapp-client
+    container_name: myapp-react-client
+    command: npm start
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+    app-network:
+        driver: bridge

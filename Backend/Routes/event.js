@@ -1,6 +1,6 @@
 const express = require("express");
 const upload = require("../src/multer");
-const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
+const { isSeller, isAdmin, isAuthenticated } = require("../Middleware/auth");
 const {
   createEvent,
   getAllEvents,

@@ -9,7 +9,7 @@ const {
   DeleteCoupon,
   getCouponByName,
 } = require("../controlar/coponCode");
-const { isSeller } = require("../middleware/auth");
+const { isSeller} = require("../Middleware/auth");
 
 router.post("/create-coupon-code", isSeller, CreatCoupon);
 

@@ -9,7 +9,7 @@ const cors = require("cors");
 
 app.use(express.json());
 app.use(cookeParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin:process.env.SITE_URL, credentials: true }));
 app.use("/upload", express.static("upload")); //image
 app.use(bodyParser.urlencoded({ extended: true }));
 
