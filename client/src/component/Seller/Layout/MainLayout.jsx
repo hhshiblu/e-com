@@ -142,13 +142,15 @@ useEffect(() => {
         className="h-screen"
       >
         <div className="logo  bg-[#D61355] py-[5px] border-r-2">
-          <h2 className="text-white fs-5 text-center py-3 mb-0">
-            {collapsed ? (
-              <span className="sm-logo text-[19px]">R D</span>
-            ) : (
-              <span className="lg-logo text-[19px]">Raj-Dhola</span>
-            )}
-          </h2>
+          <Link to="/">
+            <h2 className="text-white fs-5 text-center py-3 mb-0">
+              {collapsed ? (
+                <span className="sm-logo text-[19px]">R D</span>
+              ) : (
+                <span className="lg-logo text-[19px]">Raj-Dhola</span>
+              )}
+            </h2>
+          </Link>
         </div>
         <Menu
           theme="dark"

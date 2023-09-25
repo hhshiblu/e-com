@@ -153,7 +153,7 @@ function ProductCart() {
                     </div>
                   </div>
                   <div className="w-full lg:w-4/12">
-                    <div className="relative flex flex-col gap-4 p-4 bg-white rounded shadow">
+                    <div className="relative flex flex-col gap-4 p-4 bg-white rounded shadow ">
                       <div className="flex flex-col items-center justify-center p-4 bg-gray-100">
                         <p className="mb-2">Total Price </p>
                       </div>

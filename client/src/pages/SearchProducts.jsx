@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../component/Layout/Header";
 import Footer from "../component/Layout/Footer";
 import {
-  price_range_product,
   query_products,
 } from "../Redux/Action/filterproduct";
 import CateProductCard from "../component/Route/ProductCart/CateProductCard";
@@ -71,12 +70,6 @@ const SearchProducts = () => {
     .filter((segment) => segment !== "");
 
   useEffect(() => {
-
-      dispatch(price_range_product()); // Assuming this action updates the priceRange
-
-  }, [dispatch]);
-
-  useEffect(() => {
     setState({
       values: [priceRange.low, priceRange.high],
     });
@@ -87,8 +80,7 @@ const SearchProducts = () => {
       category: selectedCategory || "",
       subCategory: subCategory || "",
       rating: rating || "",
-      low: state.values[0] || "",
-      high: state.values[1] || "",
+
       sortPrice: "asc",
       pageNumber: pageNumber,
       searchValue: searchValue || "", // Use the provided searchValue or default to an empty string
@@ -100,8 +92,7 @@ const SearchProducts = () => {
     dispatch(query_products(query));
     
   }, [
-    state.values[0],
-    state.values[1],
+
     state.values,
     searchValue,
     maxPrice,

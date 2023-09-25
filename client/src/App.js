@@ -75,14 +75,18 @@ import MainLayout from "./component/Seller/Layout/MainLayout";
 import DashBoard from "./component/Layout/DashBoard.jsx";
 import UserOrder from "./component/userProfile/UserOrder";
 import UserOrderRefunds from "./component/userProfile/UserOrderRefunds";
+import ChatUserDashboard from "./component/userProfile/ChatUserDashboard";
 import Address from "./component/userProfile/Address";
 import UserProfile from "./component/userProfile/UserProfile";
+import AdminMainLayout from "./component/admin/layOut/AdminMainLayout";
+
+
+// import HeroBanar from "./component/admin/HeroBanar";
 // import UserDashBorad from "./component/Layout/UserDashBoard";
 // import UserDashBoard from "./component/Layout/UserDashBoard";
 
 axios.defaults.withCredentials = true;
 function App() {
-
   useEffect(() => {
     Store.dispatch(getAllCategory());
     Store.dispatch(getAllBanar());
@@ -111,7 +115,7 @@ function App() {
             path="/seller/activation/:activation_token"
             element={<SellerActivationPage />}
           />
-          <Route path="/all-products" element={<ProductsPage />} />
+          {/* <Route path="/all-products" element={<ProductsPage />} /> */}
           {/* <Route path="/products/all-products" element={<CateProductsPage />} /> */}
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling-products" element={<BestSellingPage />} />
@@ -163,14 +167,51 @@ function App() {
             <Route
               index
               element={
-             
+                <ProtectedRoute>
                   <UserProfile />
-               
+                </ProtectedRoute>
               }
             />
-            <Route path="all-orders" element={<UserOrder />} />
-            <Route path="refund-orders" element={<UserOrderRefunds />} />
-            <Route path="address" element={<Address />} />
+            <Route
+              path="all-orders"
+              element={
+                <ProtectedRoute>
+                  <UserOrder />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="refund-orders"
+              element={
+                <ProtectedRoute>
+                  <UserOrderRefunds />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="chat"
+              element={
+                <ProtectedRoute>
+                  <ChatUserDashboard/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="chat/:sellerId"
+              element={
+                <ProtectedRoute>
+                  <ChatUserDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="address"
+              element={
+                <ProtectedRoute>
+                  <Address />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           {/* all shop route */}
@@ -296,86 +337,81 @@ function App() {
           />
 
           {/* -----------------------admin routes-------------- */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardPage />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-up-items"
-            element={
-              <ProtectedAdminRoute>
-                <AdminUpComingItems />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-users"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardUsers />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-sellers"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardSellers />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-orders"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardOrders />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-products"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardProducts />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-category"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardCategory />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-events"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardEvents />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-withdraw-request"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardWithdraw />
-              </ProtectedAdminRoute>
-            }
-          />
-          <Route
-            path="/admin-hero-section"
-            element={
-              <ProtectedAdminRoute>
-                <AdminDashboardBanar />
-              </ProtectedAdminRoute>
-            }
-          />
+
+          <Route path="/admin_DashBoard" element={<AdminMainLayout />}>
+            <Route
+              index
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardPage />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="all_users"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardUsers />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="all_sellers"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardSellers />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="all_products"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardProducts />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="category"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardCategory />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="hero_section"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardBanar />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="seller_withdraw_request"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardWithdraw />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="all_events"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardEvents />
+                </ProtectedAdminRoute>
+              }
+            />
+            <Route
+              path="all_orders"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminDashboardOrders />
+                </ProtectedAdminRoute>
+              }
+            />
+          </Route>
         </Routes>
 
         <ToastContainer

@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 // import logo from "../."
 import { BiMenuAltLeft } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
-import { AiOutlineShoppingCart, AiFillDashboard } from "react-icons/ai";
+import {  AiFillDashboard } from "react-icons/ai";
 import { ImCancelCircle } from "react-icons/im";
 import { BiCategoryAlt } from "react-icons/bi";
 import { FiShoppingCart } from "react-icons/fi";
@@ -20,6 +20,7 @@ const Search = () => {
   const navigate = useNavigate();
 
   const { categories } = useSelector((state) => state.category);
+
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const [activemenu, setActiveMenu] = useState("nav_menu");
   const [activeMenu2, setactiveMenu2] = useState("nav_menu2");
@@ -76,13 +77,13 @@ const Search = () => {
   // const { id } = useParams();
 
   const subCateHandel = (i) => {
-     const queryParams = new URLSearchParams({
-       subCategory:i,
-     });
-     const url = `/products/search?${queryParams}`;
+    const queryParams = new URLSearchParams({
+      subCategory: i,
+    });
+    const url = `/products/search?${queryParams}`;
     navigate(url);
     ToggleMenu();
-  }
+  };
   return (
     <>
       <div
@@ -90,9 +91,9 @@ const Search = () => {
       >
         <div className={`navbar ${isSticky ? "sticky" : ""}`}>
           <div className="  h-[60px] min- min-w-fit md:bg-slate-900  md:grid grid-cols-4">
-            <div className="hidden md:block text-white m-auto h-[30px] ">
-              <Link to="/">
-                <img src="img/logo_title.svg" alt="" className="h-full" />
+            <div className="hidden md:block text-white m-auto h-[30px]  cursor-pointer">
+              <Link to="/" >
+                <img src="/img/logo_title.svg" alt="" className="h-full" />
               </Link>
             </div>
             <div className=" md:col-span-2 !m-auto w-[90%] py-[10px] relative">
@@ -135,7 +136,9 @@ const Search = () => {
             <div className="hidden m-auto  md:flex items-center">
               <div className={`${styles.normalFlex}`}>
                 <div className="relative cursor-pointer mr-[20px]">
-                  <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
+                  <Link
+                    to={`${isAuthenticated ? "/account/profile" : "/login"}`}
+                  >
                     {isAuthenticated ? (
                       <div className=" bg-[#ffffff] !m-auto rounded-full h-[35px] w-[35px] flex items-center justify-center">
                         <h1 className=" text-center text-black mt-[-3px] text-[20px]   font-[600] ">
@@ -164,9 +167,12 @@ const Search = () => {
           </div>
 
           <div className="hidden bg-[#232F3E] h-[39px] md:flex items-center ">
-            <div className="pl-10 my-auto  relative  text-white text-sm md:text-base duration-300 cursor-pointer catagoris">
+            <div
+              className="pl-10 my-auto  relative  text-white text-sm md:text-base duration-300 cursor-pointer catagoris"
+              onClick={ToggleMenu}
+            >
               <BiMenuAltLeft size={25} className="absolute left-2" />
-              <h3 className="  font-[600]" onClick={ToggleMenu}>
+              <h3 className="  font-[600]" >
                 {" "}
                 All Catagogies{" "}
               </h3>
@@ -417,7 +423,7 @@ const Search = () => {
                     Category
                   </p>
                 </button>
-                <Link to={`${isAuthenticated ? "/profile" : "/login"}`}>
+                <Link to={`${isAuthenticated ? "/account/profile" : "/login"}`}>
                   <button
                     type="button"
                     className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-5px]"
@@ -432,9 +438,9 @@ const Search = () => {
                   type="button"
                   className="text-center px-3 py-4  flex flex-col justify-center items-center mt-[-10px]"
                 >
-                  <Link to="/">
+                  <Link to="/" className=" cursor-pointer">
                     <img
-                      src="img/circle_logo.svg"
+                      src="/img/circle_logo.svg"
                       alt=""
                       className="h-[35px]"
                     />

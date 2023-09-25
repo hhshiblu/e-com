@@ -14,8 +14,7 @@ export const query_products = (query) => async (dispatch) => {
    category: query.category,
    subCategory: query.subCategory,
    rating: query.rating,
-   lowPrice: query.low,
-   highPrice: query.high,
+ 
    sortPrice: query.sortPrice,
    pageNumber: query.pageNumber,
    searchValue: query.searchValue || "",

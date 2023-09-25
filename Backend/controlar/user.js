@@ -7,11 +7,12 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/EmailSander");
 const CatchAsyncError = require("../Middleware/CatchAsyncError");
 const sendToken = require("../utils/jwtToken");
+const sendOTP = require("../utils/otpSender");
 
 const userSignUp = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
-
+    const { name, email, password, phoneNumber } = req.body;
+    sendOTP(phoneNumber);
     const UserExit = await User.findOne({ email });
     if (UserExit) {
       const filename = req.file.filename;

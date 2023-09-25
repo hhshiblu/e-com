@@ -1,0 +1,129 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+   arr=[2,3,5,6,7];
+hasan=[4,6,78,54];
+const amir =[...arr,...hasan]
+const hello=a=>console.log("amir bad boy",a);
+hello(30)
+   console.log(amir[8]);
+
+
+
+   const obj = { name: 'Alice', age: 30, city: 'New York' };
+Object.entries(obj).forEach(([key, value]) => {
+  console.log(`${key}: ${value}`);
+});
+const obj = { name: 'Alice', age: 30, city: 'New York' };
+Object.values(obj).forEach(value => {
+  console.log(value);
+});
+const obj = { name: 'Alice', age: 30, city: 'New York' };
+Object.keys(obj).forEach(key => {
+  console.log(`${key}: ${obj[key]}`);
+});
+const array = [1, 2, 3, 4, 5];
+array.forEach(element => {
+  console.log(element);
+});
+const array = [1, 2, 3, 4, 5];
+for (const index in array) {
+  console.log(array[index]);
+}
+const obj = { name: 'Alice', age: 30, city: 'New York' };
+for (const key in obj) {
+  console.log(`${key}: ${obj[key]}`);
+}
+const array = [1, 2, 3, 4, 5];
+for (const element of array) {
+  console.log(element);
+}
+const array = [1, 2, 3, 4, 5];
+for (let i = 0; i < array.length; i++) {
+  console.log(array[i]);
+}
+
+
+    </script>
+  </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Background Animation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.bubble-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.bubble {
+    position: absolute;
+    background-color: #3498db; /* You can customize bubble color */
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Animation for the bubbles */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+</style>
+<body>
+    <div class="bubble-container"></div>
+    <script>
+      // Function to create a bubble
+function createBubble() {
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+
+    const size = Math.random() * 100 + 50; // Random size between 50 and 150 pixels
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+
+    const left = Math.random() * window.innerWidth;
+    bubble.style.left = `${left}px`;
+
+    document.querySelector(".bubble-container").appendChild(bubble);
+
+    // Remove the bubble after the animation
+    bubble.addEventListener("animationend", () => {
+        bubble.remove();
+    });
+}
+
+// Generate bubbles at regular intervals
+setInterval(createBubble, 2000); // Adjust the interval as needed
+
+    </script>
+</body>
+</html>

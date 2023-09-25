@@ -140,7 +140,7 @@ class productfilter {
       }
 
       res.status(200).json({
-        latest_product,
+        // latest_product,
         priceRange,
       });
     } catch (error) {
@@ -149,7 +149,11 @@ class productfilter {
   });
 
   query_products = CatchAsyncError(async (req, res, next) => {
-    const parPage = 4;
+      const products = await productModel.find({}).limit(9).sort({
+        createdAt: -1,
+      });
+      const latest_product = this.formateProduct(products);
+    const parPage = 25;
     req.query.parPage = parPage;
     try {
       const products = await productModel.find({}).sort({
@@ -182,7 +186,7 @@ class productfilter {
         products: result,
         totalProduct,
         parPage,
-   
+        latest_product,
       });
     } catch (error) {
       return next(new Errorhandeler(error, 400));

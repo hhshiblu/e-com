@@ -10,7 +10,7 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import { IoLocation } from "react-icons/io5";
 import { GrServices } from "react-icons/gr";
 
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 // import axios from "axios";
@@ -20,12 +20,12 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Rating from "./Rating";
 import { addTocart } from "../../Redux/Action/cart";
-
+import { addFriend } from "../../Redux/Action/chat";
 
 const ProductDetails = ({ data, products, loading }) => {
-
+  const navigate = useNavigate();
   const { cart } = useSelector((state) => state.cart);
-  // const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   // const { products } = useSelector((state) => state.products);
   const [selectedColor, setSelectedColor] = useState({
     color: "", // Initial selected color
@@ -42,11 +42,11 @@ const ProductDetails = ({ data, products, loading }) => {
   // const navigate = useNavigate();
   const dispatch = useDispatch();
   const incrementCount = () => {
-       if (data.stock <= 1) {
-         toast.error("Product stock limited!");
-       } else {
-         setCount(count + 1);
-       }
+    if (data.stock <= 1) {
+      toast.error("Product stock limited!");
+    } else {
+      setCount(count + 1);
+    }
   };
 
   const decrementCount = () => {
@@ -60,11 +60,10 @@ const ProductDetails = ({ data, products, loading }) => {
     if (isItemExists) {
       toast.error("Item already in cart!");
     } else {
-       console.log(data?.stock);
+      console.log(data?.stock);
       if (data.stock <= 1) {
         toast.error("Product stock limited!");
       } else {
-       
         const cartData = {
           productId: data?._id,
           quantity: count, // Assuming count is the quantity
@@ -115,6 +114,23 @@ const ProductDetails = ({ data, products, loading }) => {
   //     toast.error("Please login to create a conversation");
   //   }
   // };
+const handelMessage = async () => {
+  if (isAuthenticated) {
+    try {
+       dispatch(
+        addFriend({
+          sellerId: data?.sellerId || "",
+          userId: user._id,
+        })
+      );
+      navigate(`/account/profile/chat/${data?.sellerId}`);
+    } catch (error) {
+      // Handle any errors that may occur during the dispatch or navigation.
+      console.error(error);
+    }
+  }
+};
+
   return (
     <div>
       <div className="bg-white ">
@@ -437,6 +453,7 @@ const ProductDetails = ({ data, products, loading }) => {
 
                   <hr />
                   <hr />
+                  <h1 onClick={handelMessage}> chat me</h1>
                   {data &&
                     data?.reviews?.map((item, index) => {
                       return (

@@ -17,6 +17,7 @@ function SignUp() {
     name: "",
     email: "",
     phone: "",
+    phoneNumber:"",
     password: "",
   
   });
@@ -39,6 +40,7 @@ function SignUp() {
     newform.append("name", user.name);
     newform.append("email", user.email);
     newform.append("password", user.password);
+    newform.append("phoneNumber", user.phoneNumber);
 
     axios
       .post(`${server}/signup`, newform, config)
@@ -48,7 +50,7 @@ function SignUp() {
         //   navigate("/login")
           
         // }
-        setUser({ name: "", email: "", phone: "", password: ""});
+        setUser({ name: "", email: "", phoneNumber: "", password: "" });
         setAvatar(null)
       })
       .catch((err) => {
@@ -84,6 +86,25 @@ function SignUp() {
                     autoComplete="name"
                     required
                     value={user.name}
+                    onChange={handelChange}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="phoneNumber"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  phoneNumber
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="number"
+                    name="phoneNumber"
+                    autoComplete="phoneNumber"
+                    required
+                    value={user.phoneNumber}
                     onChange={handelChange}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-500 sm:text-sm"
                   />

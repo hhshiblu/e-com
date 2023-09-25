@@ -47,12 +47,12 @@ const AdminDashboardOrders = () => {
       flex: 0.8,
     },
     {
-        field: "createdAt",
-        headerName: "Order Date",
-        type: "number",
-        minWidth: 130,
-        flex: 0.8,
-      },
+      field: "createdAt",
+      headerName: "Order Date",
+      type: "number",
+      minWidth: 130,
+      flex: 0.8,
+    },
   ];
 
   const row = [];
@@ -63,27 +63,21 @@ const AdminDashboardOrders = () => {
         itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
         total: item?.totalPrice + " $",
         status: item?.status,
-        createdAt: item?.createdAt.slice(0,10),
+        createdAt: item?.createdAt.slice(0, 10),
       });
     });
   return (
-
-   
-
-          <div className="w-full min-h-[45vh] pt-5 rounded flex justify-center">
-            <div className="w-[97%] flex justify-center">
-              <DataGrid
-                rows={row}
-                columns={columns}
-                pageSize={4}
-                disableSelectionOnClick
-                autoHeight
-              />
-           
-          </div>
-        </div>
-   
- 
+    <div className=" min-h-[45vh] pt-5 rounded flex justify-center">
+      <div className="w-[97%] flex justify-center">
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
+      </div>
+    </div>
   );
 };
 

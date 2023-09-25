@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "../.."
+    },
+    {
+      "path": "../../../c c++"
+    },
+    {
+      "path": "../../../multi-vendor-ecommerce"
+    }
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "Data-Structures-in-Real-Life-Projects"
+  }
+}

@@ -86,7 +86,7 @@ const AllProducts = () => {
 
   return (
     <>
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
+        <div className=" mx-8 pt-1 mt-10 bg-white">
           <DataGrid
             rows={row}
             columns={columns}

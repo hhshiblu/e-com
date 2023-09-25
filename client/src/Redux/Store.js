@@ -10,6 +10,8 @@ import { banarReducer } from "./reducer/banar";
 import { filterProducts } from "./reducer/filterproducts";
 import { cartReducer } from "./reducer/cart";
 
+import { chatReducer } from "./reducer/chat";
+
 const Store = configureStore({
   reducer: {
     user: userReducer,
@@ -22,6 +24,7 @@ const Store = configureStore({
     banar: banarReducer,
     orderData: orderData,
     filterProduct: filterProducts,
+    chat: chatReducer,
   },
 });
 export default Store;

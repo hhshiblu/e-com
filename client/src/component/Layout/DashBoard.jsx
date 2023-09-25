@@ -23,7 +23,6 @@ const DashBoard = () => {
       .get(`${server}/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
-        window.location.reload(true);
         navigate("/");
       })
       .catch((error) => {
@@ -109,6 +108,17 @@ const DashBoard = () => {
 
                   <Link to="address" className="block pl-4">
                     Address
+                  </Link>
+                </li>
+                <li className="flex justify-start items-center gap-2 py-2 pl-1">
+                  <Link to="chat">
+                    <span className="text-xl">
+                      <TbAddressBook />
+                    </span>
+                  </Link>
+
+                  <Link to="chat" className="block pl-4">
+                    Chat
                   </Link>
                 </li>
                 <li

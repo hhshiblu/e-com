@@ -13,7 +13,7 @@ const initialState = {
     low: 0,
     high: 100000,
   },
-  arrayProducts:[],
+  arrayProducts: [],
   product: {},
   relatedProducts: [],
   moreProducts: [],
@@ -27,6 +27,7 @@ export const filterProducts = createReducer(initialState, {
     state.isloading = false;
     state.products = action.payload.products;
     state.totalProduct = action.payload.totalProduct;
+    state.latest_product = action.payload.latest_product;
     state.parPage = action.payload.parPage;
     state.success = true;
   },
