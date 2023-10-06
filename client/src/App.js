@@ -22,6 +22,7 @@ import {
   UserOrderDetailsPage,
   TrackOrderPage,
   UserInbox,
+  BecomeSellerPage,
   CateProductsPage,
   SearchProducts,
 } from "./Routes.js";
@@ -122,6 +123,7 @@ function App() {
           <Route path="/some-related-faq" element={<FaqPage />} />
           <Route path="/products/search?" element={<SearchProducts />} />
           <Route path="/all-cart-products" element={<CartPage />} />
+          <Route path="/become-seller" element={<BecomeSellerPage />} />
           {/* <Route
             path="/profile"
             element={
@@ -192,7 +194,7 @@ function App() {
               path="chat"
               element={
                 <ProtectedRoute>
-                  <ChatUserDashboard/>
+                  <ChatUserDashboard />
                 </ProtectedRoute>
               }
             />

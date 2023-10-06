@@ -19,6 +19,7 @@ import TrackOrderPage from "./pages/TrackOrderPage.jsx"
 import UserInbox from "./pages/UserInbox.jsx"
 import CateProductsPage from "./pages/CateProductsPage.jsx";
 import SearchProducts from "./pages/SearchProducts.jsx";
+import BecomeSellerPage from "./pages/BecomeSellerPage.jsx";
 export {
   HomePage,
   LoginPage,
@@ -41,4 +42,5 @@ export {
   TrackOrderPage,
   UserInbox,
   SearchProducts,
+  BecomeSellerPage,
 };
