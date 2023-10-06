@@ -14,7 +14,7 @@ app.use(cookeParser());
 
 
 app.use(
-  cors({ origin: "https://e-com-mu-rosy.vercel.app", credentials: true })
+  cors({ origin: "https://rajdhola.com/", credentials: true })
 );
 app.use("/upload", express.static("upload")); //image
 app.use(bodyParser.urlencoded({ extended: true }));
